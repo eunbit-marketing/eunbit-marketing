@@ -250,7 +250,7 @@
                 <h1>✏️ 새 게시물</h1>
                 
                 <div class="form-group">
-                    <label>사진 선택 (사진을 선택하면 AI가 사진을 분석합니다!)</label>
+                    <label>사진 선택 (JPG, PNG, GIF 등 모든 형식 지원)</label>
                     <input type="file" id="imageInput" accept="image/*">
                 </div>
  
@@ -336,6 +336,7 @@
  
     <script>
         let selectedImageBase64 = null;
+        let selectedImageType = null;
  
         function switchTab(tabName, element) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -348,6 +349,7 @@
         document.getElementById('imageInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
+                selectedImageType = file.type; // 이미지 타입 저장 (image/jpeg, image/png 등)
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     selectedImageBase64 = event.target.result.split(',')[1];
@@ -372,7 +374,8 @@
             try {
                 const body = { 
                     tone,
-                    image: selectedImageBase64  // 사진이 있으면 전송
+                    image: selectedImageBase64,
+                    imageType: selectedImageType || 'image/jpeg'  // 이미지 타입 전송
                 };
  
                 const response = await fetch('/api/caption', {
@@ -412,6 +415,7 @@
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
             selectedImageBase64 = null;
+            selectedImageType = null;
         }
  
         function publishPost() {
