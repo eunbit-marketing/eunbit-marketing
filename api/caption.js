@@ -12,7 +12,7 @@ export default async (req, res) => {
   }
  
   try {
-    const { tone, image } = req.body;
+    const { tone, image, imageType } = req.body;
     
     if (!tone) {
       return res.status(400).json({ error: 'tone required' });
@@ -58,6 +58,7 @@ export default async (req, res) => {
     };
  
     const selectedTone = toneGuides[tone] || toneGuides['감성적'];
+    const mediaType = imageType || 'image/jpeg';
  
     // 메시지 구성
     let messages = [];
@@ -71,7 +72,7 @@ export default async (req, res) => {
             type: 'image',
             source: {
               type: 'base64',
-              media_type: 'image/jpeg',
+              media_type: mediaType,
               data: image
             }
           },
