@@ -10,14 +10,14 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+ 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
+ 
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -26,7 +26,7 @@
             gap: 20px;
             height: 90vh;
         }
-
+ 
         .sidebar {
             background: white;
             border-radius: 15px;
@@ -34,13 +34,13 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             overflow-y: auto;
         }
-
+ 
         .sidebar h2 {
             color: #667eea;
             margin-bottom: 20px;
             font-size: 18px;
         }
-
+ 
         .nav-item {
             padding: 12px 15px;
             margin: 8px 0;
@@ -50,17 +50,17 @@
             font-size: 14px;
             border: 2px solid transparent;
         }
-
+ 
         .nav-item.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             font-weight: bold;
         }
-
+ 
         .nav-item:hover {
             background: #f0f0f0;
         }
-
+ 
         .main-content {
             background: white;
             border-radius: 15px;
@@ -68,31 +68,31 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             overflow-y: auto;
         }
-
+ 
         .tab-content {
             display: none;
         }
-
+ 
         .tab-content.active {
             display: block;
         }
-
+ 
         h1 {
             color: #667eea;
             margin-bottom: 20px;
         }
-
+ 
         .form-group {
             margin-bottom: 20px;
         }
-
+ 
         label {
             display: block;
             margin-bottom: 8px;
             color: #333;
             font-weight: 500;
         }
-
+ 
         input[type="file"],
         select,
         textarea {
@@ -102,18 +102,18 @@
             border-radius: 8px;
             font-size: 14px;
         }
-
+ 
         textarea {
             min-height: 120px;
             resize: vertical;
         }
-
+ 
         .button-group {
             display: flex;
             gap: 10px;
             margin-top: 20px;
         }
-
+ 
         button {
             flex: 1;
             padding: 12px 20px;
@@ -123,27 +123,27 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
+ 
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
+ 
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
-
+ 
         .btn-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-
+ 
         .btn-secondary {
             background: #f0f0f0;
             color: #333;
         }
-
+ 
         .preview-area {
             background: #f9f9f9;
             border: 2px dashed #667eea;
@@ -155,13 +155,13 @@
             align-items: center;
             justify-content: center;
         }
-
+ 
         .preview-image {
             max-width: 100%;
             max-height: 300px;
             border-radius: 8px;
         }
-
+ 
         .output-box {
             background: #f0f7ff;
             border-left: 4px solid #667eea;
@@ -172,14 +172,14 @@
             max-height: 300px;
             overflow-y: auto;
         }
-
+ 
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
-
+ 
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -187,19 +187,19 @@
             border-radius: 8px;
             text-align: center;
         }
-
+ 
         .stat-value {
             font-size: 24px;
             font-weight: bold;
         }
-
+ 
         .loading {
             display: none;
             text-align: center;
             color: #667eea;
             margin: 20px 0;
         }
-
+ 
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
@@ -209,12 +209,12 @@
             animation: spin 1s linear infinite;
             margin: 0 auto 10px;
         }
-
+ 
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
+ 
         .error-message {
             background: #fee;
             color: #c33;
@@ -223,7 +223,7 @@
             margin-top: 10px;
             display: none;
         }
-
+ 
         .success-message {
             background: #efe;
             color: #3c3;
@@ -243,21 +243,21 @@
             <div class="nav-item" onclick="switchTab('stats', this)">📊 성과</div>
             <div class="nav-item" onclick="switchTab('settings', this)">⚙️ 설정</div>
         </div>
-
+ 
         <div class="main-content">
             <!-- 새 게시물 -->
             <div id="post" class="tab-content active">
                 <h1>✏️ 새 게시물</h1>
                 
                 <div class="form-group">
-                    <label>사진 선택</label>
+                    <label>사진 선택 (사진을 선택하면 AI가 사진을 분석합니다!)</label>
                     <input type="file" id="imageInput" accept="image/*">
                 </div>
-
+ 
                 <div class="preview-area" id="previewArea">
                     <div style="color: #999;">사진을 선택하면 미리보기가 표시됩니다</div>
                 </div>
-
+ 
                 <div class="form-group">
                     <label>톤 선택</label>
                     <select id="toneSelect">
@@ -266,37 +266,37 @@
                         <option value="유머러스">유머러스</option>
                     </select>
                 </div>
-
+ 
                 <div class="button-group">
                     <button class="btn-primary" onclick="generateCaption()">✨ AI 생성해주기</button>
                 </div>
-
+ 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>AI가 캡션을 생성 중...</p>
+                    <p>AI가 사진을 분석하고 캡션을 생성 중...</p>
                 </div>
-
+ 
                 <div class="error-message" id="errorMessage"></div>
                 <div class="success-message" id="successMessage"></div>
                 <div id="captionOutput"></div>
-
+ 
                 <div class="form-group" style="margin-top: 30px;">
                     <label>작성 내용</label>
-                    <textarea id="contentArea" placeholder="내용을 입력하거나 AI로 생성한 캡션을 수정하세요..."></textarea>
+                    <textarea id="contentArea" placeholder="AI로 생성한 캡션을 수정하세요..."></textarea>
                 </div>
-
+ 
                 <div class="button-group">
                     <button class="btn-secondary" onclick="clearForm()">초기화</button>
                     <button class="btn-primary" onclick="publishPost()">📤 발행하기</button>
                 </div>
             </div>
-
+ 
             <!-- 예약 발행 -->
             <div id="schedule" class="tab-content">
                 <h1>📅 예약 발행</h1>
                 <p style="color: #999;">곧 업데이트됩니다!</p>
             </div>
-
+ 
             <!-- 성과 -->
             <div id="stats" class="tab-content">
                 <h1>📊 성과 분석</h1>
@@ -315,7 +315,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <!-- 설정 -->
             <div id="settings" class="tab-content">
                 <h1>⚙️ 설정</h1>
@@ -333,8 +333,10 @@
             </div>
         </div>
     </div>
-
+ 
     <script>
+        let selectedImageBase64 = null;
+ 
         function switchTab(tabName, element) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -342,50 +344,57 @@
             document.getElementById(tabName).classList.add('active');
             element.classList.add('active');
         }
-
+ 
         document.getElementById('imageInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
+                    selectedImageBase64 = event.target.result.split(',')[1];
+                    const previewUrl = event.target.result;
                     document.getElementById('previewArea').innerHTML = 
-                        `<img src="${event.target.result}" class="preview-image">`;
+                        `<img src="${previewUrl}" class="preview-image">`;
                 };
                 reader.readAsDataURL(file);
             }
         });
-
+ 
         async function generateCaption() {
             const tone = document.getElementById('toneSelect').value;
             const loading = document.getElementById('loading');
             const errorMsg = document.getElementById('errorMessage');
             const successMsg = document.getElementById('successMessage');
-
+ 
             errorMsg.style.display = 'none';
             successMsg.style.display = 'none';
             loading.style.display = 'block';
-
+ 
             try {
+                const body = { 
+                    tone,
+                    image: selectedImageBase64  // 사진이 있으면 전송
+                };
+ 
                 const response = await fetch('/api/caption', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tone })
+                    body: JSON.stringify(body)
                 });
-
+ 
                 const data = await response.json();
-
+ 
                 if (!response.ok) {
                     throw new Error(data.error || 'API 오류');
                 }
-
+ 
                 const caption = data.caption;
                 document.getElementById('contentArea').value = caption;
                 document.getElementById('captionOutput').innerHTML = 
                     `<div class="output-box">${caption}</div>`;
-
+ 
                 successMsg.textContent = '✅ 캡션 생성 완료!';
                 successMsg.style.display = 'block';
-
+ 
             } catch (error) {
                 errorMsg.textContent = '❌ 오류: ' + error.message;
                 errorMsg.style.display = 'block';
@@ -393,7 +402,7 @@
                 loading.style.display = 'none';
             }
         }
-
+ 
         function clearForm() {
             document.getElementById('imageInput').value = '';
             document.getElementById('contentArea').value = '';
@@ -402,8 +411,9 @@
             document.getElementById('captionOutput').innerHTML = '';
             document.getElementById('errorMessage').style.display = 'none';
             document.getElementById('successMessage').style.display = 'none';
+            selectedImageBase64 = null;
         }
-
+ 
         function publishPost() {
             const content = document.getElementById('contentArea').value;
             if (!content) {
@@ -411,7 +421,9 @@
                 return;
             }
             alert('📤 게시물이 발행되었습니다!');
+            clearForm();
         }
     </script>
 </body>
 </html>
+ 
