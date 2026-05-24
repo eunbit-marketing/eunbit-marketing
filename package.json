@@ -3,8 +3,5 @@
   "version": "1.0.0",
   "scripts": {
     "build": "echo 'Build complete'"
-  },
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.24.0"
   }
 }
