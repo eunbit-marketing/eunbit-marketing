@@ -12,7 +12,8 @@ export default async (req, res) => {
   }
  
   try {
-    const { tone } = req.body;
+    const { tone, image } = req.body;
+    
     if (!tone) {
       return res.status(400).json({ error: 'tone required' });
     }
@@ -28,6 +29,52 @@ export default async (req, res) => {
       '유머러스': '재미있고 즐거운'
     };
  
+    const toneDesc = toneMap[tone] || '매력적인';
+ 
+    // 메시지 구성
+    let messages = [];
+ 
+    if (image) {
+      // 사진이 있으면 이미지 분석
+      messages = [{
+        role: 'user',
+        content: [
+          {
+            type: 'image',
+            source: {
+              type: 'base64',
+              media_type: 'image/jpeg',
+              data: image
+            }
+          },
+          {
+            type: 'text',
+            text: `이 사진을 보고 ${toneDesc} 인스타그램 캡션을 작성해주세요.
+ 
+요구사항:
+- 길이: 150-200자
+- 해시태그: 8-10개 (한국어 해시태그)
+- 형식: 캡션 [줄바꿈] [줄바꿈] #해시태그들
+ 
+사진의 내용을 분석해서 자연스럽고 매력적인 캡션을 만들어주세요.`
+          }
+        ]
+      }];
+    } else {
+      // 사진이 없으면 텍스트만
+      messages = [{
+        role: 'user',
+        content: `당신은 인스타그램 마케팅 전문가입니다.
+ 
+${toneDesc} 인스타그램 캡션을 작성해주세요.
+ 
+요구사항:
+- 길이: 150-200자
+- 해시태그: 8-10개 (한국어 해시태그)
+- 형식: 캡션 [줄바꿈] [줄바꿈] #해시태그들`
+      }];
+    }
+ 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -38,17 +85,7 @@ export default async (req, res) => {
       body: JSON.stringify({
         model: 'claude-opus-4-1-20250805',
         max_tokens: 300,
-        messages: [{
-          role: 'user',
-          content: `당신은 인스타그램 마케팅 전문가입니다.
- 
-이 사진을 위한 ${toneMap[tone] || '매력적인'} 인스타그램 캡션을 작성해주세요.
- 
-요구사항:
-- 길이: 150-200자
-- 해시태그: 8-10개 (한국어 해시태그)
-- 형식: 캡션 [줄바꿈] [줄바꿈] #해시태그들`
-        }]
+        messages: messages
       })
     });
  
