@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>은빛캘리 마케팅</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; }
+        .container { display: flex; height: 100vh; }
+        .sidebar { width: 100px; background: linear-gradient(180deg, #7c3aed 0%, #ec4899 50%, #f97316 100%); display: flex; flex-direction: column; align-items: center; padding: 20px 0; gap: 20px; }
+        .sidebar-btn { width: 50px; height: 50px; border: none; border-radius: 12px; background: rgba(255,255,255,0.1); color: white; font-size: 24px; cursor: pointer; }
+        .sidebar-btn.active { background: rgba(255,255,255,0.3); }
+        .main { flex: 1; display: flex; flex-direction: column; }
+        .header { background: white; padding: 20px 30px; border-bottom: 1px solid #e5e7eb; }
+        .header h1 { font-size: 24px; font-weight: 700; }
+        .content { flex: 1; padding: 30px; overflow-y: auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .banner { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 30px; text-align: center; }
+        .kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .kpi-card { background: white; padding: 20px; border-radius: 12px; text-align: center; }
+        .kpi-value { font-size: 28px; font-weight: 700; color: #7c3aed; }
+        .kpi-label { font-size: 12px; color: #6b7280; margin-top: 5px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-family: inherit; }
+        .form-group textarea { min-height: 100px; }
+        .upload-box { border: 2px dashed #d1d5db; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; }
+        .upload-box:hover { border-color: #7c3aed; background: #f3f4f6; }
+        .btn { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); color: white; padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .result { background: white; padding: 20px; border-radius: 12px; margin-top: 20px; display: none; }
+        .result.show { display: block; }
+        .result-item { margin-bottom: 15px; }
+        .result-label { font-weight: 600; color: #6b7280; font-size: 12px; margin-bottom: 5px; }
+        .result-value { background: #f3f4f6; padding: 10px; border-radius: 8px; }
+        .hashtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .hashtag { background: #dbeafe; color: #1e40af; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
+        .loading { display: none; text-align: center; padding: 20px; }
+        .loading.show { display: block; }
+        .spinner { border: 3px solid #e5e7eb; border-top: 3px solid #7c3aed; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .error { color: #dc2626; background: #fee2e2; padding: 10px; border-radius: 8px; margin-top: 10px; display: none; }
+        .error.show { display: block; }
+        #preview { max-width: 100%; margin-top: 15px; border-radius: 8px; display: none; }
+        #preview.show { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <button class="sidebar-btn active" onclick="showSection('home')">📊</button>
+            <button class="sidebar-btn" onclick="showSection('new')">✏️</button>
+            <button class="sidebar-btn" onclick="showSection('calendar')">📅</button>
+            <button class="sidebar-btn" onclick="showSection('analytics')">📈</button>
+        </div>
+
+        <div class="main">
+            <div class="header">
+                <h1>은빛캘리 마케팅</h1>
+            </div>
+
+            <div class="content">
+                <!-- 홈 섹션 -->
+                <div id="home" class="section active">
+                    <div class="banner">
+                        <h2>안녕하세요, 사장님! 👋</h2>
+                        <p>오늘도 열심히 마케팅하시겠어요?</p>
+                    </div>
+                    <div class="kpi">
+                        <div class="kpi-card">
+                            <div class="kpi-value">18,450</div>
+                            <div class="kpi-label">도달</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">1,246</div>
+                            <div class="kpi-label">좋아요</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">89</div>
+                            <div class="kpi-label">댓글</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-value">3,421</div>
+                            <div class="kpi-label">저장</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 새 게시물 섹션 -->
+                <div id="new" class="section">
+                    <h2 style="margin-bottom: 20px;">✨ AI 캡션 생성</h2>
+
+                    <div class="form-group">
+                        <label>사진 선택</label>
+                        <div class="upload-box" onclick="document.getElementById('pic').click()">
+                            <div style="font-size: 40px;">📸</div>
+                            <p>클릭해서 사진을 선택하세요</p>
+                        </div>
+                        <img id="preview">
+                    </div>
+
+                    <div class="form-group">
+                        <label>업종</label>
+                        <select id="type">
+                            <option>공방/클래스</option>
+                            <option>카페/식당</option>
+                            <option>뷰티/헤어</option>
+                            <option>소매/판매</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>톤</label>
+                        <select id="tone">
+                            <option>감성적</option>
+                            <option>정보형</option>
+                            <option>유머러스</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>설명</label>
+                        <textarea id="desc" placeholder="추가 설명"></textarea>
+                    </div>
+
+                    <button class="btn" onclick="gen()">✨ AI 생성해주기</button>
+
+                    <div class="loading" id="load">
+                        <div class="spinner"></div>
+                        <p>AI가 캡션을 만들고 있습니다...</p>
+                    </div>
+
+                    <div class="error" id="err"></div>
+
+                    <div class="result" id="res">
+                        <h3>📝 생성된 캡션</h3>
+                        <div class="result-item">
+                            <div class="result-label">캡션</div>
+                            <div class="result-value" id="cap"></div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">해시태그</div>
+                            <div class="hashtags" id="hash"></div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">최적 발행 시간</div>
+                            <div class="result-value" id="tm"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 캘린더 섹션 -->
+                <div id="calendar" class="section">
+                    <h2>📅 게시물 스케줄</h2>
+                    <p style="margin-top: 20px; color: #6b7280;">준비 중입니다.</p>
+                </div>
+
+                <!-- 분석 섹션 -->
+                <div id="analytics" class="section">
+                    <h2>📈 성과 분석</h2>
+                    <p style="margin-top: 20px; color: #6b7280;">준비 중입니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="pic" accept="image/*" style="display:none;">
+
+    <script>
+        let img = null;
+
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        document.getElementById('pic').addEventListener('change', function(e) {
+            if (!e.target.files[0]) return;
+            const r = new FileReader();
+            r.onload = (ev) => {
+                img = ev.target.result;
+                document.getElementById('preview').src = img;
+                document.getElementById('preview').classList.add('show');
+            };
+            r.readAsDataURL(e.target.files[0]);
+        });
+
+        async function gen() {
+            if (!img) { 
+                err('사진을 선택해주세요!');
+                return; 
+            }
+
+            const t = document.getElementById('type').value;
+            const tone = document.getElementById('tone').value;
+            const d = document.getElementById('desc').value || '새로운 게시물';
+
+            document.getElementById('load').classList.add('show');
+            document.getElementById('res').classList.remove('show');
+            document.getElementById('err').classList.remove('show');
+
+            try {
+                const r = await fetch('/api/caption', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ caption_text: d, business_type: t, tone: tone })
+                });
+
+                if (!r.ok) throw new Error('API 오류');
+                const data = await r.json();
+
+                document.getElementById('cap').textContent = data.caption;
+                document.getElementById('hash').innerHTML = data.hashtags.map(h => `<span class="hashtag">${h}</span>`).join('');
+                document.getElementById('tm').textContent = data.recommended_time;
+                document.getElementById('res').classList.add('show');
+            } catch (e) {
+                err('오류: ' + e.message);
+            } finally {
+                document.getElementById('load').classList.remove('show');
+            }
+        }
+
+        function err(msg) {
+            const e = document.getElementById('err');
+            e.textContent = msg;
+            e.classList.add('show');
+        }
+    </script>
+</body>
+</html>
