@@ -1,0 +1,11 @@
+{
+  "name": "eunbit-marketing",
+  "version": "1.0.0",
+  "description": "은빛캘리 마케팅 자동화",
+  "scripts": {
+    "build": "echo 'Build complete'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.0"
+  }
+}
