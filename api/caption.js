@@ -1,6 +1,4 @@
-const Anthropic = require('@anthropic-ai/sdk').default;
- 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // CORS 처리
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -23,10 +21,9 @@ module.exports = async (req, res) => {
  
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
+      console.error('ANTHROPIC_API_KEY not found');
       return res.status(500).json({ error: 'API key not configured' });
     }
- 
-    const client = new Anthropic({ apiKey });
  
     const toneMap = {
       '감성적': '감정적이고 따뜻한',
@@ -36,13 +33,20 @@ module.exports = async (req, res) => {
  
     const toneDesc = toneMap[tone] || '매력적인';
  
-    const message = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 300,
-      messages: [
-        {
-          role: 'user',
-          content: `당신은 인스타그램 마케팅 전문가입니다. 
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20241022',
+        max_tokens: 300,
+        messages: [
+          {
+            role: 'user',
+            content: `당신은 인스타그램 마케팅 전문가입니다. 
  
 이 사진을 위한 ${toneDesc} 인스타그램 캡션을 작성해주세요.
  
@@ -56,20 +60,31 @@ module.exports = async (req, res) => {
 마음까지 편해지는 그런 시간...
  
 #카페 #커피 #감성 #일상 #따뜻함 #카페투어 #커피와함께 #휴식 #감성카페`
-        }
-      ]
+          }
+        ]
+      })
     });
  
-    const caption = message.content[0].text;
+    const data = await response.json();
+ 
+    if (!response.ok) {
+      console.error('API Error:', data);
+      return res.status(response.status).json({
+        error: 'API request failed',
+        details: data.error?.message || 'Unknown error'
+      });
+    }
+ 
+    const caption = data.content[0].text;
  
     return res.status(200).json({ caption });
  
   } catch (error) {
-    console.error('Error details:', error);
+    console.error('Error:', error.message);
     return res.status(500).json({
       error: 'Failed to generate caption',
       message: error.message
     });
   }
-};
+}
  
