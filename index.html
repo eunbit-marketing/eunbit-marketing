@@ -929,6 +929,8 @@
             }
         }
     </style>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- 모바일 메뉴 토글 -->
@@ -1773,6 +1775,81 @@
             applyTheme(appData.settings.theme);
             showMessage('settings', 'success', '✅ 설정이 저장되었습니다');
         }
+
+
+        // ===== GOOGLE OAUTH 설정 =====
+        const GOOGLE_CONFIG = {
+            clientId: '340927033268-ppnn7g9hfp0or9qpoi6faq14kat8nvfu.apps.googleusercontent.com',
+            redirectUri: 'https://eunbit-marketing-qtdi.vercel.app',
+            scope: [
+                'https://www.googleapis.com/auth/spreadsheets',
+                'https://www.googleapis.com/auth/gmail.send'
+            ]
+        };
+
+        let googleToken = null;
+        let sheetsId = null;
+
+        // Google 로그인
+        function loginWithGoogle() {
+            const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
+                `client_id=${GOOGLE_CONFIG.clientId}&` +
+                `redirect_uri=${encodeURIComponent(GOOGLE_CONFIG.redirectUri)}&` +
+                `response_type=code&` +
+                `scope=${encodeURIComponent(GOOGLE_CONFIG.scope.join(' '))}&` +
+                `access_type=offline&` +
+                `prompt=consent`;
+            
+            window.location.href = authUrl;
+        }
+
+        // 게시물 저장 시 Google Sheets에도 저장
+        async function savePostWithGoogle() {
+            const content = document.getElementById('post-content').value;
+            if (!content) {
+                showMessage('post', 'error', '내용을 입력해주세요!');
+                return;
+            }
+
+            // 로컬 저장소에 저장
+            appData.posts.push({
+                id: Date.now(),
+                content,
+                date: new Date()
+            });
+
+            // Google Sheets에도 저장 (토큰이 있으면)
+            if (googleToken) {
+                try {
+                    // 실제 구현은 백엔드 API 필요
+                    console.log('✅ Google Sheets에 저장 준비');
+                } catch (error) {
+                    console.log('Google Sheets 저장 오류:', error);
+                }
+            }
+
+            showMessage('post', 'success', '✨ 게시물이 저장되었습니다!');
+            clearPostForm();
+            updateStats();
+        }
+
+        // 이메일 발송
+        async function sendEmailToSubscribers() {
+            if (!googleToken) {
+                showMessage('settings', 'error', 'Google 로그인이 필요합니다!');
+                return;
+            }
+
+            const subject = '새 게시물이 올라왔습니다! 📸';
+            const body = document.getElementById('post-content').value;
+
+            try {
+                console.log('✅ 이메일 발송 준비');
+            } catch (error) {
+                console.log('이메일 발송 오류:', error);
+            }
+        }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             updateStats();
