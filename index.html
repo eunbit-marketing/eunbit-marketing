@@ -4,49 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>은빛캘리 마케팅 대시보드</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js">
-        // Google Sheets 연결 테스트
-        function testGoogleConnection() {
-            const sheetsId = document.getElementById('google-sheets-id').value;
-            const apiKey = document.getElementById('google-api-key').value;
-            const statusMsg = document.getElementById('google-status-msg');
-            
-            if (!sheetsId || !apiKey) {
-                statusMsg.textContent = '❌ Sheets ID와 API 키를 모두 입력해주세요!';
-                statusMsg.style.background = '#fee2e2';
-                statusMsg.style.color = '#7f1d1d';
-                statusMsg.style.display = 'block';
-                return;
-            }
-            
-            // Google Sheets API 테스트
-            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}?key=${apiKey}`)
-                .then(response => {
-                    if (response.ok) {
-                        statusMsg.textContent = '✅ Google Sheets 연결 성공! 게시물은 자동으로 저장됩니다.';
-                        statusMsg.style.background = '#d1fae5';
-                        statusMsg.style.color = '#065f46';
-                        statusMsg.style.display = 'block';
-                        
-                        // 저장
-                        localStorage.setItem('google-sheets-id', sheetsId);
-                        localStorage.setItem('google-api-key', apiKey);
-                    } else {
-                        statusMsg.textContent = '❌ 연결 실패. Sheets ID와 API 키를 확인하세요.';
-                        statusMsg.style.background = '#fee2e2';
-                        statusMsg.style.color = '#7f1d1d';
-                        statusMsg.style.display = 'block';
-                    }
-                })
-                .catch(err => {
-                    statusMsg.textContent = '❌ 오류: ' + err.message;
-                    statusMsg.style.background = '#fee2e2';
-                    statusMsg.style.color = '#7f1d1d';
-                    statusMsg.style.display = 'block';
-                });
-        }
-        
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
             margin: 0;
@@ -1094,30 +1052,7 @@
                                 <option value="뷰티">💄 뷰티</option>
                                 <option value="여행">✈️ 여행</option>
                             </select>
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
 
                     <div>
@@ -1141,30 +1076,7 @@
                                 <button class="btn btn-secondary" onclick="clearPostForm()">초기화</button>
                                 <button class="btn btn-primary" onclick="savePost()">📤 발행하기</button>
                             </div>
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
                 </div>
 
@@ -1231,30 +1143,7 @@
                                     </div>
                                 </div>
                             </div>
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
                 </div>
 
@@ -1301,30 +1190,7 @@
                     <div id="post-performance">
                         <div style="color: #65676b; text-align: center; padding: 32px; background: #fafafa; border-radius: 12px;">
                             데이터가 없습니다
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -1361,30 +1227,7 @@
                                 <option value="뷰티">💄 뷰티</option>
                                 <option value="여행">✈️ 여행</option>
                             </select>
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
 
                     <div class="card">
@@ -1400,30 +1243,7 @@
                         <div class="form-group">
                             <label>📊 목표 참여도 (%)</label>
                             <input type="number" id="settings-engagement-goal" value="5" min="0.1" step="0.1">
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
                 </div>
 
@@ -1453,30 +1273,7 @@
                         <div class="form-group">
                             <label>주소</label>
                             <input type="text" id="store-address" placeholder="의정부시 ...">
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
 
                     <div class="card">
@@ -1492,30 +1289,7 @@
                                 <div id="profile-phone-preview">📞 연락처</div>
                                 <div id="profile-address-preview">📍 주소</div>
                             </div>
-    
-                    <div style="margin-top: 40px; padding-top: 32px; border-top: 2px solid #e5e7eb;">
-                        <h3 style="margin-bottom: 16px; font-size: 16px; font-weight: 600; color: #000;">🔗 Google Sheets 자동 저장</h3>
-                        <p style="font-size: 13px; color: #666; margin-bottom: 16px;">게시물을 자동으로 Google Sheets에 저장하세요</p>
-                        
-                        <div class="form-group">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">📊 Sheets ID</label>
-                            <input type="text" id="google-sheets-id" placeholder="스프레드시트 ID 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 구글 시트 URL의 /d/ 다음 부분</p>
                         </div>
-                        
-                        <div class="form-group" style="margin-top: 12px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">🔑 API 키</label>
-                            <input type="text" id="google-api-key" placeholder="Google API 키 입력" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                            <p style="font-size: 11px; color: #999; margin-top: 4px;">💡 Google Cloud Console에서 생성</p>
-                        </div>
-                        
-                        <button class="btn btn-primary" onclick="testGoogleConnection()" style="width: 100%; margin-top: 12px; padding: 12px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                            ✅ 연결 테스트
-                        </button>
-                        
-                        <div id="google-status-msg" style="margin-top: 12px; padding: 10px; border-radius: 6px; font-size: 13px; display: none;"></div>
-                    </div>
-                    </div>
                     </div>
                 </div>
 
@@ -2001,58 +1775,20 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Google Sheets 저장된 값 복구
-            const savedId = localStorage.getItem('google-sheets-id');
-            const savedKey = localStorage.getItem('google-api-key');
-            if (savedId) document.getElementById('google-sheets-id').value = savedId;
-            if (savedKey) document.getElementById('google-api-key').value = savedKey;
-
             updateStats();
             applyTheme(appData.settings.theme);
             console.log('✅ 대시보드 로드 완료 (모바일 최적화)');
         });
-    
-        // Google Sheets 연결 테스트
-        function testGoogleConnection() {
-            const sheetsId = document.getElementById('google-sheets-id').value;
-            const apiKey = document.getElementById('google-api-key').value;
-            const statusMsg = document.getElementById('google-status-msg');
-            
-            if (!sheetsId || !apiKey) {
-                statusMsg.textContent = '❌ Sheets ID와 API 키를 모두 입력해주세요!';
-                statusMsg.style.background = '#fee2e2';
-                statusMsg.style.color = '#7f1d1d';
-                statusMsg.style.display = 'block';
-                return;
-            }
-            
-            // Google Sheets API 테스트
-            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}?key=${apiKey}`)
-                .then(response => {
-                    if (response.ok) {
-                        statusMsg.textContent = '✅ Google Sheets 연결 성공! 게시물은 자동으로 저장됩니다.';
-                        statusMsg.style.background = '#d1fae5';
-                        statusMsg.style.color = '#065f46';
-                        statusMsg.style.display = 'block';
-                        
-                        // 저장
-                        localStorage.setItem('google-sheets-id', sheetsId);
-                        localStorage.setItem('google-api-key', apiKey);
-                    } else {
-                        statusMsg.textContent = '❌ 연결 실패. Sheets ID와 API 키를 확인하세요.';
-                        statusMsg.style.background = '#fee2e2';
-                        statusMsg.style.color = '#7f1d1d';
-                        statusMsg.style.display = 'block';
-                    }
-                })
-                .catch(err => {
-                    statusMsg.textContent = '❌ 오류: ' + err.message;
-                    statusMsg.style.background = '#fee2e2';
-                    statusMsg.style.color = '#7f1d1d';
-                    statusMsg.style.display = 'block';
-                });
-        }
-        
-</script>
+    </script>
+</html>
+
+    <!-- Google Sheets 섹션 (임시 위치) -->
+    <div id="google-sheets-section" style="position: fixed; bottom: 20px; right: 20px; width: 300px; background: white; border: 2px solid #667eea; border-radius: 12px; padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;">
+        <h4 style="margin: 0 0 12px 0; color: #667eea; font-size: 14px; font-weight: 600;">🔗 Google Sheets</h4>
+        <input type="text" id="google-sheets-id" placeholder="Sheets ID" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; font-size: 12px; box-sizing: border-box;">
+        <input type="text" id="google-api-key" placeholder="API Key" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; font-size: 12px; box-sizing: border-box;">
+        <button onclick="testGoogleConnection()" style="width: 100%; padding: 8px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">연결 테스트</button>
+        <div id="google-status-msg" style="margin-top: 8px; padding: 8px; border-radius: 4px; font-size: 11px; display: none;"></div>
+    </div>
 </body>
 </html>
