@@ -1660,6 +1660,40 @@
             showMessage('schedule', 'success', '✅ 예약 게시물이 삭제되었습니다');
         }
 
+
+        // ===== GOOGLE SHEETS 함수 =====
+        function testGoogleSheets() {
+            const sheetsId = document.getElementById('google-sheets-id').value;
+            const apiKey = document.getElementById('google-api-key').value;
+            
+            if (!sheetsId || !apiKey) {
+                showGoogleStatus('❌ Sheets ID와 API 키를 입력해주세요!', false);
+                return;
+            }
+            
+            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetsId}?key=${apiKey}`)
+                .then(res => {
+                    if (res.ok) {
+                        showGoogleStatus('✅ Google Sheets 연결 성공!', true);
+                        localStorage.setItem('google_sheets_id', sheetsId);
+                        localStorage.setItem('google_api_key', apiKey);
+                    } else {
+                        showGoogleStatus('❌ 연결 실패. ID/키 확인하세요.', false);
+                    }
+                })
+                .catch(err => {
+                    showGoogleStatus('❌ 오류: ' + err.message, false);
+                });
+        }
+        
+        function showGoogleStatus(msg, success) {
+            const el = document.getElementById('google-status');
+            el.textContent = msg;
+            el.style.display = 'block';
+            el.style.background = success ? '#d1fae5' : '#fee2e2';
+            el.style.color = success ? '#065f46' : '#7f1d1d';
+        }
+
         function updateStats() {
             document.getElementById('stat-posts').textContent = appData.posts.length;
         }
@@ -1775,6 +1809,11 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            const saved_id = localStorage.getItem('google_sheets_id');
+            const saved_key = localStorage.getItem('google_api_key');
+            if (saved_id) document.getElementById('google-sheets-id').value = saved_id;
+            if (saved_key) document.getElementById('google-api-key').value = saved_key;
+
             updateStats();
             applyTheme(appData.settings.theme);
             console.log('✅ 대시보드 로드 완료 (모바일 최적화)');
