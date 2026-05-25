@@ -8,7 +8,8 @@ export default async function handler(req, res) {
         return res.status(200).end();
     }
 
-    const { sheetsId, apiKey } = req.body;
+    // req.body가 없을 경우 방어 처리 (GET 요청 등)
+    const { sheetsId, apiKey } = req.body || {};
 
     if (!sheetsId || !apiKey) {
         return res.status(400).json({ error: 'Sheets ID와 API 키 필요' });
