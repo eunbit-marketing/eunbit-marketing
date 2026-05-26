@@ -538,6 +538,148 @@
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.success { background: linear-gradient(135deg, #10794A 0%, #1A1A2E 100%); }
     
+    /* ===== TIME PICKER ===== */
+    .time-picker { background: var(--bg); border-radius: 16px; padding: 16px; }
+    .time-display {
+      background: var(--grad-rainbow); border-radius: 14px; padding: 16px;
+      color: white; display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .time-display-large { font-size: 28px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+    .time-display-meta { font-size: 11px; opacity: .9; font-weight: 600; margin-top: 4px; }
+    .time-display-icon { font-size: 28px; }
+    .time-section-title { font-size: 11px; font-weight: 700; color: var(--ter); letter-spacing: 0.5px; margin: 14px 0 8px; display: flex; align-items: center; gap: 6px; }
+    .time-chips-ai { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .time-chip-ai {
+      background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px 8px; cursor: pointer; transition: all .15s;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+    .time-chip-ai:hover { border-color: var(--purple); transform: translateY(-1px); }
+    .time-chip-ai.selected {
+      background: linear-gradient(135deg, rgba(255,181,216,.18), rgba(181,167,255,.18));
+      border-color: var(--purple); border-width: 2px;
+    }
+    .time-chip-ai .chip-time { font-size: 13px; font-weight: 700; color: var(--ink); }
+    .time-chip-ai .chip-meta { font-size: 10px; color: var(--sub); font-weight: 500; }
+    
+    .time-chips-quick { display: flex; flex-wrap: wrap; gap: 6px; }
+    .time-chip-quick {
+      background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+      padding: 7px 12px; font-size: 12px; font-weight: 500; color: var(--ink);
+      cursor: pointer; transition: all .15s;
+    }
+    .time-chip-quick:hover { border-color: var(--purple); }
+    .time-chip-quick.selected { background: var(--ink); color: white; border-color: var(--ink); }
+    
+    .time-custom { margin-top: 12px; }
+    .time-custom summary {
+      cursor: pointer; font-size: 12px; font-weight: 600; color: var(--sub);
+      padding: 8px 10px; border-radius: 8px; list-style: none;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .time-custom summary::-webkit-details-marker { display: none; }
+    .time-custom summary::before { content: '▶'; font-size: 9px; transition: transform .2s; }
+    .time-custom[open] summary::before { transform: rotate(90deg); }
+    .time-custom summary:hover { background: var(--white); color: var(--ink); }
+    .time-custom-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+      margin-top: 10px; padding: 0 10px;
+    }
+    .time-select {
+      width: 100%; background: var(--white); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px; font-family: inherit; font-size: 13px;
+      font-weight: 600; color: var(--ink); cursor: pointer; outline: none;
+      text-align: center; -webkit-appearance: none; appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'><path fill='%236B6B83' d='M5 7L1 3h8z'/></svg>");
+      background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px;
+    }
+    .time-select:focus { border-color: var(--purple); }
+    
+    /* ===== DROPDOWN ===== */
+    .dropdown { position: relative; }
+    .dropdown-menu {
+      position: absolute; top: calc(100% + 6px); right: 0;
+      background: var(--white); border-radius: 14px;
+      box-shadow: 0 12px 32px rgba(26,26,46,.12); border: 1px solid var(--border);
+      padding: 6px; min-width: 220px; z-index: 50;
+      opacity: 0; transform: translateY(-4px) scale(0.98);
+      pointer-events: none; transition: all .15s;
+    }
+    .dropdown.open .dropdown-menu { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+    .dropdown-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px; cursor: pointer;
+      font-size: 13px; font-weight: 500; color: var(--ink);
+      background: none; border: none; width: 100%; text-align: left;
+    }
+    .dropdown-item:hover { background: var(--bg); }
+    .dropdown-item.danger { color: #C53030; }
+    .dropdown-item.danger:hover { background: #FEE; }
+    .dropdown-divider { height: 1px; background: var(--border); margin: 4px 8px; }
+    .dropdown-header { padding: 8px 12px 6px; font-size: 10px; font-weight: 700; color: var(--ter); letter-spacing: 0.5px; }
+    
+    /* ===== MODAL ===== */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(26,26,46,.5);
+      display: none; align-items: center; justify-content: center;
+      z-index: 500; padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; animation: fadeIn .2s; }
+    .modal {
+      background: var(--white); border-radius: var(--r-xl); padding: 28px;
+      max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+      animation: modalIn .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes modalIn { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
+    .modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .modal-close {
+      background: var(--bg); border: none; width: 32px; height: 32px;
+      border-radius: 10px; cursor: pointer; font-size: 16px; color: var(--sub);
+    }
+    .modal-close:hover { background: var(--faint); color: var(--ink); }
+    
+    /* ===== BOTTOM TAB BAR (모바일 전용) ===== */
+    .bottom-tab-bar {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+      z-index: 90;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .bottom-tab {
+      flex: 1; background: none; border: none;
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 0; color: var(--ter); font-family: inherit;
+      position: relative;
+    }
+    .bottom-tab-icon { font-size: 22px; line-height: 1; }
+    .bottom-tab-label { font-size: 10px; font-weight: 600; }
+    .bottom-tab.active { color: var(--ink); }
+    .bottom-tab.active .bottom-tab-label { font-weight: 700; }
+    .bottom-tab.active::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: var(--grad-hero);
+    }
+    .bottom-tab.fab {
+      flex: 0 0 56px;
+    }
+    .bottom-tab.fab .bottom-tab-icon {
+      width: 50px; height: 50px; border-radius: 16px;
+      background: var(--grad-hero); color: white;
+      display: grid; place-items: center; font-size: 22px;
+      box-shadow: 0 8px 20px rgba(181,167,255,.5);
+      margin-bottom: 2px;
+    }
+    .bottom-tab.fab .bottom-tab-label { display: none; }
+    
     /* ===== MOBILE TOGGLE ===== */
     .menu-toggle {
       display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
@@ -561,28 +703,43 @@
     }
     @media (max-width: 900px) {
       .app { grid-template-columns: 1fr; padding: 0; }
-      .sidebar {
-        position: fixed; left: 0; top: 0; bottom: 0; z-index: 180;
-        width: 280px; border-radius: 0;
-        height: 100vh;
-        transform: translateX(-100%); transition: transform .3s;
-      }
-      .sidebar.open { transform: translateX(0); }
-      .menu-toggle { display: block; }
-      .main { padding: 64px 16px 32px; }
+      .sidebar { display: none; }
+      .menu-toggle { display: none; }
+      .sidebar-overlay { display: none !important; }
+      .bottom-tab-bar { display: flex; }
+      .main { padding: 16px 16px 100px; }
       .post-layout { grid-template-columns: 1fr; }
       h1.page-title { font-size: 24px; }
+      .page-header { flex-direction: column; align-items: stretch; gap: 12px; }
+      .page-header > div:last-child { display: flex; gap: 8px; }
+      .page-header .btn { flex: 1; justify-content: center; }
       .bento { grid-template-columns: 1fr; }
-      .stat-hero { grid-column: auto; min-height: 180px; }
+      .stat-hero { grid-column: auto; min-height: 180px; padding: 22px; }
       .stat-value { font-size: 42px; }
-      .posts-grid { grid-template-columns: 1fr; }
+      .stat-card { padding: 20px; min-height: 160px; }
+      .stat-card-value { font-size: 32px; }
+      .posts-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .post-img { font-size: 32px; }
+      .post-body { padding: 12px; }
+      .post-title { font-size: 12px; }
+      .ai-card { grid-column: 1 / -1; padding: 20px; }
+      .ai-title { font-size: 18px; }
       .settings-layout { grid-template-columns: 1fr; }
-      .settings-nav { flex-direction: row; overflow-x: auto; padding: 8px; }
-      .settings-nav-item { white-space: nowrap; }
+      .settings-nav { flex-direction: row; overflow-x: auto; padding: 8px; position: relative; top: 0; }
+      .settings-nav-item { white-space: nowrap; flex-shrink: 0; }
       .settings-row { grid-template-columns: 1fr; }
-      .analytics-grid { grid-template-columns: repeat(2, 1fr); }
+      .analytics-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .top-posts { grid-template-columns: 1fr; }
       .theme-grid { grid-template-columns: repeat(3, 1fr); }
+      .schedule-layout { grid-template-columns: 1fr; }
+      .chart-grid { grid-template-columns: 1fr; }
+      .time-chips-ai { grid-template-columns: 1fr; }
+      .upload-card, .ai-panel, .edit-card { padding: 20px; }
+      .ai-panel-title { font-size: 18px; }
+      .tone-grid { grid-template-columns: 1fr; }
+      .stories-row { gap: 14px; }
+      .story-ring { width: 68px; height: 68px; }
+      .story-label { font-size: 11px; }
     }
   </style>
 </head>
@@ -593,7 +750,7 @@
   <div class="app">
     <!-- ========== SIDEBAR ========== -->
     <aside class="sidebar" id="sidebar">
-      <button class="workspace" aria-label="워크스페이스 전환">
+      <button class="workspace" aria-label="워크스페이스 전환" onclick="showWorkspaceMenu()">
         <div class="workspace-logo">🌸</div>
         <div class="workspace-info">
           <div class="workspace-name">bloom</div>
@@ -654,10 +811,10 @@
           <div class="pro-card-title">Bloom Pro</div>
         </div>
         <div class="pro-card-desc">AI 무제한 + 고급 분석</div>
-        <button class="pro-card-btn">월 9,900원 시작</button>
+        <button class="pro-card-btn" onclick="upgradeProMenu()">월 9,900원 시작</button>
       </div>
       
-      <button class="user-card">
+      <button class="user-card" onclick="showUserMenu()">
         <div class="user-avatar">민<span class="user-online"></span></div>
         <div class="user-info">
           <div class="user-name">민지</div>
@@ -722,40 +879,40 @@
         <div class="stories-section">
           <div class="stories-head">
             <h2 class="section-title">스토리 미리보기 ✨</h2>
-            <button class="section-link">모두 보기 →</button>
+            <button class="section-link" onclick="toast('🌸 전체 스토리는 곧 오픈됩니다')">모두 보기 →</button>
           </div>
           <div class="stories-row">
-            <div class="story">
+            <div class="story" onclick="openStoryDetail('오늘의 추천')">
               <div class="story-ring" style="background: var(--grad-sunset);">
                 <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #FFD1E1, #FFC4A8);">🌸</div></div>
               </div>
               <div class="story-label">오늘의 추천</div>
             </div>
-            <div class="story">
+            <div class="story" onclick="openStoryDetail('신메뉴')">
               <div class="story-ring" style="background: var(--grad-dreamy);">
                 <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #D4C9FF, #E5DEFF);">🆕</div></div>
               </div>
               <div class="story-label">신메뉴</div>
             </div>
-            <div class="story">
+            <div class="story" onclick="openStoryDetail('이벤트')">
               <div class="story-ring" style="background: var(--grad-spring);">
                 <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #D9F4E4, #FFF7CC);">🎉</div></div>
               </div>
               <div class="story-label">이벤트</div>
             </div>
-            <div class="story">
+            <div class="story" onclick="openStoryDetail('후기')">
               <div class="story-ring" style="background: linear-gradient(135deg, #FFB89E, #FFB5D8);">
                 <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #FFD3C2, #FFC4DE);">💌</div></div>
               </div>
               <div class="story-label">후기</div>
             </div>
-            <div class="story">
+            <div class="story" onclick="openStoryDetail('공지')">
               <div class="story-ring" style="background: linear-gradient(135deg, #D4C9FF, #B5A7FF);">
                 <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #E5DEFF, #C6BAFF);">📢</div></div>
               </div>
               <div class="story-label">공지</div>
             </div>
-            <div class="story">
+            <div class="story" onclick="toast('➕ 새 스토리 만들기 (준비 중)')">
               <div class="story-ring" style="background: linear-gradient(135deg, #FFF2BE, #C8F2D9);">
                 <div class="story-inner"><div class="story-img" style="background: var(--bg); color: var(--purple);">+</div></div>
               </div>
@@ -766,24 +923,24 @@
         
         <div class="stories-head">
           <h2 class="section-title">최근 게시물</h2>
-          <button class="section-link">전체 보기 →</button>
+          <button class="section-link" onclick="switchTab('analytics')">전체 보기 →</button>
         </div>
         <div class="posts-grid">
-          <div class="post-card">
+          <div class="post-card" onclick="openPostDetail('오늘의 추천 작품 ✨', '❤️ 245 · 💬 32')">
             <div class="post-img" style="background: var(--grad-sunset);">✨</div>
             <div class="post-body">
               <div class="post-title">오늘의 추천 작품 ✨</div>
               <div class="post-stats">❤️ 245<span>💬 32</span></div>
             </div>
           </div>
-          <div class="post-card">
+          <div class="post-card" onclick="openPostDetail('감성적인 봄 캘리그래피', '❤️ 412 · 💬 56')">
             <div class="post-img" style="background: var(--grad-dreamy);">📝</div>
             <div class="post-body">
               <div class="post-title">감성적인 봄 캘리그래피</div>
               <div class="post-stats">❤️ 412<span>💬 56</span></div>
             </div>
           </div>
-          <div class="post-card">
+          <div class="post-card" onclick="openPostDetail('주말 워크샵 안내', '❤️ 178 · 💬 24')">
             <div class="post-img" style="background: var(--grad-spring);">📌</div>
             <div class="post-body">
               <div class="post-title">주말 워크샵 안내</div>
@@ -926,7 +1083,62 @@
             <h2 class="section-title" style="margin-bottom: 16px;">⚙️ 게시 설정</h2>
             <div class="form-group">
               <label class="form-label">⏰ 발행 시간</label>
-              <input type="time" class="form-input" id="schedule-time" value="10:00">
+              <div class="time-picker">
+                <div class="time-display">
+                  <div>
+                    <div class="time-display-large" id="time-display">오전 10:00</div>
+                    <div class="time-display-meta">선택된 발행 시간</div>
+                  </div>
+                  <div class="time-display-icon">⏰</div>
+                </div>
+                <input type="hidden" id="schedule-time" value="10:00">
+                
+                <div class="time-section-title">✨ AI 추천 시간</div>
+                <div class="time-chips-ai">
+                  <button class="time-chip-ai" data-time="20:00" onclick="selectTime('20:00', this)">
+                    <span class="chip-time">오후 8:00</span>
+                    <span class="chip-meta">⭐ Peak</span>
+                  </button>
+                  <button class="time-chip-ai" data-time="21:30" onclick="selectTime('21:30', this)">
+                    <span class="chip-time">오후 9:30</span>
+                    <span class="chip-meta">🔥 트렌딩</span>
+                  </button>
+                  <button class="time-chip-ai selected" data-time="10:00" onclick="selectTime('10:00', this)">
+                    <span class="chip-time">오전 10:00</span>
+                    <span class="chip-meta">☕ 모닝</span>
+                  </button>
+                </div>
+                
+                <div class="time-section-title">📌 빠른 선택</div>
+                <div class="time-chips-quick" id="time-chips-quick">
+                  <button class="time-chip-quick" data-time="09:00" onclick="selectTime('09:00', this)">오전 9시</button>
+                  <button class="time-chip-quick" data-time="11:00" onclick="selectTime('11:00', this)">오전 11시</button>
+                  <button class="time-chip-quick" data-time="12:00" onclick="selectTime('12:00', this)">오후 12시</button>
+                  <button class="time-chip-quick" data-time="14:00" onclick="selectTime('14:00', this)">오후 2시</button>
+                  <button class="time-chip-quick" data-time="16:00" onclick="selectTime('16:00', this)">오후 4시</button>
+                  <button class="time-chip-quick" data-time="18:00" onclick="selectTime('18:00', this)">오후 6시</button>
+                  <button class="time-chip-quick" data-time="19:00" onclick="selectTime('19:00', this)">오후 7시</button>
+                  <button class="time-chip-quick" data-time="22:00" onclick="selectTime('22:00', this)">오후 10시</button>
+                </div>
+                
+                <details class="time-custom">
+                  <summary>✏️ 직접 설정</summary>
+                  <div class="time-custom-grid">
+                    <select class="time-select" id="time-ampm" onchange="updateCustomTime()">
+                      <option value="AM">오전</option>
+                      <option value="PM">오후</option>
+                    </select>
+                    <select class="time-select" id="time-hour" onchange="updateCustomTime()">
+                      <option>1</option><option>2</option><option>3</option><option>4</option>
+                      <option>5</option><option>6</option><option>7</option><option>8</option>
+                      <option>9</option><option selected>10</option><option>11</option><option>12</option>
+                    </select>
+                    <select class="time-select" id="time-min" onchange="updateCustomTime()">
+                      <option>00</option><option>15</option><option>30</option><option>45</option>
+                    </select>
+                  </div>
+                </details>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">📸 사진</label>
@@ -980,8 +1192,8 @@
             <div class="page-sub">데이터로 보는 우리 매장의 성장 📊</div>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary">📅 최근 7일</button>
-            <button class="btn btn-secondary">📥 리포트 다운로드</button>
+            <button class="btn btn-secondary" onclick="toast('📅 기간 선택은 차트 위 7일/30일/90일 탭에서')">📅 최근 7일</button>
+            <button class="btn btn-secondary" onclick="downloadReport()">📥 리포트 다운로드</button>
           </div>
         </div>
         
@@ -1025,9 +1237,9 @@
             <div class="chart-head">
               <h2 class="section-title">📈 주간 참여도 추이</h2>
               <div class="chart-tabs">
-                <button class="chart-tab active">7일</button>
-                <button class="chart-tab">30일</button>
-                <button class="chart-tab">90일</button>
+                <button class="chart-tab active" onclick="setAnalyticsRange('7d', this)">7일</button>
+                <button class="chart-tab" onclick="setAnalyticsRange('30d', this)">30일</button>
+                <button class="chart-tab" onclick="setAnalyticsRange('90d', this)">90일</button>
               </div>
             </div>
             <div class="chart-canvas-wrap"><canvas id="chart-weekly"></canvas></div>
@@ -1049,7 +1261,7 @@
         <div class="chart-card" style="margin-bottom: 16px;">
           <div class="chart-head">
             <h2 class="section-title">📊 요일별 분석</h2>
-            <button class="section-link">상세 보기 →</button>
+            <button class="section-link" onclick="toast('📊 상세 분석은 Bloom Pro에서 (준비 중)')">상세 보기 →</button>
           </div>
           <div class="chart-canvas-wrap"><canvas id="chart-daily"></canvas></div>
         </div>
@@ -1057,22 +1269,22 @@
         <div class="chart-card">
           <div class="chart-head">
             <h2 class="section-title">🎯 가장 인기있는 게시물</h2>
-            <button class="section-link">전체 보기 →</button>
+            <button class="section-link" onclick="toast('🎯 전체 랭킹은 곧 오픈됩니다')">전체 보기 →</button>
           </div>
           <div class="top-posts">
-            <div class="top-post">
+            <div class="top-post" onclick="openPostDetail('감성적인 봄 캘리그래피 워크샵 후기 모음', '❤️ 412 · 💬 56 · 📅 5/12')">
               <div class="top-post-img" style="background: var(--grad-sunset);">🥇</div>
               <span class="top-post-rank">#1</span>
               <div class="top-post-title">감성적인 봄 캘리그래피 워크샵 후기 모음</div>
               <div class="top-post-stats">❤️ 412<span>💬 56</span><span>📅 5/12</span></div>
             </div>
-            <div class="top-post">
+            <div class="top-post" onclick="openPostDetail('오늘의 추천 작품 - 봄날 손편지 시리즈', '❤️ 245 · 💬 32 · 📅 5/18')">
               <div class="top-post-img" style="background: var(--grad-dreamy);">🥈</div>
               <span class="top-post-rank">#2</span>
               <div class="top-post-title">오늘의 추천 작품 - 봄날 손편지 시리즈</div>
               <div class="top-post-stats">❤️ 245<span>💬 32</span><span>📅 5/18</span></div>
             </div>
-            <div class="top-post">
+            <div class="top-post" onclick="openPostDetail('주말 워크샵 안내 — 새 학기 캘리 클래스', '❤️ 178 · 💬 24 · 📅 5/20')">
               <div class="top-post-img" style="background: var(--grad-spring);">🥉</div>
               <span class="top-post-rank">#3</span>
               <div class="top-post-title">주말 워크샵 안내 — 새 학기 캘리 클래스</div>
@@ -1205,9 +1417,9 @@
                 <div style="font-size: 12px; font-weight: 700; opacity: .9;">CURRENT PLAN</div>
                 <div style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 4px 0;">Bloom Free 🌱</div>
                 <div style="font-size: 13px; opacity: .9; margin-bottom: 12px;">기본 기능 무료 · AI 캡션 월 30회</div>
-                <button style="background: white; color: var(--ink); border: none; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 700; cursor: pointer;">🌟 Bloom Pro 업그레이드</button>
+                <button style="background: white; color: var(--ink); border: none; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 700; cursor: pointer;" onclick="upgradeProMenu()">🌟 Bloom Pro 업그레이드</button>
               </div>
-              <button style="background: none; border: 1px solid #FCA5A5; color: #C53030; padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;">계정 삭제</button>
+              <button style="background: none; border: 1px solid #FCA5A5; color: #C53030; padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="deleteAccount()">계정 삭제</button>
             </div>
           </div>
         </div>
@@ -1251,9 +1463,45 @@
   
   <div class="toast" id="toast"></div>
   
+  <!-- ===== BOTTOM TAB BAR (모바일 전용) ===== -->
+  <nav class="bottom-tab-bar" role="navigation" aria-label="하단 탭">
+    <button class="bottom-tab active" data-tab="home">
+      <span class="bottom-tab-icon">🏠</span>
+      <span class="bottom-tab-label">홈</span>
+    </button>
+    <button class="bottom-tab" data-tab="schedule">
+      <span class="bottom-tab-icon">📅</span>
+      <span class="bottom-tab-label">예약</span>
+    </button>
+    <button class="bottom-tab fab" data-tab="post" aria-label="새 게시물">
+      <span class="bottom-tab-icon">+</span>
+      <span class="bottom-tab-label">새 글</span>
+    </button>
+    <button class="bottom-tab" data-tab="analytics">
+      <span class="bottom-tab-icon">📊</span>
+      <span class="bottom-tab-label">분석</span>
+    </button>
+    <button class="bottom-tab" data-tab="settings">
+      <span class="bottom-tab-icon">👤</span>
+      <span class="bottom-tab-label">내정보</span>
+    </button>
+  </nav>
+  
+  <!-- ===== MODAL ===== -->
+  <div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title" id="modal-title">제목</div>
+        <button class="modal-close" onclick="closeModal()" aria-label="닫기">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+  
   <script>
-    // ===== STATE =====
-    const state = {
+    // ===== STATE (localStorage 동기화) =====
+    const STORAGE_KEY = 'bloom_v2_state';
+    const defaultState = {
       currentTab: 'home',
       tone: '감성적',
       category: '공예',
@@ -1262,31 +1510,46 @@
         { id: 2, date: '2026-05-30', time: '20:00', caption: '주말 워크샵 안내 — 5월 봄 캘리 클래스 신청받습니다 🌸' },
         { id: 3, date: '2026-06-02', time: '14:00', caption: '신메뉴 안내 — 봄 디저트 캘리그래피 카드 세트 ✨' },
       ],
-      calDate: new Date(2026, 4, 1),
-      selectedDay: null,
+      analyticsRange: '7d',
       currentTheme: 'bloom',
+      settings: {
+        storeName: '은빛캘리', category: '공예',
+        instagram: '@eunbickaelri', email: 'hun2620@naver.com',
+        phone: '', address: '', description: '',
+        postsGoal: 8, followersGoal: 3000, engagementGoal: 5,
+      },
+      drafts: [],
     };
+    let state = loadState();
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        return { ...defaultState, ...saved, settings: { ...defaultState.settings, ...(saved.settings || {}) } };
+      } catch { return { ...defaultState }; }
+    }
+    function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
+    state.calDate = new Date(2026, 4, 1);
+    state.selectedDay = null;
     
     // ===== TABS =====
     function switchTab(tab) {
       state.currentTab = tab;
+      saveState();
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.bottom-tab').forEach(n => n.classList.remove('active'));
       const tabEl = document.getElementById('tab-' + tab);
       if (tabEl) tabEl.classList.add('active');
-      document.querySelectorAll(`.nav-item[data-tab="${tab}"]`).forEach(n => n.classList.add('active'));
+      document.querySelectorAll(`[data-tab="${tab}"]`).forEach(n => n.classList.add('active'));
       
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); updateMobilePreview(); }
       
-      // Mobile: close sidebar
-      if (window.innerWidth <= 900) {
-        document.getElementById('sidebar').classList.remove('open');
-        document.querySelector('.sidebar-overlay').classList.remove('show');
-      }
+      // 페이지 상단으로 스크롤
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
-    document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+    document.querySelectorAll('[data-tab]').forEach(item => {
       item.addEventListener('click', () => switchTab(item.dataset.tab));
     });
     
@@ -1411,7 +1674,13 @@
       document.getElementById('char-count').textContent = `${text.length} / 2,200자`;
       document.getElementById('hash-count').textContent = `📝 ${hashes} 해시태그`;
     }
-    function saveDraft() { toast('💾 임시저장 완료'); }
+    function saveDraft() {
+      const cap = document.getElementById('caption-final').value;
+      if (!cap.trim()) { toast('✍️ 캡션을 먼저 입력해주세요'); return; }
+      state.drafts.push({ id: Date.now(), caption: cap, tone: state.tone, category: state.category, createdAt: new Date().toISOString() });
+      saveState();
+      toast(`💾 임시저장 완료 (총 ${state.drafts.length}개)`);
+    }
     function publishPost() {
       const cap = document.getElementById('caption-final').value;
       if (!cap.trim()) { toast('✍️ 캡션을 입력해주세요'); return; }
@@ -1420,7 +1689,48 @@
       updateCaptionMeta();
     }
     
-    // ===== SCHEDULE =====
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // 저장된 테마 적용
+      applyTheme(state.currentTheme || 'bloom');
+      document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+      const themeMap = { bloom: 0, sunset: 1, dreamy: 2, spring: 3, mint: 4, dark: 5 };
+      const themeIdx = themeMap[state.currentTheme] ?? 0;
+      const themeSwatch = document.querySelectorAll('.theme-swatch')[themeIdx];
+      if (themeSwatch) themeSwatch.classList.add('active');
+      
+      // 설정 폼 복원
+      const settingsInputs = document.querySelectorAll('#tab-settings input, #tab-settings textarea, #tab-settings select');
+      settingsInputs.forEach(inp => {
+        const label = inp.previousElementSibling?.textContent?.trim() || '';
+        if (label.includes('매장명')) inp.value = state.settings.storeName;
+        else if (label.includes('인스타그램')) inp.value = state.settings.instagram;
+        else if (label.includes('이메일')) inp.value = state.settings.email;
+        else if (label.includes('연락처')) inp.value = state.settings.phone;
+        else if (label.includes('주소')) inp.value = state.settings.address;
+        else if (label.includes('매장 소개')) inp.value = state.settings.description;
+        else if (label.includes('월간 게시물')) inp.value = state.settings.postsGoal;
+        else if (label.includes('팔로워 목표')) inp.value = state.settings.followersGoal;
+        else if (label.includes('참여도')) inp.value = state.settings.engagementGoal;
+      });
+      
+      // 알림/검색/유저 클릭 핸들러
+      const searchInput = document.querySelector('.search-bar input');
+      if (searchInput) searchInput.addEventListener('keyup', handleSearch);
+      
+      // ⌘K 단축키 → 검색 포커스
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          searchInput?.focus();
+        }
+      });
+      
+      renderCalendar();
+      renderScheduledPosts();
+      updateMobilePreview();
+      console.log('🌸 Bloom Dashboard v2.1 ready!');
+    });
     function renderCalendar() {
       const cal = document.getElementById('cal-grid');
       const monthEl = document.getElementById('cal-month');
@@ -1517,12 +1827,34 @@
     // ===== ANALYTICS =====
     let weeklyChart, dailyChart;
     function initCharts() {
-      const days = ['월', '화', '수', '목', '금', '토', '일'];
       const wc = document.getElementById('chart-weekly');
       const dc = document.getElementById('chart-daily');
       if (!wc || !dc) return;
       if (weeklyChart) weeklyChart.destroy();
       if (dailyChart) dailyChart.destroy();
+      
+      // 기간별 데이터
+      const datasets = {
+        '7d': {
+          labels: ['월', '화', '수', '목', '금', '토', '일'],
+          likes: [120, 180, 250, 220, 380, 420, 290],
+          comments: [12, 18, 28, 22, 38, 52, 32],
+          posts: [3, 2, 4, 2, 5, 6, 3],
+        },
+        '30d': {
+          labels: Array.from({length: 4}, (_, i) => `${i+1}주차`),
+          likes: [1200, 1450, 1820, 2100],
+          comments: [98, 132, 168, 215],
+          posts: [12, 14, 16, 18],
+        },
+        '90d': {
+          labels: ['1월', '2월', '3월'],
+          likes: [4200, 5800, 8450],
+          comments: [380, 520, 760],
+          posts: [42, 56, 68],
+        },
+      };
+      const d = datasets[state.analyticsRange] || datasets['7d'];
       
       const ctx1 = wc.getContext('2d');
       const grad = ctx1.createLinearGradient(0, 0, 0, 240);
@@ -1532,21 +1864,11 @@
       weeklyChart = new Chart(ctx1, {
         type: 'line',
         data: {
-          labels: days,
-          datasets: [{
-            label: '좋아요', data: [120, 180, 250, 220, 380, 420, 290],
-            borderColor: '#B5A7FF', borderWidth: 3,
-            backgroundColor: grad,
-            tension: 0.4, fill: true,
-            pointBackgroundColor: '#FFB5D8', pointBorderColor: 'white',
-            pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7,
-          }, {
-            label: '댓글', data: [12, 18, 28, 22, 38, 52, 32],
-            borderColor: '#FFB5D8', borderWidth: 3,
-            tension: 0.4, fill: false,
-            pointBackgroundColor: 'white', pointBorderColor: '#FFB5D8',
-            pointBorderWidth: 2, pointRadius: 4,
-          }],
+          labels: d.labels,
+          datasets: [
+            { label: '좋아요', data: d.likes, borderColor: '#B5A7FF', borderWidth: 3, backgroundColor: grad, tension: 0.4, fill: true, pointBackgroundColor: '#FFB5D8', pointBorderColor: 'white', pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7 },
+            { label: '댓글', data: d.comments, borderColor: '#FFB5D8', borderWidth: 3, tension: 0.4, fill: false, pointBackgroundColor: 'white', pointBorderColor: '#FFB5D8', pointBorderWidth: 2, pointRadius: 4 },
+          ],
         },
         options: {
           responsive: true, maintainAspectRatio: false,
@@ -1561,11 +1883,11 @@
       dailyChart = new Chart(dc.getContext('2d'), {
         type: 'bar',
         data: {
-          labels: days,
+          labels: d.labels,
           datasets: [{
             label: '게시물 수',
-            data: [3, 2, 4, 2, 5, 6, 3],
-            backgroundColor: ['#FFB5D8', '#FFB89E', '#FFF2BE', '#C8F2D9', '#D4C9FF', '#B5A7FF', '#FFB5D8'],
+            data: d.posts,
+            backgroundColor: ['#FFB5D8', '#FFB89E', '#FFF2BE', '#C8F2D9', '#D4C9FF', '#B5A7FF', '#FFB5D8'].slice(0, d.labels.length),
             borderRadius: 10, borderSkipped: false,
           }],
         },
@@ -1585,22 +1907,236 @@
       document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
       el.classList.add('active');
       state.currentTheme = name;
+      applyTheme(name);
+      saveState();
       toast(`🎨 ${name} 테마 적용`);
     }
-    function saveSettings() { toast('💾 설정이 저장됐어요'); }
+    function applyTheme(name) {
+      const themes = {
+        bloom: { hero: 'linear-gradient(135deg, #FFB5D8 0%, #B5A7FF 100%)', rainbow: 'linear-gradient(135deg, #D4C9FF 0%, #FFB5D8 60%, #FFB89E 100%)' },
+        sunset: { hero: 'linear-gradient(135deg, #FFB5D8 0%, #FFB89E 100%)', rainbow: 'linear-gradient(135deg, #FFB89E 0%, #FFB5D8 60%, #FFF2BE 100%)' },
+        dreamy: { hero: 'linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 100%)', rainbow: 'linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 60%, #FFB5D8 100%)' },
+        spring: { hero: 'linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 100%)', rainbow: 'linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 60%, #FFB89E 100%)' },
+        mint: { hero: 'linear-gradient(135deg, #B5A7FF 0%, #C8F2D9 100%)', rainbow: 'linear-gradient(135deg, #B5A7FF 0%, #C8F2D9 60%, #FFF2BE 100%)' },
+        dark: { hero: 'linear-gradient(135deg, #1A1A2E 0%, #463272 100%)', rainbow: 'linear-gradient(135deg, #463272 0%, #1A1A2E 100%)' },
+      };
+      const t = themes[name] || themes.bloom;
+      document.documentElement.style.setProperty('--grad-hero', t.hero);
+      document.documentElement.style.setProperty('--grad-rainbow', t.rainbow);
+    }
+    function saveSettings() {
+      const inputs = document.querySelectorAll('#tab-settings input, #tab-settings textarea, #tab-settings select');
+      inputs.forEach(inp => {
+        const label = inp.previousElementSibling?.textContent?.trim() || '';
+        if (label.includes('매장명')) state.settings.storeName = inp.value;
+        else if (label.includes('인스타그램')) state.settings.instagram = inp.value;
+        else if (label.includes('이메일')) state.settings.email = inp.value;
+        else if (label.includes('연락처')) state.settings.phone = inp.value;
+        else if (label.includes('주소')) state.settings.address = inp.value;
+        else if (label.includes('매장 소개')) state.settings.description = inp.value;
+        else if (label.includes('월간 게시물')) state.settings.postsGoal = +inp.value;
+        else if (label.includes('팔로워 목표')) state.settings.followersGoal = +inp.value;
+        else if (label.includes('참여도')) state.settings.engagementGoal = +inp.value;
+        else if (label.includes('카테고리') && inp.tagName === 'SELECT') state.settings.category = inp.value;
+      });
+      saveState();
+      toast('💾 설정이 저장됐어요');
+    }
     function scrollToSettings(id, el) {
       document.querySelectorAll('.settings-nav-item').forEach(n => n.classList.remove('active'));
       el.classList.add('active');
-      document.getElementById('settings-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const target = document.getElementById('settings-' + id);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
-    // ===== INIT =====
-    document.addEventListener('DOMContentLoaded', () => {
-      renderCalendar();
-      renderScheduledPosts();
-      updateMobilePreview();
-      console.log('🌸 Bloom Dashboard ready!');
-    });
+    // ===== TIME PICKER =====
+    function selectTime(time, el) {
+      document.getElementById('schedule-time').value = time;
+      const [h, m] = time.split(':').map(Number);
+      const ampm = h < 12 ? '오전' : '오후';
+      const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+      document.getElementById('time-display').textContent = `${ampm} ${h12}:${String(m).padStart(2, '0')}`;
+      // 모든 칩 deselect 후 클릭한 칩만 selected
+      document.querySelectorAll('.time-chip-ai, .time-chip-quick').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      // 직접 설정 select도 동기화
+      document.getElementById('time-ampm').value = h < 12 ? 'AM' : 'PM';
+      document.getElementById('time-hour').value = h12;
+      document.getElementById('time-min').value = String(m).padStart(2, '0');
+    }
+    function updateCustomTime() {
+      const ampm = document.getElementById('time-ampm').value;
+      const hour = +document.getElementById('time-hour').value;
+      const min = document.getElementById('time-min').value;
+      let h24 = hour;
+      if (ampm === 'AM' && hour === 12) h24 = 0;
+      else if (ampm === 'PM' && hour !== 12) h24 = hour + 12;
+      const time = `${String(h24).padStart(2, '0')}:${min}`;
+      document.getElementById('schedule-time').value = time;
+      document.getElementById('time-display').textContent = `${ampm === 'AM' ? '오전' : '오후'} ${hour}:${min}`;
+      document.querySelectorAll('.time-chip-ai, .time-chip-quick').forEach(c => c.classList.remove('selected'));
+    }
+    
+    // ===== MODAL =====
+    function openModal(title, body) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = body;
+      document.getElementById('modal').classList.add('show');
+    }
+    function closeModal() { document.getElementById('modal').classList.remove('show'); }
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    
+    // ===== POST/STORY CLICKS =====
+    function openStoryDetail(label) {
+      openModal(`🌸 ${label}`, `
+        <div style="text-align: center; padding: 20px 0;">
+          <div style="width: 120px; height: 120px; border-radius: 50%; background: var(--grad-rainbow); margin: 0 auto 16px;"></div>
+          <p style="color: var(--sub); font-size: 13px; line-height: 1.6;">스토리 상세 보기는 곧 오픈됩니다.<br>현재는 미리보기 모드예요.</p>
+          <button class="btn btn-primary" style="margin-top: 20px;" onclick="closeModal()">확인</button>
+        </div>`);
+    }
+    function openPostDetail(title, stats) {
+      openModal(`📷 ${title}`, `
+        <div style="background: var(--grad-rainbow); aspect-ratio: 1; border-radius: 16px; margin-bottom: 16px;"></div>
+        <div style="font-size: 14px; line-height: 1.6; color: var(--ink); margin-bottom: 12px;">${title}</div>
+        <div style="display: flex; gap: 16px; color: var(--sub); font-size: 13px; font-weight: 500;">
+          <span>${stats}</span>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 20px;">
+          <button class="btn btn-secondary" style="flex: 1; justify-content: center;" onclick="closeModal()">닫기</button>
+          <button class="btn btn-primary" style="flex: 1; justify-content: center;" onclick="closeModal(); switchTab('analytics');">📊 분석 보기</button>
+        </div>
+      `);
+    }
+    
+    // ===== NOTIFICATION / WORKSPACE / USER MENU =====
+    function showNotifications() {
+      openModal('🔔 알림', `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: var(--bg); border-radius: 14px; padding: 14px; display: flex; gap: 12px;">
+            <span style="font-size: 22px;">🎉</span>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 600;">새 팔로워 +12명</div>
+              <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">최근 1시간</div>
+            </div>
+          </div>
+          <div style="background: var(--bg); border-radius: 14px; padding: 14px; display: flex; gap: 12px;">
+            <span style="font-size: 22px;">📅</span>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 600;">예약 게시물이 30분 후 발행됩니다</div>
+              <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">오후 8시 발행 예정</div>
+            </div>
+          </div>
+          <div style="background: var(--bg); border-radius: 14px; padding: 14px; display: flex; gap: 12px;">
+            <span style="font-size: 22px;">💬</span>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 600;">댓글 5개가 새로 달렸어요</div>
+              <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">오늘 오전 9시</div>
+            </div>
+          </div>
+        </div>`);
+    }
+    function showUserMenu() {
+      openModal('👤 계정', `
+        <div style="text-align: center; padding: 16px 0;">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--grad-sunset); display: grid; place-items: center; color: white; font-size: 32px; font-weight: 800; margin: 0 auto 12px;">민</div>
+          <div style="font-size: 18px; font-weight: 700;">민지</div>
+          <div style="font-size: 12px; color: var(--sub); margin-top: 4px;">은빛캘리 · Bloom Free 🌱</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+          <button class="dropdown-item" onclick="closeModal(); switchTab('settings');">⚙️ 설정으로 이동</button>
+          <button class="dropdown-item" onclick="upgradeProMenu()">🌟 Bloom Pro 업그레이드</button>
+          <button class="dropdown-item" onclick="closeModal(); toast('📖 도움말 (준비 중)')">📖 도움말</button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item danger" onclick="logout()">🚪 로그아웃</button>
+        </div>`);
+    }
+    function showWorkspaceMenu() {
+      openModal('🏢 워크스페이스', `
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button class="dropdown-item" style="background: var(--bg); padding: 14px;">
+            <span style="font-size: 22px;">🌸</span>
+            <div style="text-align: left;">
+              <div style="font-weight: 700;">민지님 워크스페이스</div>
+              <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">현재 사용 중 · Free</div>
+            </div>
+            <span style="margin-left: auto; color: var(--purple);">✓</span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="closeModal(); toast('🏢 새 워크스페이스 (준비 중)')">+ 새 워크스페이스 만들기</button>
+          <button class="dropdown-item" onclick="closeModal(); toast('🔄 워크스페이스 초대 받기 (준비 중)')">📨 초대 받은 워크스페이스 합류</button>
+        </div>`);
+    }
+    function upgradeProMenu() {
+      openModal('🌟 Bloom Pro', `
+        <div style="background: var(--grad-rainbow); border-radius: 16px; padding: 20px; color: white; margin-bottom: 16px;">
+          <div style="font-size: 14px; opacity: .9; font-weight: 700;">UPGRADE</div>
+          <div style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 4px 0;">월 9,900원</div>
+          <div style="font-size: 12px; opacity: .9;">언제든 해지 가능</div>
+        </div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 13px; padding: 0;">
+          <li style="display: flex; gap: 10px;"><span>✨</span> AI 캡션 무제한 생성</li>
+          <li style="display: flex; gap: 10px;"><span>📊</span> 고급 성과 분석 + 경쟁사 비교</li>
+          <li style="display: flex; gap: 10px;"><span>📅</span> 자동 발행 시간 추천 (AI)</li>
+          <li style="display: flex; gap: 10px;"><span>🏢</span> 멀티 매장 관리 (최대 5개)</li>
+          <li style="display: flex; gap: 10px;"><span>💬</span> 우선 고객지원</li>
+        </ul>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="closeModal(); toast('💳 결제는 준비 중이에요')">✨ Pro 시작하기</button>`);
+    }
+    function logout() {
+      if (confirm('정말 로그아웃 하시겠어요?')) {
+        toast('🚪 로그아웃됐어요 (모의)');
+        closeModal();
+      }
+    }
+    function deleteAccount() {
+      if (confirm('정말 계정을 삭제하시겠어요?\n모든 데이터가 사라지고 복구할 수 없어요.')) {
+        if (confirm('한 번 더 확인할게요. 정말 진행할까요?')) {
+          localStorage.removeItem(STORAGE_KEY);
+          toast('🗑️ 모든 데이터가 삭제됐어요');
+          setTimeout(() => location.reload(), 1500);
+        }
+      }
+    }
+    
+    // ===== SEARCH =====
+    function handleSearch(e) {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) return;
+      // 간단한 검색: 예약 게시물 + 카테고리에서 매치
+      const matches = state.scheduledPosts.filter(p => p.caption.toLowerCase().includes(q));
+      if (matches.length > 0) {
+        if (e.key === 'Enter') {
+          switchTab('schedule');
+          toast(`🔍 "${q}" 검색 결과 ${matches.length}건`);
+        }
+      } else if (e.key === 'Enter') {
+        toast(`🔍 "${q}" 검색 결과 없음`);
+      }
+    }
+    
+    // ===== ANALYTICS PERIOD TABS =====
+    function setAnalyticsRange(range, el) {
+      state.analyticsRange = range;
+      el.parentElement.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      initCharts();
+      toast(`📊 ${el.textContent} 데이터로 전환`);
+    }
+    function downloadReport() {
+      const data = {
+        date: new Date().toLocaleDateString('ko-KR'),
+        followers: 2847, likes: 18450, comments: 1246, posts: 42,
+        topPosts: ['감성적인 봄 캘리그래피 워크샵', '오늘의 추천 작품', '주말 워크샵 안내'],
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `bloom-report-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('📥 리포트 다운로드 완료');
+    }
   </script>
 </body>
 </html>
