@@ -1,1842 +1,1606 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>은빛캘리 마케팅 대시보드</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: #fafafa;
-            min-height: 100vh;
-            padding: 0;
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 999;
-            background: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 12px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            font-size: 20px;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 24px;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            background: #fff;
-            border-radius: 16px;
-            padding: 28px 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-        }
-
-        .sidebar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 32px;
-            font-size: 16px;
-            font-weight: 700;
-            color: #000;
-            letter-spacing: -0.3px;
-        }
-
-        .nav-item {
-            padding: 12px 14px;
-            margin: 8px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-size: 14px;
-            border: none;
-            background: transparent;
-            color: #65676b;
-            font-weight: 500;
-            text-align: left;
-            width: 100%;
-        }
-
-        .nav-item:active {
-            background: #f0f0f0;
-        }
-
-        .nav-item:hover {
-            background: #f0f0f0;
-        }
-
-        .nav-item.active {
-            background: #f0f0f0;
-            color: #000;
-            font-weight: 600;
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main-content {
-            background: #fff;
-            border-radius: 16px;
-            padding: 48px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            overflow-y: auto;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        h1 {
-            color: #000;
-            margin-bottom: 32px;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        h3 {
-            color: #000;
-            margin-bottom: 16px;
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -0.2px;
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-size: 14px;
-            letter-spacing: -0.2px;
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #000;
-        }
-
-        .btn-secondary:active {
-            background: #e4e4e4;
-        }
-
-        .btn-secondary:hover {
-            background: #e4e4e4;
-        }
-
-        /* ===== FORM ELEMENTS ===== */
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #000;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: -0.2px;
-        }
-
-        input[type="file"],
-        input[type="text"],
-        input[type="email"],
-        input[type="number"],
-        input[type="date"],
-        input[type="time"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            transition: all 0.25s;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            background: #fff;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .button-group .btn {
-            flex: 1;
-        }
-
-        /* ===== DRAG AND DROP ===== */
-        .upload-area {
-            border: 2px dashed #e5e7eb;
-            border-radius: 12px;
-            padding: 40px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            background: #fafafa;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .upload-area:active {
-            border-color: #667eea;
-            background: #f0f7ff;
-        }
-
-        .upload-area:hover {
-            border-color: #667eea;
-            background: #f0f7ff;
-        }
-
-        .upload-area.drag-over {
-            border-color: #667eea;
-            background: #f0f7ff;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .upload-text {
-            color: #65676b;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .upload-text strong {
-            color: #000;
-            font-weight: 600;
-        }
-
-        /* ===== PREVIEW ===== */
-        .preview-area {
-            background: #fafafa;
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            min-height: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 24px 0;
-        }
-
-        .preview-image {
-            max-width: 100%;
-            max-height: 380px;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-
-        /* ===== CARDS ===== */
-        .card {
-            background: #fafafa;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 16px;
-            transition: all 0.25s;
-        }
-
-        .card:active {
-            border-color: #667eea;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
-        }
-
-        .card:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.1);
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 28px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
-        }
-
-        .stat-value {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            opacity: 0.95;
-            font-weight: 500;
-        }
-
-        /* ===== GRID ===== */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .grid-2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .grid-4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-
-        /* ===== MESSAGES ===== */
-        .message {
-            padding: 14px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            animation: slideIn 0.3s ease-out;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(-10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        .message.show {
-            display: block;
-        }
-
-        .success {
-            background: #d1fae5;
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-        }
-
-        .error {
-            background: #fee2e2;
-            color: #7f1d1d;
-            border: 1px solid #fecaca;
-        }
-
-        /* ===== LOADING ===== */
-        .loading {
-            text-align: center;
-            color: #667eea;
-            display: none;
-            background: #f0f7ff;
-            padding: 24px;
-            border-radius: 12px;
-            margin-bottom: 24px;
-            border: 1px solid #bfdbfe;
-        }
-
-        .loading.show {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid #e5e7eb;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 12px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ===== CALENDAR ===== */
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 12px;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-        }
-
-        .day-header {
-            text-align: center;
-            font-weight: 600;
-            color: #667eea;
-            padding: 10px;
-            font-size: 12px;
-        }
-
-        .day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-size: 13px;
-            font-weight: 500;
-            min-height: 40px;
-        }
-
-        .day:active {
-            border-color: #667eea;
-            background: #f0f7ff;
-        }
-
-        .day:hover {
-            border-color: #667eea;
-            background: #f0f7ff;
-        }
-
-        .day.selected {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .day.other-month {
-            color: #d1d5db;
-        }
-
-        /* ===== MOBILE PREVIEW ===== */
-        .mobile-frame {
-            background: #000;
-            border-radius: 40px;
-            padding: 12px;
-            width: 100%;
-            max-width: 280px;
-            margin: 24px auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-            border: 12px solid #000;
-        }
-
-        .mobile-content {
-            background: white;
-            border-radius: 32px;
-            overflow: hidden;
-            min-height: 560px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mobile-image {
-            width: 100%;
-            height: 280px;
-            background: linear-gradient(135deg, #f0f0f0 0%, #e8e8e8 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: #999;
-            overflow: hidden;
-        }
-
-        .mobile-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .mobile-body {
-            padding: 14px;
-            flex: 1;
-            overflow-y: auto;
-            font-size: 12px;
-        }
-
-        /* ===== WELCOME BANNER ===== */
-        .welcome-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 16px;
-            margin-bottom: 32px;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-        }
-
-        .welcome-banner h2 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .welcome-banner p {
-            font-size: 15px;
-            opacity: 0.95;
-            letter-spacing: -0.2px;
-        }
-
-        /* ===== STORE PROFILE PREVIEW ===== */
-        .store-profile-preview {
-            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-            border-radius: 12px;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid #e5e7eb;
-        }
-
-        .profile-image-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 40px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .profile-image-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 8px;
-        }
-
-        .profile-category {
-            font-size: 13px;
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .profile-description {
-            font-size: 13px;
-            color: #65676b;
-            line-height: 1.5;
-            margin-bottom: 12px;
-        }
-
-        .profile-contact {
-            font-size: 12px;
-            color: #65676b;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 12px;
-            margin-top: 12px;
-        }
-
-        .profile-contact div {
-            margin: 6px 0;
-        }
-
-        /* ===== COLOR PALETTE ===== */
-        .color-palette {
-            display: flex;
-            gap: 10px;
-            margin: 12px 0;
-            flex-wrap: wrap;
-        }
-
-        .color-option {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid #e5e7eb;
-            transition: all 0.25s;
-            min-height: 44px;
-            min-width: 44px;
-        }
-
-        .color-option:active {
-            transform: scale(0.95);
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
-        .color-option.selected {
-            border-color: #000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1200px) {
-            .grid-3 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .grid-4 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .sidebar {
-                position: static;
-                margin-bottom: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .container {
-                padding: 0;
-                gap: 0;
-            }
-
-            .sidebar {
-                position: fixed;
-                left: 0;
-                top: 0;
-                width: 260px;
-                height: 100vh;
-                z-index: 998;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                border-radius: 0;
-                margin-top: 0;
-                padding-top: 60px;
-                overflow-y: auto;
-                box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 997;
-            }
-
-            .sidebar-overlay.open {
-                display: block;
-            }
-
-            .main-content {
-                border-radius: 0;
-                padding: 24px 16px;
-                margin-top: 0;
-            }
-
-            h1 {
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
-
-            h3 {
-                font-size: 14px;
-            }
-
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .welcome-banner {
-                padding: 24px 16px;
-            }
-
-            .welcome-banner h2 {
-                font-size: 22px;
-            }
-
-            .welcome-banner p {
-                font-size: 14px;
-            }
-
-            .upload-area {
-                padding: 30px 16px;
-            }
-
-            .upload-icon {
-                font-size: 36px;
-            }
-
-            .stat-card {
-                padding: 20px;
-            }
-
-            .stat-value {
-                font-size: 28px;
-            }
-
-            .card {
-                padding: 16px;
-                margin-bottom: 12px;
-            }
-
-            .form-group {
-                margin-bottom: 16px;
-            }
-
-            label {
-                font-size: 13px;
-                margin-bottom: 6px;
-            }
-
-            input[type="file"],
-            input[type="text"],
-            input[type="email"],
-            input[type="number"],
-            input[type="date"],
-            input[type="time"],
-            select,
-            textarea {
-                padding: 12px;
-                font-size: 16px;
-            }
-
-            .mobile-frame {
-                max-width: 100%;
-                border-radius: 20px;
-                border-width: 8px;
-            }
-
-            .day {
-                min-height: 36px;
-                font-size: 12px;
-            }
-
-            .day-header {
-                padding: 6px;
-                font-size: 11px;
-            }
-
-            .calendar-header {
-                gap: 8px;
-                margin-bottom: 12px;
-            }
-
-            .color-palette {
-                gap: 8px;
-            }
-
-            .color-option {
-                width: 36px;
-                height: 36px;
-                min-height: 36px;
-                min-width: 36px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-content {
-                padding: 16px 12px;
-            }
-
-            h1 {
-                font-size: 20px;
-                margin-bottom: 16px;
-            }
-
-            .grid-4 {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stat-card {
-                padding: 16px;
-            }
-
-            .stat-value {
-                font-size: 24px;
-            }
-
-            .stat-label {
-                font-size: 11px;
-            }
-
-            .welcome-banner {
-                padding: 20px 12px;
-            }
-
-            .welcome-banner h2 {
-                font-size: 18px;
-                margin-bottom: 6px;
-            }
-
-            .welcome-banner p {
-                font-size: 13px;
-            }
-
-            .btn {
-                padding: 10px 16px;
-                min-height: 40px;
-                font-size: 13px;
-            }
-
-            .upload-area {
-                padding: 24px 12px;
-            }
-
-            .upload-icon {
-                font-size: 32px;
-                margin-bottom: 12px;
-            }
-
-            .upload-text {
-                font-size: 12px;
-                line-height: 1.4;
-            }
-
-            input[type="file"],
-            input[type="text"],
-            input[type="email"],
-            input[type="number"],
-            input[type="date"],
-            input[type="time"],
-            select,
-            textarea {
-                padding: 10px;
-                font-size: 16px;
-            }
-
-            .card {
-                padding: 12px;
-            }
-
-            .form-group {
-                margin-bottom: 12px;
-            }
-
-            label {
-                font-size: 12px;
-            }
-
-            .mobile-frame {
-                max-width: 100%;
-                border-radius: 16px;
-                border-width: 6px;
-            }
-
-            .profile-image-preview {
-                width: 80px;
-                height: 80px;
-                font-size: 32px;
-            }
-
-            .profile-name {
-                font-size: 16px;
-            }
-
-            .store-profile-preview {
-                padding: 16px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Bloom — 소상공인의 인스타가 피어나는 곳. AI 캡션 생성 + 예약 발행 + 성과 분석">
+  <title>Bloom — Instagram 마케팅 대시보드</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌸%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #FFF8F3;
+      --white: #FFFFFF;
+      --ink: #1A1A2E;
+      --sub: #6B6B83;
+      --ter: #A6A6BD;
+      --purple: #B5A7FF;
+      --pink: #FFB5D8;
+      --peach: #FFB89E;
+      --lavender: #D4C9FF;
+      --mint: #C8F2D9;
+      --yellow: #FFF2BE;
+      --border: #F2EFF1;
+      --faint: #EBE9EE;
+      --grad-hero: linear-gradient(135deg, #FFB5D8 0%, #B5A7FF 100%);
+      --grad-sunset: linear-gradient(135deg, #FFB5D8 0%, #FFB89E 100%);
+      --grad-dreamy: linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 100%);
+      --grad-spring: linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 100%);
+      --grad-rainbow: linear-gradient(135deg, #D4C9FF 0%, #FFB5D8 60%, #FFB89E 100%);
+      --grad-dark: linear-gradient(135deg, #1A1A2E 0%, #463272 100%);
+      --shadow-sm: 0 2px 8px rgba(26,26,46,.04);
+      --shadow-md: 0 4px 24px rgba(26,26,46,.06);
+      --shadow-lg: 0 16px 40px rgba(70,50,114,.2);
+      --shadow-pill: 0 6px 16px rgba(181,167,255,.25);
+      --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px;
+      --font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    }
+    *,*::before,*::after { box-sizing: border-box; }
+    body, h1, h2, h3, p, ul, ol, li, figure, blockquote { margin: 0; padding: 0; }
+    button { font-family: inherit; cursor: pointer; }
+    html, body { font-family: var(--font); background: var(--bg); color: var(--ink); -webkit-font-smoothing: antialiased; line-height: 1.5; }
+    
+    .app { display: grid; grid-template-columns: 272px 1fr; min-height: 100vh; padding: 12px; gap: 0; }
+    
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      background: var(--white); border-radius: var(--r-xl); padding: 16px;
+      box-shadow: var(--shadow-md);
+      display: flex; flex-direction: column;
+      height: calc(100vh - 24px); position: sticky; top: 12px;
+      overflow-y: auto;
+    }
+    .workspace {
+      background: rgba(235,233,238,.5); border-radius: var(--r-md);
+      padding: 10px; display: flex; align-items: center; gap: 12px;
+      cursor: pointer; transition: background .2s; border: none; width: 100%;
+    }
+    .workspace:hover { background: var(--faint); }
+    .workspace-logo {
+      width: 36px; height: 36px; border-radius: 11px; background: var(--grad-hero);
+      display: grid; place-items: center; font-size: 18px; color: white; flex-shrink: 0;
+    }
+    .workspace-info { flex: 1; line-height: 1.2; text-align: left; min-width: 0; }
+    .workspace-name { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; }
+    .workspace-sub { font-size: 11px; color: var(--ter); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .workspace-chevron { color: var(--ter); font-weight: 700; }
+    
+    .search-bar {
+      margin: 12px 0 8px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 11px; padding: 9px 10px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--ter);
+      border-width: 1px;
+    }
+    .search-bar input {
+      flex: 1; background: none; border: none; outline: none;
+      font-family: inherit; font-size: 12px; color: var(--ink);
+    }
+    .search-bar input::placeholder { color: var(--ter); }
+    .kbd {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 6px; padding: 3px 8px;
+      font-size: 10px; font-weight: 600; color: var(--sub);
+    }
+    
+    .nav-section { font-size: 10px; font-weight: 700; color: var(--ter); letter-spacing: 0.8px; padding: 14px 8px 6px; }
+    .nav-list { display: flex; flex-direction: column; gap: 2px; }
+    .nav-item {
+      position: relative; display: flex; align-items: center; gap: 12px;
+      padding: 11px 16px; border-radius: 12px;
+      transition: all .2s; font-size: 13px; font-weight: 500;
+      color: var(--sub); border: none; background: transparent; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: rgba(235,233,238,.5); color: var(--ink); }
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(255,181,216,.18), rgba(181,167,255,.18));
+      color: var(--ink); font-weight: 600;
+    }
+    .nav-item.active::before {
+      content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 18px; background: var(--grad-hero); border-radius: 2px;
+    }
+    .nav-icon { font-size: 15px; }
+    .nav-label { flex: 1; }
+    .nav-badge { background: var(--grad-hero); color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+    .nav-chip { background: var(--mint); color: #10794A; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 6px; }
+    
+    .divider { height: 1px; background: var(--border); margin: 14px 8px; }
+    
+    .pro-card {
+      background: linear-gradient(135deg, #FFB5D8 0%, #D4C9FF 50%, #B5A7FF 100%);
+      border-radius: 16px; padding: 14px; color: white; margin-top: auto;
+    }
+    .pro-card-head { display: flex; align-items: center; gap: 8px; }
+    .pro-card-title { font-size: 13px; font-weight: 700; }
+    .pro-card-desc { font-size: 11px; opacity: .9; margin: 4px 0 10px; }
+    .pro-card-btn {
+      background: rgba(255,255,255,.95); color: var(--ink); border: none;
+      border-radius: 10px; padding: 9px; width: 100%;
+      font-size: 11px; font-weight: 600;
+    }
+    .user-card {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px; border-radius: 12px; margin-top: 8px;
+      background: transparent; border: none; width: 100%;
+    }
+    .user-card:hover { background: rgba(235,233,238,.5); }
+    .user-avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: var(--grad-sunset);
+      display: grid; place-items: center; color: white; font-weight: 700; font-size: 13px;
+      position: relative; flex-shrink: 0;
+    }
+    .user-online {
+      position: absolute; bottom: -1px; right: -1px; width: 10px; height: 10px;
+      background: #66D68C; border: 2px solid white; border-radius: 50%;
+    }
+    .user-info { flex: 1; line-height: 1.2; text-align: left; min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 600; }
+    .user-meta { font-size: 10px; color: var(--ter); margin-top: 2px; }
+    .user-more { color: var(--ter); font-weight: 700; padding: 0 4px; }
+    
+    /* ===== MAIN ===== */
+    .main { padding: 28px 40px 60px; overflow-x: hidden; min-width: 0; }
+    .breadcrumb { font-size: 12px; color: var(--ter); font-weight: 500; margin-bottom: 8px; }
+    .page-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+    h1.page-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; line-height: 1.15; margin-bottom: 6px; }
+    .page-sub { font-size: 14px; color: var(--sub); font-weight: 500; }
+    
+    .btn { border: none; border-radius: 12px; padding: 11px 18px; font-size: 13px; font-weight: 600; letter-spacing: -0.2px; transition: all .2s; display: inline-flex; align-items: center; gap: 8px; line-height: 1; }
+    .btn-primary { background: var(--ink); color: white; box-shadow: 0 6px 16px rgba(26,26,46,.2); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(26,26,46,.25); }
+    .btn-secondary { background: var(--white); color: var(--ink); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg); border-color: var(--ter); }
+    .btn-ghost { background: transparent; color: var(--sub); }
+    .btn-ghost:hover { background: var(--faint); color: var(--ink); }
+    .btn-gradient { background: var(--grad-hero); color: white; box-shadow: var(--shadow-pill); }
+    .btn-gradient:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(181,167,255,.4); }
+    
+    .tab { display: none; }
+    .tab.active { display: block; animation: fadeIn .3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .card { background: var(--white); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-md); }
+    .card-pad-sm { padding: 16px; border-radius: var(--r-lg); }
+    
+    /* ===== DASHBOARD ===== */
+    .bento {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-hero {
+      background: var(--grad-rainbow);
+      color: white; border-radius: var(--r-xl);
+      padding: 28px; position: relative; overflow: hidden;
+      min-height: 220px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .stat-hero::after {
+      content: ''; position: absolute; right: -40px; top: -40px;
+      width: 160px; height: 160px; border-radius: 50%;
+      background: rgba(255,255,255,.15);
+    }
+    .stat-label { font-size: 13px; font-weight: 600; opacity: .9; letter-spacing: -0.2px; }
+    .stat-value { font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin: 8px 0 4px; }
+    .stat-change { font-size: 13px; font-weight: 600; opacity: .95; }
+    .stat-mini-chart { display: flex; gap: 4px; align-items: flex-end; height: 60px; margin-top: 12px; position: relative; z-index: 1; }
+    .stat-mini-chart span {
+      flex: 1; background: rgba(255,255,255,.7); border-radius: 4px; transition: all .3s;
+    }
+    
+    .stat-card {
+      background: var(--white); border-radius: var(--r-xl); padding: 24px;
+      box-shadow: var(--shadow-md);
+      min-height: 220px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .stat-card-emoji { font-size: 28px; }
+    .stat-card-label { font-size: 13px; color: var(--sub); margin-top: 16px; font-weight: 500; }
+    .stat-card-value { font-size: 38px; font-weight: 800; letter-spacing: -1.5px; color: var(--ink); margin-top: 6px; }
+    .badge-up { background: var(--mint); color: #10794A; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px; display: inline-flex; gap: 4px; margin-top: 12px; align-self: flex-start; }
+    .badge-up.orange { background: #FFEDD5; color: #B6500F; }
+    
+    .stories-section { margin-bottom: 24px; }
+    .stories-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    h2.section-title { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+    .section-link { font-size: 13px; color: var(--sub); font-weight: 500; background: none; border: none; padding: 4px 8px; border-radius: 8px; }
+    .section-link:hover { background: var(--faint); color: var(--ink); }
+    
+    .stories-row { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 6px; scroll-behavior: smooth; }
+    .stories-row::-webkit-scrollbar { display: none; }
+    .story {
+      flex-shrink: 0; text-align: center; cursor: pointer;
+      transition: transform .2s;
+    }
+    .story:hover { transform: translateY(-4px); }
+    .story-ring {
+      width: 78px; height: 78px; border-radius: 50%;
+      padding: 3px;
+      display: grid; place-items: center;
+      margin-bottom: 8px;
+    }
+    .story-inner {
+      width: 100%; height: 100%; border-radius: 50%;
+      background: white; padding: 3px;
+      display: grid; place-items: center;
+    }
+    .story-img {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: 22px;
+    }
+    .story-label { font-size: 12px; font-weight: 500; color: var(--ink); max-width: 80px; }
+    
+    .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr) 1.2fr; gap: 16px; }
+    .post-card {
+      background: var(--white); border-radius: var(--r-xl); overflow: hidden;
+      box-shadow: var(--shadow-md); cursor: pointer; transition: all .2s;
+    }
+    .post-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .post-img {
+      width: 100%; aspect-ratio: 1; display: grid; place-items: center; color: white;
+      font-size: 42px; font-weight: 700;
+    }
+    .post-body { padding: 16px; }
+    .post-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+    .post-stats { font-size: 11px; color: var(--sub); display: flex; gap: 12px; font-weight: 500; }
+    
+    .ai-card {
+      background: var(--grad-dark); border-radius: var(--r-xl);
+      padding: 24px; color: white; position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .ai-card::before {
+      content: ''; position: absolute; top: -60px; right: -40px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,181,216,.4) 0%, transparent 70%);
+      filter: blur(20px);
+    }
+    .ai-spark {
+      width: 38px; height: 38px; border-radius: 12px;
+      background: var(--grad-hero);
+      display: grid; place-items: center; font-size: 18px; z-index: 1;
+    }
+    .ai-label { font-size: 11px; font-weight: 700; color: var(--pink); margin-top: 12px; letter-spacing: 1px; z-index: 1; position: relative; }
+    .ai-title { font-size: 22px; font-weight: 800; letter-spacing: -0.7px; line-height: 1.25; margin: 8px 0; z-index: 1; position: relative; }
+    .ai-desc { font-size: 12px; opacity: .7; margin-bottom: 16px; line-height: 1.5; z-index: 1; position: relative; }
+    .ai-btn {
+      background: white; color: var(--ink); border: none; border-radius: 12px;
+      padding: 11px 16px; font-size: 12px; font-weight: 700;
+      align-self: flex-start; margin-top: auto; z-index: 1; position: relative;
+    }
+    
+    /* ===== NEW POST ===== */
+    .post-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .upload-card { background: var(--white); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-md); }
+    .upload-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .upload-zone {
+      border: 2px dashed rgba(181,167,255,.5); border-radius: var(--r-lg);
+      padding: 40px 20px; text-align: center;
+      background: linear-gradient(135deg, #FFF0F5 0%, #F4F0FF 100%);
+      cursor: pointer; transition: all .2s;
+      position: relative;
+    }
+    .upload-zone:hover { border-color: var(--purple); transform: scale(1.005); }
+    .upload-zone.has-image { padding: 0; border: none; background: none; }
+    .upload-zone.has-image img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--r-lg); }
+    .upload-cam {
+      width: 88px; height: 88px; border-radius: 24px; background: var(--grad-hero);
+      display: grid; place-items: center; margin: 0 auto 20px;
+      font-size: 36px; color: white;
+      box-shadow: 0 12px 28px rgba(181,167,255,.4);
+    }
+    .upload-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 4px; }
+    .upload-meta { font-size: 12px; color: var(--sub); margin-bottom: 18px; }
+    .upload-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--ink); color: white;
+      padding: 8px 14px; border-radius: 100px;
+      font-size: 11px; font-weight: 600;
+    }
+    
+    .tone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+    .tone-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 600; color: var(--ink);
+      cursor: pointer; transition: all .2s;
+    }
+    .tone-chip-emoji { font-size: 18px; }
+    .tone-chip:hover { border-color: var(--purple); }
+    .tone-chip.active {
+      background: linear-gradient(90deg, rgba(255,181,216,.18), rgba(181,167,255,.18));
+      border-color: var(--purple); border-width: 2px; padding: 11px 9px;
+    }
+    
+    .cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .cat-chip {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 500; color: var(--sub);
+      cursor: pointer; transition: all .2s;
+    }
+    .cat-chip:hover { border-color: var(--purple); color: var(--ink); }
+    .cat-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
+    
+    /* AI panel */
+    .ai-panel {
+      background: var(--grad-dark); border-radius: var(--r-xl);
+      padding: 24px; color: white; position: relative; overflow: hidden;
+    }
+    .ai-panel::before {
+      content: ''; position: absolute; top: -80px; right: -40px;
+      width: 280px; height: 280px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,181,216,.4), transparent 70%);
+      filter: blur(30px);
+    }
+    .ai-panel-head { display: flex; align-items: center; gap: 10px; position: relative; }
+    .ai-tag {
+      background: var(--grad-hero); color: white; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 8px;
+    }
+    .ai-panel-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-top: 12px; position: relative; }
+    .ai-panel-sub { font-size: 12px; opacity: .6; margin-top: 4px; position: relative; }
+    .ai-output {
+      background: rgba(255,255,255,.08); border-radius: 16px;
+      padding: 16px; margin-top: 16px; font-size: 13px; line-height: 1.6;
+      min-height: 140px; max-height: 220px; overflow-y: auto;
+      position: relative;
+    }
+    .ai-actions { display: flex; gap: 8px; margin-top: 14px; position: relative; }
+    .ai-actions .btn-light { background: rgba(255,255,255,.15); color: white; padding: 10px 14px; font-size: 12px; border-radius: 10px; border: none; font-weight: 600; }
+    .ai-actions .btn-light:hover { background: rgba(255,255,255,.25); }
+    .ai-actions .btn-use { background: white; color: var(--ink); padding: 10px 14px; font-size: 12px; font-weight: 700; border-radius: 10px; border: none; margin-left: auto; }
+    
+    .edit-card { background: var(--white); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-md); }
+    .template-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0 16px; }
+    .template-chip {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 9px 12px; font-size: 12px; font-weight: 500; color: var(--ink);
+      cursor: pointer; transition: all .2s; text-align: left;
+    }
+    .template-chip:hover { border-color: var(--purple); background: white; }
+    .caption-textarea {
+      width: 100%; min-height: 160px;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 14px;
+      padding: 14px; font-family: inherit; font-size: 13px; line-height: 1.6; color: var(--ink);
+      resize: vertical; outline: none;
+    }
+    .caption-textarea:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(181,167,255,.15); }
+    .caption-meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; color: var(--ter); font-weight: 500; }
+    .caption-meta .hash-count { color: var(--purple); font-weight: 700; }
+    
+    /* ===== SCHEDULE ===== */
+    .schedule-layout { display: grid; grid-template-columns: 1.2fr 1fr 0.8fr; gap: 20px; }
+    .cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-nav { display: flex; gap: 6px; }
+    .cal-nav button { width: 30px; height: 30px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--ink); display: grid; place-items: center; font-size: 12px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-day-header { text-align: center; font-size: 11px; font-weight: 700; color: var(--ter); padding: 8px; letter-spacing: 0.5px; }
+    .cal-day {
+      aspect-ratio: 1; display: grid; place-items: center;
+      border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--ink);
+      cursor: pointer; transition: all .15s;
+      position: relative; background: transparent; border: none;
+    }
+    .cal-day:hover { background: var(--bg); }
+    .cal-day.other-month { color: var(--ter); }
+    .cal-day.today { color: var(--purple); font-weight: 700; }
+    .cal-day.selected {
+      background: var(--grad-hero); color: white;
+      box-shadow: var(--shadow-pill);
+    }
+    .cal-day.has-event::after {
+      content: ''; position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; background: var(--purple); border-radius: 50%;
+    }
+    .cal-day.selected.has-event::after { background: white; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 8px; display: block; }
+    .form-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 11px 14px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none;
+    }
+    .form-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(181,167,255,.15); }
+    
+    /* iPhone Frame */
+    .phone-frame {
+      background: var(--ink); border-radius: 36px; padding: 8px;
+      max-width: 240px; margin: 0 auto;
+      box-shadow: 0 30px 60px rgba(0,0,0,.25);
+    }
+    .phone-screen {
+      background: white; border-radius: 28px; overflow: hidden;
+      aspect-ratio: 9/19;
+      display: flex; flex-direction: column;
+    }
+    .phone-header { padding: 8px 12px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--border); }
+    .phone-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--grad-hero); }
+    .phone-name { font-size: 10px; font-weight: 600; }
+    .phone-img {
+      width: 100%; aspect-ratio: 1; flex-shrink: 0;
+      display: grid; place-items: center; font-size: 32px;
+    }
+    .phone-actions { padding: 6px 12px; font-size: 13px; color: var(--ink); display: flex; gap: 8px; }
+    .phone-body { padding: 6px 12px 10px; font-size: 9px; line-height: 1.45; flex: 1; overflow-y: auto; }
+    .phone-likes { font-size: 9px; font-weight: 700; margin-bottom: 3px; }
+    .phone-caption-text { color: var(--ink); }
+    
+    .schedule-list { margin-top: 28px; }
+    .schedule-row {
+      background: var(--white); border-radius: var(--r-lg); padding: 16px;
+      display: flex; gap: 14px; align-items: center;
+      box-shadow: var(--shadow-sm); margin-bottom: 10px;
+    }
+    .schedule-date {
+      background: var(--grad-spring); border-radius: 12px; padding: 10px 14px;
+      text-align: center; min-width: 64px;
+    }
+    .schedule-date-d { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; color: var(--ink); }
+    .schedule-date-m { font-size: 10px; font-weight: 600; color: var(--ink); opacity: .7; }
+    .schedule-row-info { flex: 1; min-width: 0; }
+    .schedule-row-cap { font-size: 13px; color: var(--ink); font-weight: 500; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+    .schedule-row-meta { font-size: 11px; color: var(--sub); margin-top: 4px; }
+    .schedule-row-delete {
+      background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
+      font-size: 11px; color: var(--sub); font-weight: 500;
+    }
+    .schedule-row-delete:hover { color: #C53030; border-color: #FCA5A5; }
+    
+    /* ===== ANALYTICS ===== */
+    .analytics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .chart-card { background: var(--white); border-radius: var(--r-xl); padding: 24px; box-shadow: var(--shadow-md); }
+    .chart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .chart-tabs { display: flex; gap: 4px; }
+    .chart-tab { background: transparent; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--sub); }
+    .chart-tab.active { background: var(--ink); color: white; }
+    .chart-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .chart-canvas-wrap { height: 240px; position: relative; }
+    
+    .insight-card {
+      background: var(--grad-dark); color: white; border-radius: var(--r-xl); padding: 20px;
+      position: relative; overflow: hidden;
+    }
+    .insight-card .ai-label { color: var(--pink); margin-top: 0; }
+    .insight-title { font-size: 16px; font-weight: 700; line-height: 1.4; margin-top: 8px; }
+    .insight-list { list-style: none; margin-top: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 12px; }
+    .insight-list li { display: flex; gap: 8px; opacity: .9; }
+    .insight-list li::before { content: '•'; color: var(--pink); }
+    
+    .top-posts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 14px; }
+    .top-post {
+      background: var(--bg); border-radius: 14px; padding: 12px; cursor: pointer;
+      transition: all .2s;
+    }
+    .top-post:hover { background: var(--white); box-shadow: var(--shadow-sm); }
+    .top-post-img { width: 100%; aspect-ratio: 1; border-radius: 12px; margin-bottom: 10px; display: grid; place-items: center; font-size: 28px; color: white; }
+    .top-post-title { font-size: 12px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .top-post-stats { font-size: 10px; color: var(--sub); display: flex; gap: 8px; }
+    .top-post-rank {
+      display: inline-block; background: var(--grad-hero); color: white;
+      font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    
+    /* ===== SETTINGS ===== */
+    .settings-layout { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+    .settings-nav {
+      background: var(--white); border-radius: var(--r-xl); padding: 12px;
+      box-shadow: var(--shadow-md); height: fit-content;
+      display: flex; flex-direction: column; gap: 2px;
+      position: sticky; top: 12px;
+    }
+    .settings-nav-item {
+      background: transparent; border: none; padding: 11px 14px; border-radius: 10px;
+      text-align: left; font-size: 13px; font-weight: 500; color: var(--sub);
+      display: flex; align-items: center; gap: 10px;
+      cursor: pointer; transition: all .15s;
+    }
+    .settings-nav-item:hover { background: var(--bg); color: var(--ink); }
+    .settings-nav-item.active { background: var(--bg); color: var(--ink); font-weight: 600; }
+    
+    .settings-section { background: var(--white); border-radius: var(--r-xl); padding: 28px; box-shadow: var(--shadow-md); margin-bottom: 16px; }
+    .settings-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px; }
+    .settings-section-desc { font-size: 13px; color: var(--sub); margin-bottom: 20px; }
+    .settings-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    
+    .theme-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+    .theme-swatch {
+      aspect-ratio: 1; border-radius: 16px; cursor: pointer;
+      border: 2px solid var(--border); transition: all .2s;
+      position: relative; overflow: hidden;
+    }
+    .theme-swatch:hover { transform: scale(1.05); }
+    .theme-swatch.active { border-color: var(--ink); box-shadow: 0 6px 16px rgba(0,0,0,.15); }
+    .theme-swatch.active::after {
+      content: '✓'; position: absolute; bottom: 6px; right: 6px;
+      width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: white;
+      display: grid; place-items: center; font-size: 11px; font-weight: 700;
+    }
+    .theme-label { font-size: 11px; font-weight: 500; color: var(--sub); text-align: center; margin-top: 6px; }
+    
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--ink); color: white;
+      padding: 14px 20px; border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      font-size: 13px; font-weight: 600;
+      transform: translateY(120%); opacity: 0;
+      transition: all .3s; z-index: 1000;
+      max-width: 320px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: linear-gradient(135deg, #10794A 0%, #1A1A2E 100%); }
+    
+    /* ===== MOBILE TOGGLE ===== */
+    .menu-toggle {
+      display: none; position: fixed; top: 16px; left: 16px; z-index: 200;
+      background: white; border: 1px solid var(--border); border-radius: 12px;
+      padding: 10px 12px; font-size: 18px; box-shadow: var(--shadow-md);
+    }
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 150;
+    }
+    .sidebar-overlay.show { display: block; }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1280px) {
+      .posts-grid { grid-template-columns: repeat(2, 1fr); }
+      .bento { grid-template-columns: 1fr 1fr; }
+      .stat-hero { grid-column: span 2; }
+      .schedule-layout { grid-template-columns: 1fr; }
+      .chart-grid { grid-template-columns: 1fr; }
+      .analytics-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-posts { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; padding: 0; }
+      .sidebar {
+        position: fixed; left: 0; top: 0; bottom: 0; z-index: 180;
+        width: 280px; border-radius: 0;
+        height: 100vh;
+        transform: translateX(-100%); transition: transform .3s;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .menu-toggle { display: block; }
+      .main { padding: 64px 16px 32px; }
+      .post-layout { grid-template-columns: 1fr; }
+      h1.page-title { font-size: 24px; }
+      .bento { grid-template-columns: 1fr; }
+      .stat-hero { grid-column: auto; min-height: 180px; }
+      .stat-value { font-size: 42px; }
+      .posts-grid { grid-template-columns: 1fr; }
+      .settings-layout { grid-template-columns: 1fr; }
+      .settings-nav { flex-direction: row; overflow-x: auto; padding: 8px; }
+      .settings-nav-item { white-space: nowrap; }
+      .settings-row { grid-template-columns: 1fr; }
+      .analytics-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-posts { grid-template-columns: 1fr; }
+      .theme-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
 </head>
 <body>
-    <!-- 모바일 메뉴 토글 -->
-    <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
-    <div class="sidebar-overlay" onclick="toggleMobileMenu()"></div>
+  <button class="menu-toggle" onclick="toggleSidebar()" aria-label="메뉴 토글">☰</button>
+  <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <div class="container">
-        <!-- SIDEBAR -->
-        <div class="sidebar">
-            <div class="sidebar-brand">📱 은빛캘리</div>
-            <div class="nav-item active" onclick="switchTab('home', this)">🏠 대시보드</div>
-            <div class="nav-item" onclick="switchTab('post', this)">✏️ 새 게시물</div>
-            <div class="nav-item" onclick="switchTab('schedule', this)">📅 예약 발행</div>
-            <div class="nav-item" onclick="switchTab('analytics', this)">📊 성과 분석</div>
-            <div class="nav-item" onclick="switchTab('settings', this)">⚙️ 설정</div>
+  <div class="app">
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar" id="sidebar">
+      <button class="workspace" aria-label="워크스페이스 전환">
+        <div class="workspace-logo">🌸</div>
+        <div class="workspace-info">
+          <div class="workspace-name">bloom</div>
+          <div class="workspace-sub">민지님 워크스페이스</div>
         </div>
+        <span class="workspace-chevron">⌄</span>
+      </button>
+      
+      <label class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="검색" aria-label="검색">
+        <span class="kbd">⌘K</span>
+      </label>
+      
+      <div class="nav-section">MAIN</div>
+      <nav class="nav-list">
+        <button class="nav-item active" data-tab="home">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">대시보드</span>
+        </button>
+        <button class="nav-item" data-tab="post">
+          <span class="nav-icon">✨</span>
+          <span class="nav-label">새 게시물</span>
+        </button>
+        <button class="nav-item" data-tab="schedule">
+          <span class="nav-icon">📅</span>
+          <span class="nav-label">예약 발행</span>
+          <span class="nav-badge">3</span>
+        </button>
+        <button class="nav-item" data-tab="analytics">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">성과 분석</span>
+        </button>
+      </nav>
+      
+      <div class="nav-section">TOOLS</div>
+      <nav class="nav-list">
+        <button class="nav-item" data-tab="ai">
+          <span class="nav-icon">✨</span>
+          <span class="nav-label">AI 어시스턴트</span>
+          <span class="nav-chip">NEW</span>
+        </button>
+        <button class="nav-item" data-tab="hashtag">
+          <span class="nav-icon">#️⃣</span>
+          <span class="nav-label">해시태그 분석</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">설정</span>
+        </button>
+      </nav>
+      
+      <div class="divider"></div>
+      
+      <div class="pro-card">
+        <div class="pro-card-head">
+          <span style="font-size: 18px;">🌟</span>
+          <div class="pro-card-title">Bloom Pro</div>
+        </div>
+        <div class="pro-card-desc">AI 무제한 + 고급 분석</div>
+        <button class="pro-card-btn">월 9,900원 시작</button>
+      </div>
+      
+      <button class="user-card">
+        <div class="user-avatar">민<span class="user-online"></span></div>
+        <div class="user-info">
+          <div class="user-name">민지</div>
+          <div class="user-meta">은빛캘리 · Free</div>
+        </div>
+        <span class="user-more">⋯</span>
+      </button>
+    </aside>
 
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
+    <!-- ========== MAIN ========== -->
+    <main class="main">
+      
+      <!-- ====== HOME / DASHBOARD ====== -->
+      <section class="tab active" id="tab-home">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">메인</div>
+            <h1 class="page-title">안녕하세요, 민지님 🌸</h1>
+            <div class="page-sub">오늘도 멋진 콘텐츠로 팔로워들과 만나볼까요?</div>
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('post')">+ 새 게시물</button>
+        </div>
+        
+        <div class="bento">
+          <div class="stat-hero">
+            <div>
+              <div class="stat-label">팔로워</div>
+              <div class="stat-value">2,847</div>
+              <div class="stat-change">↑ +124 이번 주 (+4.5%)</div>
+            </div>
+            <div class="stat-mini-chart">
+              <span style="height: 40%;"></span>
+              <span style="height: 30%;"></span>
+              <span style="height: 50%;"></span>
+              <span style="height: 45%;"></span>
+              <span style="height: 60%;"></span>
+              <span style="height: 70%;"></span>
+              <span style="height: 55%;"></span>
+              <span style="height: 75%;"></span>
+            </div>
+          </div>
+          
+          <div class="stat-card">
+            <div>
+              <span class="stat-card-emoji">❤️</span>
+              <div class="stat-card-label">총 좋아요</div>
+              <div class="stat-card-value">18.4K</div>
+            </div>
+            <span class="badge-up">↑ 12.4%</span>
+          </div>
+          
+          <div class="stat-card">
+            <div>
+              <span class="stat-card-emoji">💬</span>
+              <div class="stat-card-label">총 댓글</div>
+              <div class="stat-card-value">1,246</div>
+            </div>
+            <span class="badge-up orange">↑ 8.2%</span>
+          </div>
+        </div>
+        
+        <div class="stories-section">
+          <div class="stories-head">
+            <h2 class="section-title">스토리 미리보기 ✨</h2>
+            <button class="section-link">모두 보기 →</button>
+          </div>
+          <div class="stories-row">
+            <div class="story">
+              <div class="story-ring" style="background: var(--grad-sunset);">
+                <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #FFD1E1, #FFC4A8);">🌸</div></div>
+              </div>
+              <div class="story-label">오늘의 추천</div>
+            </div>
+            <div class="story">
+              <div class="story-ring" style="background: var(--grad-dreamy);">
+                <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #D4C9FF, #E5DEFF);">🆕</div></div>
+              </div>
+              <div class="story-label">신메뉴</div>
+            </div>
+            <div class="story">
+              <div class="story-ring" style="background: var(--grad-spring);">
+                <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #D9F4E4, #FFF7CC);">🎉</div></div>
+              </div>
+              <div class="story-label">이벤트</div>
+            </div>
+            <div class="story">
+              <div class="story-ring" style="background: linear-gradient(135deg, #FFB89E, #FFB5D8);">
+                <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #FFD3C2, #FFC4DE);">💌</div></div>
+              </div>
+              <div class="story-label">후기</div>
+            </div>
+            <div class="story">
+              <div class="story-ring" style="background: linear-gradient(135deg, #D4C9FF, #B5A7FF);">
+                <div class="story-inner"><div class="story-img" style="background: linear-gradient(135deg, #E5DEFF, #C6BAFF);">📢</div></div>
+              </div>
+              <div class="story-label">공지</div>
+            </div>
+            <div class="story">
+              <div class="story-ring" style="background: linear-gradient(135deg, #FFF2BE, #C8F2D9);">
+                <div class="story-inner"><div class="story-img" style="background: var(--bg); color: var(--purple);">+</div></div>
+              </div>
+              <div class="story-label">더보기</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="stories-head">
+          <h2 class="section-title">최근 게시물</h2>
+          <button class="section-link">전체 보기 →</button>
+        </div>
+        <div class="posts-grid">
+          <div class="post-card">
+            <div class="post-img" style="background: var(--grad-sunset);">✨</div>
+            <div class="post-body">
+              <div class="post-title">오늘의 추천 작품 ✨</div>
+              <div class="post-stats">❤️ 245<span>💬 32</span></div>
+            </div>
+          </div>
+          <div class="post-card">
+            <div class="post-img" style="background: var(--grad-dreamy);">📝</div>
+            <div class="post-body">
+              <div class="post-title">감성적인 봄 캘리그래피</div>
+              <div class="post-stats">❤️ 412<span>💬 56</span></div>
+            </div>
+          </div>
+          <div class="post-card">
+            <div class="post-img" style="background: var(--grad-spring);">📌</div>
+            <div class="post-body">
+              <div class="post-title">주말 워크샵 안내</div>
+              <div class="post-stats">❤️ 178<span>💬 24</span></div>
+            </div>
+          </div>
+          <div class="ai-card">
+            <div class="ai-spark">✨</div>
+            <div class="ai-label">AI 추천</div>
+            <div class="ai-title">오늘은 이런 콘텐츠 어때요?</div>
+            <div class="ai-desc">최근 트렌드 분석 기반 맞춤 해시태그 + 캡션 자동 생성</div>
+            <button class="ai-btn" onclick="switchTab('post')">✨ 캡션 생성하기</button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ====== NEW POST ====== -->
+      <section class="tab" id="tab-post">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">메인 / 새 게시물</div>
+            <h1 class="page-title">새 게시물 만들기</h1>
+            <div class="page-sub">AI가 도와주는 1분 컨텐츠 제작 ✨</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary" onclick="saveDraft()">💾 임시저장</button>
+            <button class="btn btn-primary" onclick="publishPost()">✨ 지금 발행하기</button>
+          </div>
+        </div>
+        
+        <div class="post-layout">
+          <div>
+            <div class="upload-card">
+              <div class="upload-head">
+                <div>
+                  <h2 style="font-size: 14px; font-weight: 700;">📸 사진</h2>
+                  <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">드래그하거나 클릭해서 업로드</div>
+                </div>
+              </div>
+              <div class="upload-zone" id="upload-zone" onclick="document.getElementById('upload-input').click()">
+                <input type="file" id="upload-input" accept="image/*" hidden>
+                <div class="upload-cam">📷</div>
+                <div class="upload-title">사진을 여기에 드래그하세요</div>
+                <div class="upload-meta">또는 클릭해서 갤러리에서 선택 · 최대 10MB</div>
+                <div class="upload-chip">✨ AI가 자동으로 분석해드려요</div>
+              </div>
+              
+              <div style="margin-top: 24px;">
+                <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">🎨 톤앤매너</div>
+                <div class="tone-grid">
+                  <button class="tone-chip active" data-tone="감성적">
+                    <span class="tone-chip-emoji">💝</span>감성적
+                  </button>
+                  <button class="tone-chip" data-tone="정보형">
+                    <span class="tone-chip-emoji">📚</span>정보형
+                  </button>
+                  <button class="tone-chip" data-tone="유머러스">
+                    <span class="tone-chip-emoji">😄</span>유머러스
+                  </button>
+                </div>
+              </div>
+              
+              <div style="margin-top: 20px;">
+                <div style="font-size: 13px; font-weight: 700; margin-bottom: 8px;">🏷️ 카테고리</div>
+                <div class="cat-grid">
+                  <button class="cat-chip" data-cat="음식점">🍽️ 음식점</button>
+                  <button class="cat-chip" data-cat="카페">☕ 카페</button>
+                  <button class="cat-chip active" data-cat="공예">✨ 공예</button>
+                  <button class="cat-chip" data-cat="패션">👗 패션</button>
+                  <button class="cat-chip" data-cat="뷰티">💄 뷰티</button>
+                  <button class="cat-chip" data-cat="여행">✈️ 여행</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="ai-panel">
+              <div class="ai-panel-head">
+                <span class="ai-tag">✨ AI</span>
+              </div>
+              <div class="ai-panel-title">바로 생성된 캡션</div>
+              <div class="ai-panel-sub">사진 분석 + 톤앤매너 + 카테고리 기반</div>
+              <div class="ai-output" id="ai-output">봄날 햇살처럼 따스한 손편지 💌
+
+오늘은 캘리그래피로 마음을 전하는 시간을 가져봤어요. 한 글자 한 글자에 담긴 정성이 누군가에겐 큰 위로가 되길 ☘️
+
+#캘리그래피 #손글씨 #감성캘리 #봄캘리 #손편지</div>
+              <div class="ai-actions">
+                <button class="btn-light" onclick="regenerateCaption()">🔄 다시 생성</button>
+                <button class="btn-light" onclick="copyCaption()">📋 복사</button>
+                <button class="btn-use" onclick="useCaption()">✨ 이걸로 사용</button>
+              </div>
+            </div>
             
-            <!-- HOME TAB -->
-            <div id="home" class="tab-content active">
-                <h1>대시보드</h1>
-                
-                <div class="welcome-banner">
-                    <h2>완성하세요, 사장님!</h2>
-                    <p>인스타그램 마케팅 자동화로 성공적인 비즈니스를 만들어보세요</p>
-                </div>
-
-                <div class="grid grid-4">
-                    <div class="stat-card">
-                        <div class="stat-value" id="stat-posts">0</div>
-                        <div class="stat-label">게시물</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">28</div>
-                        <div class="stat-label">팔로워</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">18,450</div>
-                        <div class="stat-label">좋아요</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">1,246</div>
-                        <div class="stat-label">댓글</div>
-                    </div>
-                </div>
-
-                <h3>오늘의 여행</h3>
-                <div class="grid grid-3">
-                    <div class="card">
-                        <div style="font-weight: 600; color: #667eea; margin-bottom: 12px; font-size: 14px;">📊 게시물 성과</div>
-                        <div style="font-size: 28px; font-weight: 700; color: #000;">0</div>
-                        <div style="font-size: 12px; color: #65676b;">오늘 새 게시물</div>
-                    </div>
-                    <div class="card">
-                        <div style="font-weight: 600; color: #667eea; margin-bottom: 12px; font-size: 14px;">❤️ 오늘 좋아요</div>
-                        <div style="font-size: 28px; font-weight: 700; color: #000;">0</div>
-                        <div style="font-size: 12px; color: #65676b;">+0% from yesterday</div>
-                    </div>
-                    <div class="card">
-                        <div style="font-weight: 600; color: #667eea; margin-bottom: 12px; font-size: 14px;">💬 오늘 댓글</div>
-                        <div style="font-size: 28px; font-weight: 700; color: #000;">0</div>
-                        <div style="font-size: 12px; color: #65676b;">+0% from yesterday</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 32px;">
-                    <h3>최근 게시물</h3>
-                    <div id="recent-posts" style="color: #65676b; text-align: center; padding: 32px; background: #fafafa; border-radius: 12px; border: 1px solid #e5e7eb;">
-                        아직 게시물이 없습니다
-                    </div>
-                </div>
+            <div class="edit-card">
+              <h2 style="font-size: 14px; font-weight: 700;">✍️ 최종 캡션</h2>
+              <div style="font-size: 11px; color: var(--sub); margin: 2px 0 12px;">자유롭게 편집할 수 있어요</div>
+              <div style="font-size: 11px; font-weight: 700; color: var(--ter); margin-bottom: 8px;">템플릿 빠르게 적용</div>
+              <div class="template-grid">
+                <button class="template-chip" onclick="applyTemplate(1)">오늘의 추천</button>
+                <button class="template-chip" onclick="applyTemplate(2)">특별한 순간</button>
+                <button class="template-chip" onclick="applyTemplate(3)">감사 인사</button>
+                <button class="template-chip" onclick="applyTemplate(4)">신메뉴</button>
+              </div>
+              <textarea class="caption-textarea" id="caption-final" placeholder="여기에 캡션을 작성하거나 AI 결과를 가져오세요..." oninput="updateCaptionMeta()"></textarea>
+              <div class="caption-meta">
+                <span id="char-count">0 / 2,200자</span>
+                <span class="hash-count" id="hash-count">📝 0 해시태그</span>
+              </div>
             </div>
-
-            <!-- POST TAB -->
-            <div id="post" class="tab-content">
-                <h1>새 게시물</h1>
-
-                <div id="post-message" class="message"></div>
-                <div id="post-loading" class="loading"><div class="spinner"></div><p>AI가 캡션을 생성 중...</p></div>
-
-                <div class="grid grid-2">
-                    <div>
-                        <div class="form-group">
-                            <label>📸 사진 선택</label>
-                            <div class="upload-area" id="post-upload-area">
-                                <div class="upload-icon">📷</div>
-                                <div class="upload-text">
-                                    사진을 드래그하거나<br>
-                                    <strong>클릭하여 업로드</strong>
-                                </div>
-                            </div>
-                            <input type="file" id="post-image" accept="image/*" style="display: none;">
-                        </div>
-
-                        <div class="preview-area" id="post-preview">
-                            <div style="color: #65676b; text-align: center;">
-                                <div style="font-size: 48px; margin-bottom: 10px;">📸</div>
-                                <div>미리보기</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>🎨 톤 선택</label>
-                            <select id="post-tone">
-                                <option value="감성적">💝 감성적</option>
-                                <option value="정보형">📚 정보형</option>
-                                <option value="유머러스">😄 유머러스</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>🏷️ 카테고리</label>
-                            <select id="post-category">
-                                <option value="">선택하세요</option>
-                                <option value="음식점">🍽️ 음식점</option>
-                                <option value="카페">☕ 카페</option>
-                                <option value="공예">✨ 공예</option>
-                                <option value="패션">👗 패션</option>
-                                <option value="뷰티">💄 뷰티</option>
-                                <option value="여행">✈️ 여행</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div class="card" style="background: #f0f7ff; border: 1px solid #bfdbfe;">
-                            <h3 style="margin-bottom: 20px;">✨ AI 캡션 생성</h3>
-                            <button class="btn btn-primary" onclick="generateCaption()" style="width: 100%; margin-bottom: 20px;">🤖 AI 캡션 생성하기</button>
-                            
-                            <label style="margin-top: 20px;">📋 템플릿 선택</label>
-                            <select id="caption-template" onchange="applyTemplate()" style="margin-bottom: 20px;">
-                                <option value="">선택하세요</option>
-                                <option value="template1">오늘의 추천</option>
-                                <option value="template2">특별한 순간</option>
-                                <option value="template3">한주의 시작</option>
-                                <option value="template4">감사 인사</option>
-                            </select>
-
-                            <label>✍️ 캡션</label>
-                            <textarea id="post-content" placeholder="캡션을 작성하세요..."></textarea>
-
-                            <div class="button-group" style="margin-top: 20px;">
-                                <button class="btn btn-secondary" onclick="clearPostForm()">초기화</button>
-                                <button class="btn btn-primary" onclick="savePost()">📤 발행하기</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="caption-output" style="margin-top: 24px;"></div>
-            </div>
-
-            <!-- SCHEDULE TAB -->
-            <div id="schedule" class="tab-content">
-                <h1>예약 발행</h1>
-
-                <div id="schedule-message" class="message"></div>
-
-                <div class="grid grid-2" style="grid-template-columns: 1fr;">
-                    <!-- 모바일에서는 스택, 데스크톱에서는 3열 -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%;">
-                        <!-- LEFT: 달력 -->
-                        <div class="card">
-                            <h3 style="margin-bottom: 20px;">📆 날짜 선택</h3>
-                            <div id="schedule-calendar"></div>
-                        </div>
-
-                        <!-- CENTER: 설정 -->
-                        <div class="card">
-                            <h3 style="margin-bottom: 20px;">⚙️ 게시 설정</h3>
-                            <div class="form-group">
-                                <label>⏰ 발행 시간</label>
-                                <input type="time" id="schedule-time" value="10:00">
-                            </div>
-
-                            <div class="form-group">
-                                <label>📸 사진</label>
-                                <div class="upload-area" id="schedule-upload-area" style="padding: 20px;">
-                                    <div class="upload-icon" style="font-size: 32px;">📷</div>
-                                    <div class="upload-text" style="font-size: 12px;">
-                                        드래그 또는<br><strong>클릭</strong>
-                                    </div>
-                                </div>
-                                <input type="file" id="schedule-image" accept="image/*" style="display: none;">
-                            </div>
-
-                            <div class="form-group">
-                                <label>✍️ 캡션</label>
-                                <textarea id="schedule-caption" placeholder="캡션을 입력하세요..." style="min-height: 100px;"></textarea>
-                            </div>
-
-                            <button class="btn btn-primary" onclick="schedulePost()" style="width: 100%;">📅 예약 발행</button>
-                        </div>
-
-                        <!-- RIGHT: 모바일 미리보기 -->
-                        <div>
-                            <h3 style="margin-bottom: 16px;">📱 미리보기</h3>
-                            <div class="mobile-frame">
-                                <div class="mobile-content">
-                                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; text-align: center; font-weight: 600; font-size: 12px;">은빛캘리</div>
-                                    <div class="mobile-image" id="mobile-image-preview">
-                                        <div>사진을 선택해주세요</div>
-                                    </div>
-                                    <div class="mobile-body">
-                                        <div id="mobile-caption-preview" style="line-height: 1.4; margin-bottom: 8px;">캡션이 여기 표시됩니다</div>
-                                        <div style="display: flex; gap: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb;">
-                                            <span>❤️ 0</span>
-                                            <span>💬 0</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="margin-top: 32px; margin-bottom: 16px;">📋 예약된 게시물</h3>
-                <div id="scheduled-posts"></div>
-            </div>
-
-            <!-- ANALYTICS TAB -->
-            <div id="analytics" class="tab-content">
-                <h1>성과 분석</h1>
-
-                <div class="grid grid-4">
-                    <div class="stat-card">
-                        <div class="stat-value">3</div>
-                        <div class="stat-label">총 게시물</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">28</div>
-                        <div class="stat-label">팔로워</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">18,450</div>
-                        <div class="stat-label">총 좋아요</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">1,246</div>
-                        <div class="stat-label">총 댓글</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-2" style="margin-top: 32px;">
-                    <div class="card">
-                        <h3 style="margin-bottom: 20px;">📈 주간 성과</h3>
-                        <canvas id="chart-weekly"></canvas>
-                    </div>
-                    <div class="card">
-                        <h3 style="margin-bottom: 20px;">📊 요일별 분석</h3>
-                        <canvas id="chart-daily"></canvas>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom: 20px;">🎯 게시물별 성과</h3>
-                    <div id="post-performance">
-                        <div style="color: #65676b; text-align: center; padding: 32px; background: #fafafa; border-radius: 12px;">
-                            데이터가 없습니다
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SETTINGS TAB -->
-            <div id="settings" class="tab-content">
-                <h1>설정</h1>
-
-                <div id="settings-message" class="message"></div>
-
-                <h3 style="margin-bottom: 20px; margin-top: 32px;">👤 기본 정보</h3>
-                <div class="grid grid-2">
-                    <div class="card">
-                        <div class="form-group">
-                            <label>📱 인스타그램 계정</label>
-                            <input type="text" id="settings-instagram" value="@eunbickaelri">
-                        </div>
-                        <div class="form-group">
-                            <label>📧 이메일</label>
-                            <input type="email" id="settings-email" value="hun2620@naver.com">
-                        </div>
-                        <div class="form-group">
-                            <label>🏪 가게명</label>
-                            <input type="text" id="settings-name" value="은빛캘리">
-                        </div>
-                        <div class="form-group">
-                            <label>🏷️ 카테고리</label>
-                            <select id="settings-category">
-                                <option value="">선택하세요</option>
-                                <option value="음식점">🍽️ 음식점</option>
-                                <option value="카페">☕ 카페</option>
-                                <option value="공예">✨ 공예</option>
-                                <option value="패션">👗 패션</option>
-                                <option value="뷰티">💄 뷰티</option>
-                                <option value="여행">✈️ 여행</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="margin-bottom: 16px;">📌 목표 설정</h3>
-                        <div class="form-group">
-                            <label>📅 월간 게시물 목표</label>
-                            <input type="number" id="settings-posts-goal" value="8" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>👥 목표 팔로워</label>
-                            <input type="number" id="settings-followers-goal" value="100" min="1">
-                        </div>
-                        <div class="form-group">
-                            <label>📊 목표 참여도 (%)</label>
-                            <input type="number" id="settings-engagement-goal" value="5" min="0.1" step="0.1">
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="margin-bottom: 20px; margin-top: 32px;">🎨 매장 홍보 스타일</h3>
-                <div class="grid grid-2">
-                    <div class="card">
-                        <h3 style="margin-bottom: 16px; font-size: 14px;">프로필 설정</h3>
-                        <div class="form-group">
-                            <label>프로필 이미지</label>
-                            <div class="upload-area" id="profile-upload-area" style="padding: 20px;">
-                                <div style="font-size: 32px;">📷</div>
-                                <div class="upload-text" style="font-size: 12px;">클릭하여 업로드</div>
-                            </div>
-                            <input type="file" id="profile-image" accept="image/*" style="display: none;">
-                        </div>
-
-                        <div class="form-group">
-                            <label>매장 설명</label>
-                            <textarea id="store-description" placeholder="매장에 대해 설명해주세요..." style="min-height: 80px;"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>연락처</label>
-                            <input type="text" id="store-phone" placeholder="010-0000-0000">
-                        </div>
-
-                        <div class="form-group">
-                            <label>주소</label>
-                            <input type="text" id="store-address" placeholder="의정부시 ...">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3 style="margin-bottom: 16px; font-size: 14px;">스타일 미리보기</h3>
-                        <div class="store-profile-preview">
-                            <div class="profile-image-preview" id="profile-image-preview-box">
-                                📷
-                            </div>
-                            <div class="profile-name" id="profile-name-preview">은빛캘리</div>
-                            <div class="profile-category" id="profile-category-preview">✨ 공예</div>
-                            <div class="profile-description" id="profile-description-preview">매장 설명</div>
-                            <div class="profile-contact">
-                                <div id="profile-phone-preview">📞 연락처</div>
-                                <div id="profile-address-preview">📍 주소</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h3 style="margin-bottom: 20px; margin-top: 32px;">🌈 색상 테마</h3>
-                <div class="card">
-                    <div class="color-palette">
-                        <div class="color-option selected" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" onclick="selectTheme('default', this)" title="기본"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="selectTheme('pink', this)" title="핑크"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="selectTheme('blue', this)" title="블루"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="selectTheme('green', this)" title="그린"></div>
-                        <div class="color-option" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);" onclick="selectTheme('orange', this)" title="오렌지"></div>
-                    </div>
-                </div>
-
-                <div class="button-group" style="margin-top: 32px;">
-                    <button class="btn btn-primary" onclick="saveSettings()" style="width: 100%;">💾 저장</button>
-                </div>
-            </div>
-
+          </div>
         </div>
-    </div>
-
-    <script>
-        const themes = {
-            default: { primary: '#667eea', secondary: '#764ba2', name: '기본' },
-            pink: { primary: '#f093fb', secondary: '#f5576c', name: '핑크' },
-            blue: { primary: '#4facfe', secondary: '#00f2fe', name: '블루' },
-            green: { primary: '#43e97b', secondary: '#38f9d7', name: '그린' },
-            orange: { primary: '#fa709a', secondary: '#fee140', name: '오렌지' }
-        };
-
-        const appData = {
-            posts: [],
-            scheduledPosts: [],
-            settings: {
-                instagram: '@eunbickaelri',
-                email: 'hun2620@naver.com',
-                name: '은빛캘리',
-                category: '공예',
-                profileImage: null,
-                storeDescription: '',
-                storePhone: '',
-                storeAddress: '',
-                theme: 'default'
-            }
-        };
-
-        // ===== 모바일 메뉴 =====
-        function toggleMobileMenu() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('open');
-        }
-
-        function switchTab(tabName, element) {
-            try {
-                toggleMobileMenu();
-                
-                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-                document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-                
-                const tab = document.getElementById(tabName);
-                if (tab) {
-                    tab.classList.add('active');
-                    element.classList.add('active');
-                }
-
-                if (tabName === 'analytics') {
-                    setTimeout(() => initAnalyticsCharts(), 300);
-                }
-
-                if (tabName === 'schedule') {
-                    setTimeout(() => {
-                        renderCalendar();
-                        updateScheduledPosts();
-                    }, 300);
-                }
-            } catch (error) {
-                console.error('탭 전환 오류:', error);
-            }
-        }
-
-        // ===== 드래그 앤 드롭 =====
-        function setupDragAndDrop(uploadAreaId, fileInputId) {
-            const uploadArea = document.getElementById(uploadAreaId);
-            const fileInput = document.getElementById(fileInputId);
-
-            if (!uploadArea || !fileInput) return;
-
-            uploadArea.addEventListener('click', () => fileInput.click());
-
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('drag-over');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('drag-over');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('drag-over');
-                
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    fileInput.files = files;
-                    const event = new Event('change', { bubbles: true });
-                    fileInput.dispatchEvent(event);
-                }
-            });
-        }
-
-        setupDragAndDrop('post-upload-area', 'post-image');
-        setupDragAndDrop('schedule-upload-area', 'schedule-image');
-        setupDragAndDrop('profile-upload-area', 'profile-image');
-
-        function showMessage(tabId, type, message) {
-            const messageEl = document.getElementById(`${tabId}-message`);
-            if (messageEl) {
-                messageEl.textContent = message;
-                messageEl.className = `message show ${type}`;
-                setTimeout(() => messageEl.classList.remove('show'), 4000);
-            }
-        }
-
-        function setLoading(tabId, show) {
-            const loading = document.getElementById(`${tabId}-loading`);
-            if (loading) {
-                if (show) loading.classList.add('show');
-                else loading.classList.remove('show');
-            }
-        }
-
-        async function generateCaption() {
-            try {
-                const imageInput = document.getElementById('post-image');
-                const tone = document.getElementById('post-tone').value;
-
-                if (!tone) {
-                    showMessage('post', 'error', '톤을 선택해주세요');
-                    return;
-                }
-
-                setLoading('post', true);
-
-                let imageBase64 = null;
-                let imageType = 'image/jpeg';
-
-                if (imageInput.files[0]) {
-                    const file = imageInput.files[0];
-                    imageType = file.type || 'image/jpeg';
-                    
-                    imageBase64 = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = (e) => resolve(e.target.result.split(',')[1]);
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-                }
-
-                const response = await fetch('/api/caption', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tone, image: imageBase64, imageType })
-                });
-
-                if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'API 오류');
-                }
-
-                const data = await response.json();
-                document.getElementById('post-content').value = data.caption;
-                showMessage('post', 'success', '✅ 캡션 생성 완료!');
-            } catch (error) {
-                showMessage('post', 'error', `❌ 오류: ${error.message}`);
-            } finally {
-                setLoading('post', false);
-            }
-        }
-
-        function applyTemplate() {
-            const template = document.getElementById('caption-template').value;
-            const templates = {
-                template1: '오늘의 추천을 소개합니다! 🌟\n이 제품은 정말 특별해요.\n\n#추천 #오늘 #특별',
-                template2: '이런 순간을 사랑합니다 ❤️\n함께하는 시간이 최고예요.\n\n#순간 #감성 #함께',
-                template3: '한주를 시작하며 💪\n새로운 도전, 함께해요!\n\n#월요일 #화이팅 #함께',
-                template4: '항상 감사합니다 🙏\n여러분의 사랑이 저를 행복하게 만들어요.\n\n#감사 #사랑 #응원'
-            };
-
-            if (template && templates[template]) {
-                document.getElementById('post-content').value = templates[template];
-            }
-        }
-
-        function savePost() {
-            const content = document.getElementById('post-content').value;
-            if (!content) {
-                showMessage('post', 'error', '캡션을 입력해주세요');
-                return;
-            }
-
-            appData.posts.push({
-                id: Date.now(),
-                content,
-                date: new Date()
-            });
-
-            showMessage('post', 'success', '📤 게시물이 발행되었습니다!');
-            clearPostForm();
-            updateStats();
-        }
-
-        function clearPostForm() {
-            document.getElementById('post-image').value = '';
-            document.getElementById('post-content').value = '';
-            document.getElementById('post-preview').innerHTML = `
-                <div style="color: #65676b; text-align: center;">
-                    <div style="font-size: 48px; margin-bottom: 10px;">📸</div>
-                    <div>미리보기</div>
+      </section>
+      
+      <!-- ====== SCHEDULE ====== -->
+      <section class="tab" id="tab-schedule">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">메인 / 예약 발행</div>
+            <h1 class="page-title">예약 발행</h1>
+            <div class="page-sub">최적의 시간에 자동으로 게시되도록 예약해보세요</div>
+          </div>
+          <button class="btn btn-primary" onclick="schedulePost()">📅 예약 추가</button>
+        </div>
+        
+        <div class="schedule-layout">
+          <div class="card">
+            <div class="cal-head">
+              <h2 class="section-title" id="cal-month">2026년 5월</h2>
+              <div class="cal-nav">
+                <button onclick="prevMonth()">◀</button>
+                <button onclick="nextMonth()">▶</button>
+              </div>
+            </div>
+            <div class="cal-grid" id="cal-grid"></div>
+          </div>
+          
+          <div class="card">
+            <h2 class="section-title" style="margin-bottom: 16px;">⚙️ 게시 설정</h2>
+            <div class="form-group">
+              <label class="form-label">⏰ 발행 시간</label>
+              <input type="time" class="form-input" id="schedule-time" value="10:00">
+            </div>
+            <div class="form-group">
+              <label class="form-label">📸 사진</label>
+              <div style="background: var(--bg); border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: all .2s;" onclick="document.getElementById('schedule-image').click()" onmouseover="this.style.borderColor='var(--purple)'" onmouseout="this.style.borderColor='var(--border)'">
+                <input type="file" id="schedule-image" accept="image/*" hidden onchange="previewSchedule(this)">
+                <div id="schedule-img-preview" style="font-size: 28px;">📷</div>
+                <div style="font-size: 11px; color: var(--sub); margin-top: 6px;">클릭해서 업로드</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">✍️ 캡션</label>
+              <textarea class="caption-textarea" id="schedule-caption" placeholder="캡션을 입력하세요..." style="min-height: 100px;" oninput="updateMobilePreview()"></textarea>
+            </div>
+            <button class="btn btn-gradient" style="width: 100%; justify-content: center;" onclick="schedulePost()">📅 예약 발행</button>
+          </div>
+          
+          <div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--ter); letter-spacing: 0.5px; margin-bottom: 10px;">📱 미리보기</div>
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <div class="phone-header">
+                  <div class="phone-avatar"></div>
+                  <div class="phone-name">eunbickaelri</div>
                 </div>
-            `;
-        }
-
-        document.addEventListener('change', function(e) {
-            if (e.target.id === 'post-image' && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    document.getElementById('post-preview').innerHTML = `<img src="${event.target.result}" class="preview-image">`;
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            } else if (e.target.id === 'schedule-image' && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    document.getElementById('mobile-image-preview').innerHTML = `<img src="${event.target.result}" style="width: 100%; height: 100%; object-fit: cover;">`;
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            } else if (e.target.id === 'profile-image' && e.target.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    document.getElementById('profile-image-preview-box').innerHTML = `<img src="${event.target.result}">`;
-                    appData.settings.profileImage = event.target.result;
-                };
-                reader.readAsDataURL(e.target.files[0]);
-            }
-        });
-
-        document.addEventListener('input', function(e) {
-            if (e.target.id === 'schedule-caption') {
-                document.getElementById('mobile-caption-preview').textContent = e.target.value || '캡션이 여기 표시됩니다';
-            }
-            if (e.target.id === 'settings-name') {
-                document.getElementById('profile-name-preview').textContent = e.target.value || '은빛캘리';
-            }
-            if (e.target.id === 'store-description') {
-                document.getElementById('profile-description-preview').textContent = e.target.value || '매장 설명';
-            }
-            if (e.target.id === 'store-phone') {
-                document.getElementById('profile-phone-preview').textContent = e.target.value ? `📞 ${e.target.value}` : '📞 연락처';
-            }
-            if (e.target.id === 'store-address') {
-                document.getElementById('profile-address-preview').textContent = e.target.value ? `📍 ${e.target.value}` : '📍 주소';
-            }
-        });
-
-        let currentDate = new Date();
-        let selectedDay = null;
-
-        function renderCalendar() {
-            const calendar = document.getElementById('schedule-calendar');
-            if (!calendar) return;
-
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            let html = `
-                <div class="calendar-header">
-                    <button class="btn btn-secondary" onclick="previousMonth()" style="padding: 6px 10px; font-size: 12px;">◀</button>
-                    <div style="flex: 1; text-align: center; font-weight: 600; color: #000;">${year}년 ${month + 1}월</div>
-                    <button class="btn btn-secondary" onclick="nextMonth()" style="padding: 6px 10px; font-size: 12px;">▶</button>
+                <div class="phone-img" id="phone-img" style="background: var(--grad-sunset);">📷</div>
+                <div class="phone-actions">
+                  <span>♡</span><span>💬</span><span>➤</span>
                 </div>
-                <div class="calendar-grid">
-            `;
-
-            const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
-            dayNames.forEach(name => html += `<div class="day-header">${name}</div>`);
-
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div class="day other-month"></div>';
-            }
-
-            for (let day = 1; day <= daysInMonth; day++) {
-                const selected = selectedDay === day ? 'selected' : '';
-                html += `<div class="day ${selected}" onclick="selectDate(event, ${day})">${day}</div>`;
-            }
-
-            html += '</div>';
-            calendar.innerHTML = html;
-        }
-
-        function selectDate(event, day) {
-            event.preventDefault();
-            selectedDay = day;
-            renderCalendar();
-        }
-
-        function previousMonth() {
-            currentDate.setMonth(currentDate.getMonth() - 1);
-            selectedDay = null;
-            renderCalendar();
-        }
-
-        function nextMonth() {
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            selectedDay = null;
-            renderCalendar();
-        }
-
-        function schedulePost() {
-            const caption = document.getElementById('schedule-caption').value;
-            if (!caption) {
-                showMessage('schedule', 'error', '캡션을 입력해주세요');
-                return;
-            }
-
-            const time = document.getElementById('schedule-time').value;
-            appData.scheduledPosts.push({
-                id: Date.now(),
-                caption,
-                time,
-                date: selectedDay ? `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}` : '선택 필요'
-            });
-
-            showMessage('schedule', 'success', '📅 게시물이 예약되었습니다!');
-            document.getElementById('schedule-caption').value = '';
-            updateScheduledPosts();
-        }
-
-        function updateScheduledPosts() {
-            const container = document.getElementById('scheduled-posts');
-            if (!container) return;
+                <div class="phone-body">
+                  <div class="phone-likes">245 likes</div>
+                  <div class="phone-caption-text"><b>eunbickaelri</b> <span id="phone-caption">캡션이 여기에 표시됩니다</span></div>
+                  <div style="color: var(--ter); margin-top: 4px; font-size: 8px;">2분 전</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="schedule-list" id="schedule-list">
+          <h2 class="section-title" style="margin-bottom: 14px;">📋 예약된 게시물</h2>
+          <div id="scheduled-posts"></div>
+        </div>
+      </section>
+      
+      <!-- ====== ANALYTICS ====== -->
+      <section class="tab" id="tab-analytics">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">메인 / 성과 분석</div>
+            <h1 class="page-title">성과 분석</h1>
+            <div class="page-sub">데이터로 보는 우리 매장의 성장 📊</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn btn-secondary">📅 최근 7일</button>
+            <button class="btn btn-secondary">📥 리포트 다운로드</button>
+          </div>
+        </div>
+        
+        <div class="analytics-grid">
+          <div class="stat-card">
+            <div>
+              <span class="stat-card-emoji">📸</span>
+              <div class="stat-card-label">총 게시물</div>
+              <div class="stat-card-value">42</div>
+            </div>
+            <span class="badge-up">↑ 5개 이번 주</span>
+          </div>
+          <div class="stat-card">
+            <div>
+              <span class="stat-card-emoji">👥</span>
+              <div class="stat-card-label">팔로워</div>
+              <div class="stat-card-value">2,847</div>
+            </div>
+            <span class="badge-up">↑ +124 이번 주</span>
+          </div>
+          <div class="stat-card">
+            <div>
+              <span class="stat-card-emoji">❤️</span>
+              <div class="stat-card-label">총 좋아요</div>
+              <div class="stat-card-value">18.4K</div>
+            </div>
+            <span class="badge-up">↑ 12.4%</span>
+          </div>
+          <div class="stat-card">
+            <div>
+              <span class="stat-card-emoji">💬</span>
+              <div class="stat-card-label">총 댓글</div>
+              <div class="stat-card-value">1,246</div>
+            </div>
+            <span class="badge-up orange">↑ 8.2%</span>
+          </div>
+        </div>
+        
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-head">
+              <h2 class="section-title">📈 주간 참여도 추이</h2>
+              <div class="chart-tabs">
+                <button class="chart-tab active">7일</button>
+                <button class="chart-tab">30일</button>
+                <button class="chart-tab">90일</button>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="chart-weekly"></canvas></div>
+          </div>
+          
+          <div class="insight-card">
+            <div class="ai-spark">✨</div>
+            <div class="ai-label" style="margin-top: 12px;">AI 인사이트</div>
+            <div class="insight-title">이번 주, 이렇게 해보세요</div>
+            <ul class="insight-list">
+              <li>금요일 오후 8시가 가장 좋은 발행 시간이에요</li>
+              <li>"감성적" 톤의 게시물이 32% 더 좋은 반응을 얻고 있어요</li>
+              <li>해시태그 #봄캘리가 트렌드에 올랐어요 — 활용해보세요</li>
+              <li>스토리 활용도가 낮아요 (주 2회 → 5회 권장)</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="chart-card" style="margin-bottom: 16px;">
+          <div class="chart-head">
+            <h2 class="section-title">📊 요일별 분석</h2>
+            <button class="section-link">상세 보기 →</button>
+          </div>
+          <div class="chart-canvas-wrap"><canvas id="chart-daily"></canvas></div>
+        </div>
+        
+        <div class="chart-card">
+          <div class="chart-head">
+            <h2 class="section-title">🎯 가장 인기있는 게시물</h2>
+            <button class="section-link">전체 보기 →</button>
+          </div>
+          <div class="top-posts">
+            <div class="top-post">
+              <div class="top-post-img" style="background: var(--grad-sunset);">🥇</div>
+              <span class="top-post-rank">#1</span>
+              <div class="top-post-title">감성적인 봄 캘리그래피 워크샵 후기 모음</div>
+              <div class="top-post-stats">❤️ 412<span>💬 56</span><span>📅 5/12</span></div>
+            </div>
+            <div class="top-post">
+              <div class="top-post-img" style="background: var(--grad-dreamy);">🥈</div>
+              <span class="top-post-rank">#2</span>
+              <div class="top-post-title">오늘의 추천 작품 - 봄날 손편지 시리즈</div>
+              <div class="top-post-stats">❤️ 245<span>💬 32</span><span>📅 5/18</span></div>
+            </div>
+            <div class="top-post">
+              <div class="top-post-img" style="background: var(--grad-spring);">🥉</div>
+              <span class="top-post-rank">#3</span>
+              <div class="top-post-title">주말 워크샵 안내 — 새 학기 캘리 클래스</div>
+              <div class="top-post-stats">❤️ 178<span>💬 24</span><span>📅 5/20</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- ====== SETTINGS ====== -->
+      <section class="tab" id="tab-settings">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">설정</div>
+            <h1 class="page-title">설정</h1>
+            <div class="page-sub">매장 정보, 목표, 테마를 관리해보세요</div>
+          </div>
+          <button class="btn btn-primary" onclick="saveSettings()">💾 변경사항 저장</button>
+        </div>
+        
+        <div class="settings-layout">
+          <nav class="settings-nav">
+            <button class="settings-nav-item active" onclick="scrollToSettings('profile', this)">👤 매장 프로필</button>
+            <button class="settings-nav-item" onclick="scrollToSettings('goals', this)">🎯 목표</button>
+            <button class="settings-nav-item" onclick="scrollToSettings('theme', this)">🎨 테마</button>
+            <button class="settings-nav-item" onclick="scrollToSettings('account', this)">🔐 계정</button>
+          </nav>
+          
+          <div>
+            <div class="settings-section" id="settings-profile">
+              <h3>매장 프로필</h3>
+              <div class="settings-section-desc">고객에게 보여질 매장의 기본 정보를 입력하세요</div>
+              <div class="settings-row">
+                <div class="form-group">
+                  <label class="form-label">🏪 매장명</label>
+                  <input type="text" class="form-input" value="은빛캘리">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">🏷️ 카테고리</label>
+                  <select class="form-input">
+                    <option>✨ 공예</option>
+                    <option>🍽️ 음식점</option>
+                    <option>☕ 카페</option>
+                    <option>👗 패션</option>
+                    <option>💄 뷰티</option>
+                    <option>✈️ 여행</option>
+                  </select>
+                </div>
+              </div>
+              <div class="settings-row">
+                <div class="form-group">
+                  <label class="form-label">📱 인스타그램</label>
+                  <input type="text" class="form-input" value="@eunbickaelri">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">📧 이메일</label>
+                  <input type="email" class="form-input" value="hun2620@naver.com">
+                </div>
+              </div>
+              <div class="settings-row">
+                <div class="form-group">
+                  <label class="form-label">📞 연락처</label>
+                  <input type="text" class="form-input" placeholder="010-0000-0000">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">📍 주소</label>
+                  <input type="text" class="form-input" placeholder="의정부시 ...">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">📝 매장 소개</label>
+                <textarea class="caption-textarea" placeholder="매장에 대해 짧게 소개해주세요 (100자 이내)"></textarea>
+              </div>
+            </div>
             
-            if (appData.scheduledPosts.length === 0) {
-                container.innerHTML = '<div style="color: #65676b; text-align: center; padding: 32px; background: #fafafa; border-radius: 12px; border: 1px solid #e5e7eb;">예약된 게시물이 없습니다</div>';
-                return;
-            }
-
-            container.innerHTML = appData.scheduledPosts.map(post => `
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 15px;">
-                        <div>
-                            <div style="font-weight: 600; color: #667eea; margin-bottom: 8px;">📅 ${post.date} | ⏰ ${post.time}</div>
-                            <div style="font-size: 13px; color: #65676b; white-space: pre-wrap;">${post.caption.substring(0, 100)}...</div>
-                        </div>
-                        <button class="btn btn-secondary" onclick="deleteScheduledPost(${post.id})" style="padding: 6px 12px; font-size: 12px; white-space: nowrap;">🗑️ 삭제</button>
-                    </div>
+            <div class="settings-section" id="settings-goals">
+              <h3>월간 목표</h3>
+              <div class="settings-section-desc">목표를 설정하면 진행 상황을 추적해드려요</div>
+              <div class="settings-row">
+                <div class="form-group">
+                  <label class="form-label">📅 월간 게시물 목표</label>
+                  <input type="number" class="form-input" value="8">
                 </div>
-            `).join('');
-        }
-
-        function deleteScheduledPost(id) {
-            appData.scheduledPosts = appData.scheduledPosts.filter(p => p.id !== id);
-            updateScheduledPosts();
-            showMessage('schedule', 'success', '✅ 예약 게시물이 삭제되었습니다');
-        }
-
-        function updateStats() {
-            document.getElementById('stat-posts').textContent = appData.posts.length;
-        }
-
-        function applyTheme(themeName) {
-            try {
-                const theme = themes[themeName] || themes.default;
-                const primaryColor = theme.primary;
-                const secondaryColor = theme.secondary;
-
-                document.querySelectorAll('.stat-card').forEach(card => {
-                    card.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
-                });
-
-                document.querySelectorAll('.btn-primary').forEach(btn => {
-                    btn.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
-                });
-
-                document.querySelectorAll('.welcome-banner').forEach(banner => {
-                    banner.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 50%, #f093fb 100%)`;
-                });
-
-                document.querySelectorAll('.profile-category').forEach(el => {
-                    el.style.color = primaryColor;
-                });
-
-                console.log(`✅ 테마 적용됨: ${theme.name}`);
-            } catch (error) {
-                console.error('테마 적용 오류:', error);
-            }
-        }
-
-        function selectTheme(theme, element) {
-            try {
-                document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
-                element.classList.add('selected');
-                appData.settings.theme = theme;
-                applyTheme(theme);
-                showMessage('settings', 'success', `🎨 ${themes[theme].name} 테마로 변경되었습니다!`);
-            } catch (error) {
-                console.error('테마 선택 오류:', error);
-            }
-        }
-
-        let weeklyChart, dailyChart;
-
-        function initAnalyticsCharts() {
-            const weeklyCtx = document.getElementById('chart-weekly');
-            const dailyCtx = document.getElementById('chart-daily');
-
-            if (!weeklyCtx || !dailyCtx) return;
-
-            if (weeklyChart) weeklyChart.destroy();
-            if (dailyChart) dailyChart.destroy();
-
-            const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
-
-            weeklyChart = new Chart(weeklyCtx, {
-                type: 'line',
-                data: {
-                    labels: dayNames,
-                    datasets: [{
-                        label: '좋아요',
-                        data: [15, 28, 42, 35, 50, 68, 45],
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.08)',
-                        tension: 0.4,
-                        fill: true,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#667eea'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
-                }
-            });
-
-            dailyChart = new Chart(dailyCtx, {
-                type: 'bar',
-                data: {
-                    labels: dayNames,
-                    datasets: [{
-                        label: '댓글',
-                        data: [5, 8, 12, 7, 15, 20, 10],
-                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
-                        borderColor: '#667eea',
-                        borderWidth: 1,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
-                }
-            });
-        }
-
-        function saveSettings() {
-            appData.settings.name = document.getElementById('settings-name').value;
-            appData.settings.email = document.getElementById('settings-email').value;
-            appData.settings.instagram = document.getElementById('settings-instagram').value;
-            appData.settings.category = document.getElementById('settings-category').value;
-            appData.settings.storeDescription = document.getElementById('store-description').value;
-            appData.settings.storePhone = document.getElementById('store-phone').value;
-            appData.settings.storeAddress = document.getElementById('store-address').value;
-
-            applyTheme(appData.settings.theme);
-            showMessage('settings', 'success', '✅ 설정이 저장되었습니다');
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            updateStats();
-            applyTheme(appData.settings.theme);
-            console.log('✅ 대시보드 로드 완료 (모바일 최적화)');
-        });
-    </script>
-
-    <!-- Google Sheets 팝업 -->
-    <div id="google-popup" style="position: fixed; bottom: 20px; right: 20px; width: 280px; background: white; border: 2px solid #667eea; border-radius: 12px; padding: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 999; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h4 style="margin: 0; color: #667eea; font-size: 14px; font-weight: 600;">🔗 Google Sheets</h4>
-            <span onclick="document.getElementById('google-popup').style.display='none'" style="cursor: pointer; font-size: 18px; color: #999;">✕</span>
+                <div class="form-group">
+                  <label class="form-label">👥 팔로워 목표</label>
+                  <input type="number" class="form-input" value="3000">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">📊 참여도 목표 (%)</label>
+                <input type="number" class="form-input" value="5" step="0.1">
+              </div>
+            </div>
+            
+            <div class="settings-section" id="settings-theme">
+              <h3>색상 테마</h3>
+              <div class="settings-section-desc">매장 분위기에 맞는 테마를 선택하세요</div>
+              <div class="theme-grid">
+                <div>
+                  <div class="theme-swatch active" style="background: var(--grad-hero);" onclick="setTheme(this, 'bloom')"></div>
+                  <div class="theme-label">Bloom (기본)</div>
+                </div>
+                <div>
+                  <div class="theme-swatch" style="background: var(--grad-sunset);" onclick="setTheme(this, 'sunset')"></div>
+                  <div class="theme-label">Sunset</div>
+                </div>
+                <div>
+                  <div class="theme-swatch" style="background: var(--grad-dreamy);" onclick="setTheme(this, 'dreamy')"></div>
+                  <div class="theme-label">Dreamy</div>
+                </div>
+                <div>
+                  <div class="theme-swatch" style="background: var(--grad-spring);" onclick="setTheme(this, 'spring')"></div>
+                  <div class="theme-label">Spring</div>
+                </div>
+                <div>
+                  <div class="theme-swatch" style="background: linear-gradient(135deg, #B5A7FF, #C8F2D9);" onclick="setTheme(this, 'mint')"></div>
+                  <div class="theme-label">Mint</div>
+                </div>
+                <div>
+                  <div class="theme-swatch" style="background: var(--grad-dark);" onclick="setTheme(this, 'dark')"></div>
+                  <div class="theme-label">Midnight</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="settings-section" id="settings-account">
+              <h3>계정 및 플랜</h3>
+              <div class="settings-section-desc">현재 플랜 정보 및 계정 관리</div>
+              <div style="background: var(--grad-rainbow); border-radius: 16px; padding: 20px; color: white; margin-bottom: 16px;">
+                <div style="font-size: 12px; font-weight: 700; opacity: .9;">CURRENT PLAN</div>
+                <div style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 4px 0;">Bloom Free 🌱</div>
+                <div style="font-size: 13px; opacity: .9; margin-bottom: 12px;">기본 기능 무료 · AI 캡션 월 30회</div>
+                <button style="background: white; color: var(--ink); border: none; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 700; cursor: pointer;">🌟 Bloom Pro 업그레이드</button>
+              </div>
+              <button style="background: none; border: 1px solid #FCA5A5; color: #C53030; padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;">계정 삭제</button>
+            </div>
+          </div>
         </div>
-        <input type="text" id="google-sheets-id" placeholder="Sheets ID" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; font-size: 12px; box-sizing: border-box;">
-        <input type="text" id="google-api-key" placeholder="API Key" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; font-size: 12px; box-sizing: border-box;">
-        <button onclick="testGoogleConnection()" style="width: 100%; padding: 8px; background: #667eea; color: white; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">테스트</button>
-        <div id="google-status-msg" style="margin-top: 8px; padding: 8px; border-radius: 4px; font-size: 11px; display: none;"></div>
-    </div>
-
-    <script>
-        window.testGoogleConnection = function() {
-            const id = document.getElementById('google-sheets-id').value;
-            const key = document.getElementById('google-api-key').value;
-            const msg = document.getElementById('google-status-msg');
-            if (!id || !key) {
-                msg.textContent = '❌ ID/키 입력!'; msg.style.display = 'block'; msg.style.background = '#fee2e2';
-                return;
-            }
-            // 백엔드 API 호출 (CORS 문제 해결!)
-            fetch('/api/google-sheets', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ sheetsId: id, apiKey: key })
-            })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.success) {
-                        msg.textContent = '✅ 연결 성공! ' + data.spreadsheetTitle; 
-                        msg.style.background = '#d1fae5'; 
-                        msg.style.color = '#065f46';
-                        localStorage.setItem('gs-id', id); 
-                        localStorage.setItem('gs-key', key);
-                    } else {
-                        msg.textContent = '❌ ' + (data.error || '실패!'); 
-                        msg.style.background = '#fee2e2';
-                        msg.style.color = '#7f1d1d';
-                    }
-                    msg.style.display = 'block';
-                })
-                .catch(e => { 
-                    msg.textContent = '❌ 오류: ' + e.message; 
-                    msg.style.display = 'block'; 
-                    msg.style.background = '#fee2e2';
-                    msg.style.color = '#7f1d1d';
-                });
-        };
-        document.addEventListener('DOMContentLoaded', function() {
-            const id = localStorage.getItem('gs-id');
-            const key = localStorage.getItem('gs-key');
-            if (id) document.getElementById('google-sheets-id').value = id;
-            if (key) document.getElementById('google-api-key').value = key;
+      </section>
+      
+      <!-- ====== AI ASSISTANT (간단) ====== -->
+      <section class="tab" id="tab-ai">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">도구 / AI 어시스턴트</div>
+            <h1 class="page-title">AI 어시스턴트 ✨</h1>
+            <div class="page-sub">캡션 · 해시태그 · 콘텐츠 아이디어를 1초 만에</div>
+          </div>
+        </div>
+        <div class="ai-card" style="padding: 40px;">
+          <div class="ai-spark" style="width: 56px; height: 56px; border-radius: 18px;">✨</div>
+          <div class="ai-title" style="font-size: 28px; margin-top: 20px;">Coming Soon</div>
+          <div class="ai-desc" style="font-size: 14px;">독립 AI 어시스턴트 페이지는 곧 오픈됩니다.<br>지금은 "새 게시물"에서 AI 캡션을 사용해보세요.</div>
+          <button class="ai-btn" onclick="switchTab('post')">새 게시물로 이동 →</button>
+        </div>
+      </section>
+      
+      <!-- ====== HASHTAG (간단) ====== -->
+      <section class="tab" id="tab-hashtag">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">도구 / 해시태그</div>
+            <h1 class="page-title">해시태그 분석</h1>
+            <div class="page-sub">트렌드 해시태그와 성과 추이를 한눈에</div>
+          </div>
+        </div>
+        <div class="ai-card" style="padding: 40px;">
+          <div class="ai-spark" style="width: 56px; height: 56px; border-radius: 18px;">#️⃣</div>
+          <div class="ai-title" style="font-size: 28px; margin-top: 20px;">Coming Soon</div>
+          <div class="ai-desc" style="font-size: 14px;">해시태그 트렌드 분석 도구가 곧 오픈됩니다.</div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+  
+  <script>
+    // ===== STATE =====
+    const state = {
+      currentTab: 'home',
+      tone: '감성적',
+      category: '공예',
+      scheduledPosts: [
+        { id: 1, date: '2026-05-28', time: '10:00', caption: '봄날 햇살처럼 따스한 손편지 💌 #캘리그래피' },
+        { id: 2, date: '2026-05-30', time: '20:00', caption: '주말 워크샵 안내 — 5월 봄 캘리 클래스 신청받습니다 🌸' },
+        { id: 3, date: '2026-06-02', time: '14:00', caption: '신메뉴 안내 — 봄 디저트 캘리그래피 카드 세트 ✨' },
+      ],
+      calDate: new Date(2026, 4, 1),
+      selectedDay: null,
+      currentTheme: 'bloom',
+    };
+    
+    // ===== TABS =====
+    function switchTab(tab) {
+      state.currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const tabEl = document.getElementById('tab-' + tab);
+      if (tabEl) tabEl.classList.add('active');
+      document.querySelectorAll(`.nav-item[data-tab="${tab}"]`).forEach(n => n.classList.add('active'));
+      
+      if (tab === 'analytics') setTimeout(initCharts, 100);
+      if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); updateMobilePreview(); }
+      
+      // Mobile: close sidebar
+      if (window.innerWidth <= 900) {
+        document.getElementById('sidebar').classList.remove('open');
+        document.querySelector('.sidebar-overlay').classList.remove('show');
+      }
+    }
+    
+    document.querySelectorAll('.nav-item[data-tab]').forEach(item => {
+      item.addEventListener('click', () => switchTab(item.dataset.tab));
+    });
+    
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.querySelector('.sidebar-overlay').classList.toggle('show');
+    }
+    
+    // ===== TOAST =====
+    function toast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + type;
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+    
+    // ===== NEW POST =====
+    document.querySelectorAll('.tone-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        state.tone = chip.dataset.tone;
+      });
+    });
+    document.querySelectorAll('.cat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        state.category = chip.dataset.cat;
+      });
+    });
+    
+    // Photo upload (Post)
+    const uploadInput = document.getElementById('upload-input');
+    const uploadZone = document.getElementById('upload-zone');
+    if (uploadInput) {
+      uploadInput.addEventListener('change', (e) => {
+        if (e.target.files[0]) showUploadedImage(e.target.files[0]);
+      });
+    }
+    if (uploadZone) {
+      uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.style.borderColor = 'var(--purple)'; });
+      uploadZone.addEventListener('dragleave', () => { uploadZone.style.borderColor = ''; });
+      uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer.files[0]) showUploadedImage(e.dataTransfer.files[0]);
+      });
+    }
+    function showUploadedImage(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadZone.classList.add('has-image');
+        uploadZone.innerHTML = `<img src="${e.target.result}" alt="업로드된 사진">`;
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    async function regenerateCaption() {
+      const aiOutput = document.getElementById('ai-output');
+      const fallbackSamples = [
+        `봄날 햇살처럼 따스한 손편지 💌\n\n오늘은 캘리그래피로 마음을 전하는 시간을 가져봤어요. 한 글자 한 글자에 담긴 정성이 누군가에겐 큰 위로가 되길 ☘️\n\n#캘리그래피 #손글씨 #감성캘리 #봄캘리 #손편지`,
+        `잔잔한 오후, 펜 끝에서 피어나는 한 줄 ✨\n\n바쁜 일상 속에서도 잠시 멈추고 손글씨로 마음을 정리하는 시간. 오늘은 어떤 글귀를 적어볼까요? 💭\n\n#감성글귀 #손글씨일상 #캘리그래피 #힐링타임 #작가의방`,
+        `봄이 오면 글씨도 피어나요 🌸\n\n이번 주는 봄 시리즈를 준비했어요. 따스한 톤과 부드러운 곡선으로, 보는 것만으로도 마음이 풀어지는 작품 💛\n\n#봄감성 #캘리그래피작가 #손편지 #봄작품 #힐링`,
+      ];
+      
+      // 업로드된 이미지가 있으면 base64로 추출
+      let imageBase64 = null;
+      let imageType = 'image/jpeg';
+      const img = document.querySelector('.upload-zone.has-image img');
+      if (img && img.src.startsWith('data:')) {
+        const parts = img.src.split(',');
+        imageType = parts[0].split(':')[1].split(';')[0];
+        imageBase64 = parts[1];
+      }
+      
+      const originalText = aiOutput.textContent;
+      aiOutput.innerHTML = '<span style="opacity:.7;">✨ AI가 캡션을 생성 중...</span>';
+      
+      try {
+        const res = await fetch('/api/caption', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tone: state.tone, image: imageBase64, imageType }),
         });
-    </script>
-
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || 'API error');
+        }
+        const data = await res.json();
+        aiOutput.textContent = data.caption || fallbackSamples[0];
+        toast('✨ AI 캡션 생성 완료!');
+      } catch (e) {
+        // 로컬 / API 실패 시 샘플 fallback
+        const idx = Math.floor(Math.random() * fallbackSamples.length);
+        aiOutput.textContent = fallbackSamples[idx];
+        toast('💡 샘플 캡션 (API 없음 / 로컬 모드)');
+      }
+    }
+    function copyCaption() {
+      const text = document.getElementById('ai-output').textContent;
+      navigator.clipboard.writeText(text).then(() => toast('📋 클립보드에 복사됐어요'));
+    }
+    function useCaption() {
+      const text = document.getElementById('ai-output').textContent;
+      document.getElementById('caption-final').value = text;
+      updateCaptionMeta();
+      toast('✅ AI 캡션을 가져왔어요');
+    }
+    function applyTemplate(n) {
+      const templates = {
+        1: '오늘의 추천 ✨\n\n특별히 준비한 작품을 소개해드려요. 마음이 닿기를 바라며.\n\n#추천 #오늘 #특별',
+        2: '이런 순간을 사랑합니다 ❤️\n\n함께하는 시간이 최고예요.\n\n#순간 #감성 #함께',
+        3: '항상 감사합니다 🙏\n\n여러분의 사랑이 저를 행복하게 만들어요.\n\n#감사 #사랑 #응원',
+        4: '새롭게 만났어요 🌸\n\n오랜만에 선보이는 신작이에요. 살펴봐주세요!\n\n#신메뉴 #신작 #업데이트',
+      };
+      document.getElementById('caption-final').value = templates[n];
+      updateCaptionMeta();
+    }
+    function updateCaptionMeta() {
+      const text = document.getElementById('caption-final').value;
+      const hashes = (text.match(/#\S+/g) || []).length;
+      document.getElementById('char-count').textContent = `${text.length} / 2,200자`;
+      document.getElementById('hash-count').textContent = `📝 ${hashes} 해시태그`;
+    }
+    function saveDraft() { toast('💾 임시저장 완료'); }
+    function publishPost() {
+      const cap = document.getElementById('caption-final').value;
+      if (!cap.trim()) { toast('✍️ 캡션을 입력해주세요'); return; }
+      toast('🎉 게시물이 발행됐어요!');
+      document.getElementById('caption-final').value = '';
+      updateCaptionMeta();
+    }
+    
+    // ===== SCHEDULE =====
+    function renderCalendar() {
+      const cal = document.getElementById('cal-grid');
+      const monthEl = document.getElementById('cal-month');
+      if (!cal) return;
+      const y = state.calDate.getFullYear();
+      const m = state.calDate.getMonth();
+      monthEl.textContent = `${y}년 ${m + 1}월`;
+      const first = new Date(y, m, 1).getDay();
+      const days = new Date(y, m + 1, 0).getDate();
+      const today = new Date();
+      const eventDates = state.scheduledPosts.map(p => p.date);
+      
+      let html = '';
+      const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+      dayNames.forEach(d => html += `<div class="cal-day-header">${d}</div>`);
+      for (let i = 0; i < first; i++) html += '<div></div>';
+      for (let d = 1; d <= days; d++) {
+        const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const classes = ['cal-day'];
+        if (state.selectedDay === d) classes.push('selected');
+        if (today.getFullYear() === y && today.getMonth() === m && today.getDate() === d) classes.push('today');
+        if (eventDates.includes(dateStr)) classes.push('has-event');
+        html += `<button class="${classes.join(' ')}" onclick="selectDay(${d})">${d}</button>`;
+      }
+      cal.innerHTML = html;
+    }
+    function selectDay(d) { state.selectedDay = d; renderCalendar(); }
+    function prevMonth() { state.calDate.setMonth(state.calDate.getMonth() - 1); state.selectedDay = null; renderCalendar(); }
+    function nextMonth() { state.calDate.setMonth(state.calDate.getMonth() + 1); state.selectedDay = null; renderCalendar(); }
+    
+    function renderScheduledPosts() {
+      const c = document.getElementById('scheduled-posts');
+      if (!c) return;
+      if (state.scheduledPosts.length === 0) {
+        c.innerHTML = `<div style="background: var(--white); border-radius: 16px; padding: 32px; text-align: center; color: var(--sub); font-size: 13px;">아직 예약된 게시물이 없어요</div>`;
+        return;
+      }
+      c.innerHTML = state.scheduledPosts.map(p => {
+        const dt = new Date(p.date);
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const d = String(dt.getDate()).padStart(2, '0');
+        return `
+          <div class="schedule-row">
+            <div class="schedule-date">
+              <div class="schedule-date-d">${d}</div>
+              <div class="schedule-date-m">${m}월</div>
+            </div>
+            <div class="schedule-row-info">
+              <div class="schedule-row-cap">${p.caption}</div>
+              <div class="schedule-row-meta">⏰ ${p.time}</div>
+            </div>
+            <button class="schedule-row-delete" onclick="deleteScheduled(${p.id})">🗑️</button>
+          </div>`;
+      }).join('');
+    }
+    function deleteScheduled(id) {
+      state.scheduledPosts = state.scheduledPosts.filter(p => p.id !== id);
+      renderScheduledPosts();
+      renderCalendar();
+      toast('🗑️ 삭제됐어요');
+    }
+    function schedulePost() {
+      const cap = document.getElementById('schedule-caption').value;
+      if (!cap.trim()) { toast('✍️ 캡션을 입력해주세요'); return; }
+      if (!state.selectedDay) { toast('📅 날짜를 선택해주세요'); return; }
+      const y = state.calDate.getFullYear();
+      const m = state.calDate.getMonth() + 1;
+      const time = document.getElementById('schedule-time').value;
+      state.scheduledPosts.push({
+        id: Date.now(),
+        date: `${y}-${String(m).padStart(2, '0')}-${String(state.selectedDay).padStart(2, '0')}`,
+        time, caption: cap,
+      });
+      document.getElementById('schedule-caption').value = '';
+      renderScheduledPosts();
+      renderCalendar();
+      toast('📅 예약 완료!');
+    }
+    function previewSchedule(input) {
+      if (input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('schedule-img-preview').innerHTML = `<img src="${e.target.result}" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;">`;
+          document.getElementById('phone-img').innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    function updateMobilePreview() {
+      const cap = document.getElementById('schedule-caption').value;
+      document.getElementById('phone-caption').textContent = cap || '캡션이 여기에 표시됩니다';
+    }
+    
+    // ===== ANALYTICS =====
+    let weeklyChart, dailyChart;
+    function initCharts() {
+      const days = ['월', '화', '수', '목', '금', '토', '일'];
+      const wc = document.getElementById('chart-weekly');
+      const dc = document.getElementById('chart-daily');
+      if (!wc || !dc) return;
+      if (weeklyChart) weeklyChart.destroy();
+      if (dailyChart) dailyChart.destroy();
+      
+      const ctx1 = wc.getContext('2d');
+      const grad = ctx1.createLinearGradient(0, 0, 0, 240);
+      grad.addColorStop(0, 'rgba(181,167,255,.4)');
+      grad.addColorStop(1, 'rgba(255,181,216,0)');
+      
+      weeklyChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: days,
+          datasets: [{
+            label: '좋아요', data: [120, 180, 250, 220, 380, 420, 290],
+            borderColor: '#B5A7FF', borderWidth: 3,
+            backgroundColor: grad,
+            tension: 0.4, fill: true,
+            pointBackgroundColor: '#FFB5D8', pointBorderColor: 'white',
+            pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7,
+          }, {
+            label: '댓글', data: [12, 18, 28, 22, 38, 52, 32],
+            borderColor: '#FFB5D8', borderWidth: 3,
+            tension: 0.4, fill: false,
+            pointBackgroundColor: 'white', pointBorderColor: '#FFB5D8',
+            pointBorderWidth: 2, pointRadius: 4,
+          }],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: true, position: 'top', labels: { font: { family: 'Pretendard, sans-serif', size: 12 }, padding: 16, usePointStyle: true } } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.04)' }, ticks: { font: { family: 'Pretendard, sans-serif' } } },
+            x: { grid: { display: false }, ticks: { font: { family: 'Pretendard, sans-serif' } } },
+          },
+        },
+      });
+      
+      dailyChart = new Chart(dc.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: days,
+          datasets: [{
+            label: '게시물 수',
+            data: [3, 2, 4, 2, 5, 6, 3],
+            backgroundColor: ['#FFB5D8', '#FFB89E', '#FFF2BE', '#C8F2D9', '#D4C9FF', '#B5A7FF', '#FFB5D8'],
+            borderRadius: 10, borderSkipped: false,
+          }],
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.04)' }, ticks: { font: { family: 'Pretendard, sans-serif' } } },
+            x: { grid: { display: false }, ticks: { font: { family: 'Pretendard, sans-serif' } } },
+          },
+        },
+      });
+    }
+    
+    // ===== SETTINGS =====
+    function setTheme(el, name) {
+      document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      state.currentTheme = name;
+      toast(`🎨 ${name} 테마 적용`);
+    }
+    function saveSettings() { toast('💾 설정이 저장됐어요'); }
+    function scrollToSettings(id, el) {
+      document.querySelectorAll('.settings-nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('settings-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCalendar();
+      renderScheduledPosts();
+      updateMobilePreview();
+      console.log('🌸 Bloom Dashboard ready!');
+    });
+  </script>
 </body>
 </html>
