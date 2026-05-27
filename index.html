@@ -540,6 +540,60 @@
     
     /* ===== TIME PICKER ===== */
     .time-picker { background: var(--bg); border-radius: 16px; padding: 16px; }
+    
+    /* ===== AI 분석 결과 (이미지 분석 통합) ===== */
+    .ai-analysis-box {
+      background: linear-gradient(135deg, rgba(255,181,216,.08), rgba(181,167,255,.08));
+      border: 1px solid rgba(181,167,255,.3);
+      border-radius: var(--r-lg);
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+    .ai-analysis-box.show { display: block; animation: fadeIn .3s ease-out; }
+    .ai-analysis-head {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
+    }
+    .ai-analysis-title { font-size: 12px; font-weight: 700; color: var(--ink); }
+    .ai-analysis-meta { font-size: 10px; color: var(--sub); margin-left: auto; }
+    .ai-analyzing {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px; background: rgba(255,255,255,.5); border-radius: 12px;
+    }
+    .ai-spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(181,167,255,.3);
+      border-top-color: var(--purple);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hashtag-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .hashtag-chip {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--ink);
+      cursor: pointer; transition: all .15s;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .hashtag-chip:hover {
+      border-color: var(--purple); background: rgba(181,167,255,.08);
+      transform: translateY(-1px);
+    }
+    .hashtag-chip.added { background: var(--ink); color: white; border-color: var(--ink); }
+    .hashtag-chip.added::after { content: '✓'; margin-left: 2px; }
+    .hashtag-chip-plus {
+      background: rgba(181,167,255,.15); border: 1px dashed var(--purple);
+      color: var(--purple); font-weight: 700;
+    }
+    .add-all-btn {
+      background: var(--ink); color: white; border: none;
+      border-radius: 10px; padding: 8px 14px;
+      font-size: 11px; font-weight: 700; cursor: pointer;
+      margin-top: 10px;
+    }
+    .add-all-btn:hover { background: var(--purple); }
     .time-display {
       background: var(--grad-rainbow); border-radius: 14px; padding: 16px;
       color: white; display: flex; align-items: center; justify-content: space-between;
@@ -1014,6 +1068,16 @@
                   <button class="cat-chip" data-cat="여행">✈️ 여행</button>
                 </div>
               </div>
+              
+              <!-- AI 이미지 분석 결과 -->
+              <div class="ai-analysis-box" id="ai-analysis-box">
+                <div class="ai-analysis-head">
+                  <span style="font-size: 14px;">✨</span>
+                  <span class="ai-analysis-title">AI 추천 해시태그</span>
+                  <span class="ai-analysis-meta" id="ai-analysis-meta">사진 분석 기반</span>
+                </div>
+                <div id="ai-analysis-content"></div>
+              </div>
             </div>
           </div>
           
@@ -1442,19 +1506,76 @@
         </div>
       </section>
       
-      <!-- ====== HASHTAG (간단) ====== -->
+      <!-- ====== HASHTAG ====== -->
       <section class="tab" id="tab-hashtag">
         <div class="page-header">
           <div>
             <div class="breadcrumb">도구 / 해시태그</div>
             <h1 class="page-title">해시태그 분석</h1>
-            <div class="page-sub">트렌드 해시태그와 성과 추이를 한눈에</div>
+            <div class="page-sub">트렌드 해시태그와 AI 추천으로 도달률을 높여보세요</div>
           </div>
         </div>
-        <div class="ai-card" style="padding: 40px;">
-          <div class="ai-spark" style="width: 56px; height: 56px; border-radius: 18px;">#️⃣</div>
-          <div class="ai-title" style="font-size: 28px; margin-top: 20px;">Coming Soon</div>
-          <div class="ai-desc" style="font-size: 14px;">해시태그 트렌드 분석 도구가 곧 오픈됩니다.</div>
+        
+        <!-- AI 추천기 -->
+        <div class="card" style="margin-bottom: 20px;">
+          <h2 class="section-title" style="margin-bottom: 16px;">✨ AI 해시태그 추천</h2>
+          <div class="form-group">
+            <label class="form-label">📝 캡션 또는 키워드를 입력하세요</label>
+            <textarea class="caption-textarea" id="hashtag-input" placeholder="예: 봄날 햇살처럼 따스한 손편지" style="min-height: 80px;"></textarea>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: end;">
+            <div class="form-group" style="flex: 1; margin: 0;">
+              <label class="form-label">🏷️ 카테고리</label>
+              <select class="form-input" id="hashtag-category">
+                <option value="공예">✨ 공예</option>
+                <option value="음식점">🍽️ 음식점</option>
+                <option value="카페">☕ 카페</option>
+                <option value="패션">👗 패션</option>
+                <option value="뷰티">💄 뷰티</option>
+                <option value="여행">✈️ 여행</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="generateHashtags()" style="white-space: nowrap;">✨ 추천받기</button>
+          </div>
+          <div id="hashtag-result" style="margin-top: 16px;"></div>
+        </div>
+        
+        <!-- 카테고리별 트렌딩 -->
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-head">
+              <h2 class="section-title">🔥 카테고리별 트렌딩</h2>
+              <div class="chart-tabs">
+                <button class="chart-tab active" onclick="loadTrendingHashtags('공예', this)">공예</button>
+                <button class="chart-tab" onclick="loadTrendingHashtags('음식점', this)">음식점</button>
+                <button class="chart-tab" onclick="loadTrendingHashtags('카페', this)">카페</button>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap"><canvas id="chart-hashtag-trend"></canvas></div>
+          </div>
+          
+          <div class="insight-card">
+            <div class="ai-spark">✨</div>
+            <div class="ai-label" style="margin-top: 12px;">해시태그 팁</div>
+            <div class="insight-title">효과적으로 사용하는 법</div>
+            <ul class="insight-list">
+              <li>한 게시물당 8~15개가 가장 효율적이에요</li>
+              <li>인기 + 니치 해시태그를 섞으세요 (8:2 비율)</li>
+              <li>지역 해시태그를 추가하면 도달률 +30%</li>
+              <li>같은 해시태그 반복 사용은 도달이 떨어져요</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- 내 자주 쓰는 해시태그 -->
+        <div class="card" style="margin-top: 16px;">
+          <div class="chart-head" style="margin-bottom: 16px;">
+            <h2 class="section-title">📌 내가 자주 쓰는 해시태그</h2>
+            <button class="section-link" onclick="clearHashtagHistory()">초기화</button>
+          </div>
+          <div id="my-hashtags-list">
+            <div style="color: var(--sub); font-size: 13px; text-align: center; padding: 24px;">아직 사용한 해시태그가 없어요. AI 추천에서 해시태그를 사용하면 여기에 통계가 쌓여요 ✨</div>
+          </div>
         </div>
       </section>
       
@@ -1544,6 +1665,7 @@
       
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); updateMobilePreview(); }
+      if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags('공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1603,8 +1725,86 @@
       reader.onload = (e) => {
         uploadZone.classList.add('has-image');
         uploadZone.innerHTML = `<img src="${e.target.result}" alt="업로드된 사진">`;
+        // 사진 업로드 직후 자동 분석
+        analyzeImageForHashtags(e.target.result.split(',')[1], file.type);
       };
       reader.readAsDataURL(file);
+    }
+    
+    async function analyzeImageForHashtags(imageBase64, imageType) {
+      const box = document.getElementById('ai-analysis-box');
+      const content = document.getElementById('ai-analysis-content');
+      const meta = document.getElementById('ai-analysis-meta');
+      
+      box.classList.add('show');
+      content.innerHTML = `
+        <div class="ai-analyzing">
+          <div class="ai-spinner"></div>
+          <span style="font-size: 12px; color: var(--sub); font-weight: 500;">사진을 분석 중이에요...</span>
+        </div>`;
+      meta.textContent = '분석 중';
+      
+      try {
+        const res = await fetch('/api/hashtag', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: imageBase64, imageType, category: state.category }),
+        });
+        if (!res.ok) throw new Error('API error');
+        const data = await res.json();
+        renderHashtagChips(data.hashtags || []);
+        meta.textContent = `${(data.hashtags || []).length}개 추천`;
+      } catch (e) {
+        // Fallback: 카테고리 기반 기본 해시태그
+        const fallback = {
+          '공예': ['#캘리그래피', '#손글씨', '#감성캘리', '#작가의방', '#손편지', '#봄캘리'],
+          '음식점': ['#맛집', '#오늘의메뉴', '#한식', '#가정식', '#맛스타그램', '#먹스타그램'],
+          '카페': ['#카페', '#커피', '#디저트', '#카페스타그램', '#감성카페', '#휴식'],
+          '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드'],
+          '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#아름다움'],
+          '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#추천'],
+        }[state.category] || ['#일상', '#감성', '#추천', '#공유'];
+        renderHashtagChips(fallback);
+        meta.textContent = '오프라인 추천';
+      }
+    }
+    
+    function renderHashtagChips(hashtags) {
+      const content = document.getElementById('ai-analysis-content');
+      content.innerHTML = `
+        <div class="hashtag-chips" id="hashtag-chips-container">
+          ${hashtags.map((tag, i) => `<button class="hashtag-chip" data-tag="${tag}" onclick="addHashtag('${tag}', this)">${tag}</button>`).join('')}
+        </div>
+        <button class="add-all-btn" onclick="addAllHashtags()">✨ 전부 캡션에 추가</button>`;
+    }
+    
+    function addHashtag(tag, el) {
+      const textarea = document.getElementById('caption-final');
+      if (!textarea.value.includes(tag)) {
+        const sep = textarea.value && !textarea.value.endsWith('\n') ? ' ' : '';
+        textarea.value += sep + tag;
+        if (el) el.classList.add('added');
+        updateCaptionMeta();
+      }
+    }
+    
+    function addAllHashtags() {
+      const textarea = document.getElementById('caption-final');
+      const chips = document.querySelectorAll('#hashtag-chips-container .hashtag-chip');
+      const tagsToAdd = [];
+      chips.forEach(c => {
+        const tag = c.dataset.tag;
+        if (!textarea.value.includes(tag)) tagsToAdd.push(tag);
+        c.classList.add('added');
+      });
+      if (tagsToAdd.length > 0) {
+        const sep = textarea.value && !textarea.value.endsWith('\n') ? '\n\n' : '';
+        textarea.value += sep + tagsToAdd.join(' ');
+        updateCaptionMeta();
+        toast(`✨ ${tagsToAdd.length}개 해시태그 추가됨`);
+      } else {
+        toast('💡 이미 모두 추가되어 있어요');
+      }
     }
     
     async function regenerateCaption() {
@@ -1757,7 +1957,60 @@
       }
       cal.innerHTML = html;
     }
-    function selectDay(d) { state.selectedDay = d; renderCalendar(); }
+    function selectDay(d) {
+      state.selectedDay = d;
+      renderCalendar();
+      // 도트가 있는 날 클릭 시 그날 게시물 모달
+      const y = state.calDate.getFullYear();
+      const m = state.calDate.getMonth() + 1;
+      const dateStr = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dayPosts = state.scheduledPosts.filter(p => p.date === dateStr);
+      if (dayPosts.length > 0) {
+        const html = `
+          <div style="font-size: 13px; color: var(--sub); margin-bottom: 16px;">${y}년 ${m}월 ${d}일 · 예약된 게시물 ${dayPosts.length}개</div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${dayPosts.map(p => `
+              <div style="background: var(--bg); border-radius: 14px; padding: 14px; position: relative;">
+                <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 8px;">
+                  <span style="background: var(--grad-hero); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px;">⏰ ${p.time}</span>
+                  <span style="font-size: 11px; color: var(--sub); font-weight: 500;">예약됨</span>
+                </div>
+                <div style="font-size: 13px; color: var(--ink); line-height: 1.5; max-height: 60px; overflow: hidden;">${p.caption.replace(/</g, '&lt;')}</div>
+                <div style="display: flex; gap: 6px; margin-top: 12px;">
+                  <button class="btn btn-secondary" style="flex: 1; justify-content: center; padding: 8px; font-size: 12px;" onclick="editScheduled(${p.id})">✏️ 편집</button>
+                  <button class="btn btn-secondary" style="flex: 1; justify-content: center; padding: 8px; font-size: 12px; color: #C53030; border-color: #FCA5A5;" onclick="deleteScheduled(${p.id}); closeModal();">🗑️ 삭제</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 16px;" onclick="closeModal()">확인</button>
+        `;
+        openModal(`📅 ${m}월 ${d}일`, html);
+      }
+    }
+    
+    function editScheduled(id) {
+      const post = state.scheduledPosts.find(p => p.id === id);
+      if (!post) return;
+      closeModal();
+      // 폼에 값 채우기
+      document.getElementById('schedule-caption').value = post.caption;
+      document.getElementById('schedule-time').value = post.time;
+      // 시간 디스플레이 동기화
+      const [h, mm] = post.time.split(':').map(Number);
+      const ampm = h < 12 ? '오전' : '오후';
+      const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+      document.getElementById('time-display').textContent = `${ampm} ${h12}:${String(mm).padStart(2, '0')}`;
+      // 삭제 후 (편집 = 삭제 + 새로 저장)
+      state.scheduledPosts = state.scheduledPosts.filter(p => p.id !== id);
+      saveState();
+      renderScheduledPosts();
+      renderCalendar();
+      updateMobilePreview();
+      toast('✏️ 편집 모드 — 수정 후 다시 예약해주세요');
+      // 폼으로 스크롤
+      document.getElementById('schedule-caption').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     function prevMonth() { state.calDate.setMonth(state.calDate.getMonth() - 1); state.selectedDay = null; renderCalendar(); }
     function nextMonth() { state.calDate.setMonth(state.calDate.getMonth() + 1); state.selectedDay = null; renderCalendar(); }
     
@@ -2136,6 +2389,131 @@
       a.click();
       URL.revokeObjectURL(url);
       toast('📥 리포트 다운로드 완료');
+    }
+    
+    // ===== HASHTAG PAGE =====
+    async function generateHashtags() {
+      const input = document.getElementById('hashtag-input').value.trim();
+      const category = document.getElementById('hashtag-category').value;
+      const result = document.getElementById('hashtag-result');
+      if (!input) { toast('📝 캡션이나 키워드를 입력해주세요'); return; }
+      result.innerHTML = `<div class="ai-analyzing" style="background: var(--bg);"><div class="ai-spinner"></div><span style="font-size: 12px; color: var(--sub); font-weight: 500;">AI가 해시태그를 분석 중이에요...</span></div>`;
+      let hashtags;
+      try {
+        const res = await fetch('/api/hashtag', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ caption: input, category }),
+        });
+        if (!res.ok) throw new Error('API error');
+        const data = await res.json();
+        hashtags = data.hashtags || [];
+      } catch (e) {
+        const fallback = {
+          '공예': ['#캘리그래피', '#손글씨', '#감성캘리', '#작가의방', '#손편지', '#공예작가', '#작품', '#수공예'],
+          '음식점': ['#맛집', '#오늘의메뉴', '#한식', '#가정식', '#맛스타그램', '#먹스타그램', '#JMT', '#존맛'],
+          '카페': ['#카페', '#커피', '#디저트', '#카페스타그램', '#감성카페', '#휴식', '#아메리카노', '#카페투어'],
+          '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드', '#패션스타그램'],
+          '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#아름다움'],
+          '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#추천'],
+        };
+        hashtags = fallback[category] || ['#일상', '#감성', '#추천', '#공유', '#감사', '#함께'];
+      }
+      
+      if (!state.hashtagStats) state.hashtagStats = {};
+      hashtags.forEach(tag => { state.hashtagStats[tag] = (state.hashtagStats[tag] || 0) + 1; });
+      saveState();
+      renderMyHashtags();
+      
+      result.innerHTML = `
+        <div style="margin-bottom: 10px; font-size: 12px; font-weight: 700; color: var(--ter);">${hashtags.length}개 추천 · 클릭해서 복사</div>
+        <div class="hashtag-chips">
+          ${hashtags.map(tag => `<button class="hashtag-chip" onclick="copyHashtag('${tag}', this)">${tag}</button>`).join('')}
+        </div>
+        <button class="add-all-btn" onclick='copyAllHashtags(${JSON.stringify(hashtags)})'>📋 전체 복사</button>`;
+    }
+    
+    function copyHashtag(tag, el) {
+      navigator.clipboard.writeText(tag).then(() => {
+        el.classList.add('added');
+        toast(`📋 "${tag}" 복사됨`);
+        setTimeout(() => el.classList.remove('added'), 1200);
+      });
+    }
+    
+    function copyAllHashtags(tags) {
+      const text = tags.join(' ');
+      navigator.clipboard.writeText(text).then(() => toast(`📋 ${tags.length}개 해시태그 복사됨`));
+    }
+    
+    let hashtagTrendChart;
+    function loadTrendingHashtags(category, el) {
+      if (el) {
+        el.parentElement.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+      }
+      const trending = {
+        '공예': [['#캘리그래피', 4200], ['#손글씨', 3800], ['#감성캘리', 2900], ['#손편지', 2200], ['#작가의방', 1800], ['#봄캘리', 1500], ['#공예작가', 1200], ['#수공예', 950]],
+        '음식점': [['#맛집', 12800], ['#먹스타그램', 9500], ['#JMT', 7200], ['#한식', 5800], ['#가정식', 3900], ['#오늘의메뉴', 2700], ['#존맛탱', 2100], ['#맛스타그램', 1800]],
+        '카페': [['#카페', 15200], ['#커피', 11000], ['#디저트', 8400], ['#카페스타그램', 6900], ['#감성카페', 4500], ['#아메리카노', 3200], ['#휴식', 2400], ['#카페투어', 1900]],
+      };
+      const data = trending[category] || trending['공예'];
+      const canvas = document.getElementById('chart-hashtag-trend');
+      if (!canvas) return;
+      if (hashtagTrendChart) hashtagTrendChart.destroy();
+      hashtagTrendChart = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: data.map(d => d[0]),
+          datasets: [{
+            label: '게시물 수',
+            data: data.map(d => d[1]),
+            backgroundColor: ['#FFB5D8', '#FFB89E', '#FFF2BE', '#C8F2D9', '#D4C9FF', '#B5A7FF', '#FFB5D8', '#FFB89E'],
+            borderRadius: 8, borderSkipped: false,
+          }],
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,.04)' }, ticks: { font: { family: 'Pretendard, sans-serif' } } },
+            y: { grid: { display: false }, ticks: { font: { family: 'Pretendard, sans-serif', size: 11 } } },
+          },
+        },
+      });
+    }
+    
+    function renderMyHashtags() {
+      const container = document.getElementById('my-hashtags-list');
+      if (!container) return;
+      const stats = state.hashtagStats || {};
+      const sorted = Object.entries(stats).sort((a, b) => b[1] - a[1]).slice(0, 12);
+      if (sorted.length === 0) {
+        container.innerHTML = `<div style="color: var(--sub); font-size: 13px; text-align: center; padding: 24px;">아직 사용한 해시태그가 없어요. AI 추천에서 해시태그를 사용하면 여기에 통계가 쌓여요 ✨</div>`;
+        return;
+      }
+      const maxCount = sorted[0][1];
+      container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${sorted.map(([tag, count]) => `
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="font-size: 13px; font-weight: 600; min-width: 130px; color: var(--ink);">${tag}</div>
+              <div style="flex: 1; background: var(--bg); border-radius: 8px; height: 24px; position: relative; overflow: hidden;">
+                <div style="background: var(--grad-hero); height: 100%; width: ${(count / maxCount) * 100}%; border-radius: 8px; transition: width .4s;"></div>
+              </div>
+              <div style="font-size: 12px; font-weight: 700; color: var(--sub); min-width: 36px; text-align: right;">${count}회</div>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+    
+    function clearHashtagHistory() {
+      if (!confirm('해시태그 사용 기록을 모두 삭제할까요?')) return;
+      state.hashtagStats = {};
+      saveState();
+      renderMyHashtags();
+      toast('🗑️ 해시태그 기록 삭제됨');
     }
   </script>
 </body>
