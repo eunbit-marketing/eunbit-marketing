@@ -230,6 +230,30 @@
     .stat-card-value { font-size: 38px; font-weight: 800; letter-spacing: -1.5px; color: var(--ink); margin-top: 6px; }
     .badge-up { background: var(--mint); color: #10794A; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 8px; display: inline-flex; gap: 4px; margin-top: 12px; align-self: flex-start; }
     .badge-up.orange { background: #FFEDD5; color: #B6500F; }
+    .today-workspace {
+      margin: 24px 0; background: var(--white); border: 1px solid var(--border);
+      border-radius: 18px; padding: 20px; box-shadow: var(--shadow-sm);
+    }
+    .today-workspace-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .today-workspace-sub { font-size: 12px; color: var(--sub); margin-top: 4px; }
+    .today-task-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .today-task {
+      border: 1px solid var(--border); background: var(--bg); border-radius: 14px;
+      padding: 14px; min-height: 128px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .today-task-kicker { font-size: 11px; font-weight: 800; color: var(--purple); }
+    .today-task-title { font-size: 15px; font-weight: 800; color: var(--ink); line-height: 1.35; }
+    .today-task-desc { font-size: 12px; color: var(--sub); line-height: 1.55; }
+    .today-task button {
+      margin-top: auto; align-self: flex-start; border: 1px solid var(--border);
+      background: var(--white); color: var(--ink); border-radius: 9px; padding: 8px 10px;
+      font-size: 12px; font-weight: 800; cursor: pointer;
+    }
+    .today-task button:hover { border-color: var(--purple); color: var(--purple); }
+    .today-count {
+      background: rgba(181,167,255,.14); color: var(--purple); border-radius: 999px;
+      padding: 6px 10px; font-size: 12px; font-weight: 800; white-space: nowrap;
+    }
     
     .stories-section { margin-bottom: 24px; }
     .stories-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
@@ -948,6 +972,7 @@
       .posts-grid { grid-template-columns: repeat(2, 1fr); }
       .bento { grid-template-columns: 1fr 1fr; }
       .stat-hero { grid-column: span 2; }
+      .today-task-list { grid-template-columns: 1fr; }
       .schedule-layout { grid-template-columns: 1fr; }
       .draft-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .chart-grid { grid-template-columns: 1fr; }
@@ -1279,6 +1304,17 @@
             </div>
             <span class="badge-up orange">↑ 8.2%</span>
           </div>
+        </div>
+
+        <div class="today-workspace">
+          <div class="today-workspace-head">
+            <div>
+              <h2 class="section-title">오늘 할 마케팅</h2>
+              <div class="today-workspace-sub">저장함과 예약 상태를 보고 오늘 해야 할 일을 Bloom이 골라드려요.</div>
+            </div>
+            <span class="today-count" id="today-task-count">0개 대기</span>
+          </div>
+          <div class="today-task-list" id="today-task-list"></div>
         </div>
         
         <div class="stories-section">
@@ -2226,6 +2262,7 @@
       if (tabEl) tabEl.classList.add('active');
       document.querySelectorAll(`[data-tab="${tab}"]`).forEach(n => n.classList.add('active'));
       
+      if (tab === 'home') renderTodayTasks();
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderDraftQueue(); updateMobilePreview(); }
       if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags('공예'), 100); renderMyHashtags(); }
@@ -2559,6 +2596,7 @@
       renderCalendar();
       renderScheduledPosts();
       renderDraftQueue();
+      renderTodayTasks();
       updateMobilePreview();
       if (!state.onboardingComplete) setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
@@ -2850,6 +2888,7 @@
       state.weeklyDrafts.unshift(draft);
       saveState();
       renderDraftQueue();
+      renderTodayTasks();
       if (!silent) toast('🗂️ 이번 주 문안 저장함에 넣었어요');
       return draft;
     }
@@ -2926,6 +2965,7 @@
       draft.status = status;
       saveState();
       renderDraftQueue();
+      renderTodayTasks();
       if (showToast) toast(`상태를 ${getDraftStatusLabel(status)}으로 바꿨어요`);
     }
 
@@ -2935,6 +2975,7 @@
       if (state.activeDraftId === id) state.activeDraftId = null;
       saveState();
       renderDraftQueue();
+      renderTodayTasks();
       toast('문안을 삭제했어요');
     }
 
@@ -2951,7 +2992,50 @@
       state.weeklyDrafts = [...samples.map((d, i) => ({ id: Date.now() + i, status: 'draft', createdAt: new Date().toISOString(), ...d })), ...state.weeklyDrafts];
       saveState();
       renderDraftQueue();
+      renderTodayTasks();
       toast('✨ 예시 문안을 저장함에 채웠어요');
+    }
+
+    function renderTodayTasks() {
+      const list = document.getElementById('today-task-list');
+      const count = document.getElementById('today-task-count');
+      if (!list) return;
+      ensureDraftQueue();
+      const drafts = state.weeklyDrafts || [];
+      const draftCount = drafts.filter(d => (d.status || 'draft') === 'draft').length;
+      const copiedCount = drafts.filter(d => d.status === 'copied').length;
+      const scheduledCount = state.scheduledPosts?.length || 0;
+      const tasks = [
+        {
+          kicker: '1순위',
+          title: draftCount ? `저장된 초안 ${draftCount}개 확인` : '오늘 쓸 문안 만들기',
+          desc: draftCount ? '초안을 복사하거나 예약 발행에 넣어 이번 주 흐름을 이어가세요.' : 'AI 어시스턴트에서 인스타/네이버 문안을 하나 만들어보세요.',
+          action: draftCount ? '저장함 보기' : 'AI로 만들기',
+          tab: draftCount ? 'schedule' : 'ai',
+        },
+        {
+          kicker: '게시 준비',
+          title: copiedCount ? `복사한 문안 ${copiedCount}개 게시 확인` : '네이버 플레이스 소식 1개 준비',
+          desc: copiedCount ? '복사 후 실제 게시까지 끝났다면 게시완료로 바꿔주세요.' : '자동 발행 전까지는 복사해서 바로 쓰는 흐름이 핵심이에요.',
+          action: copiedCount ? '상태 정리' : '문안 만들기',
+          tab: copiedCount ? 'schedule' : 'ai',
+        },
+        {
+          kicker: '캘린더',
+          title: scheduledCount ? `예약 계획 ${scheduledCount}건 점검` : '이번 주 예약 계획 비어 있음',
+          desc: scheduledCount ? '예약된 문안과 날짜가 이번 주 홍보 흐름에 맞는지 확인하세요.' : '저장한 문안을 날짜에 넣으면 실행률이 올라가요.',
+          action: '캘린더 보기',
+          tab: 'schedule',
+        },
+      ];
+      list.innerHTML = tasks.map(task => `
+        <article class="today-task">
+          <div class="today-task-kicker">${task.kicker}</div>
+          <div class="today-task-title">${task.title}</div>
+          <div class="today-task-desc">${task.desc}</div>
+          <button onclick="switchTab('${task.tab}')">${task.action}</button>
+        </article>`).join('');
+      if (count) count.textContent = `${draftCount + copiedCount + scheduledCount}개 대기`;
     }
     
     // ===== ANALYTICS =====

@@ -88,7 +88,8 @@ Goal: Make Bloom a weekly habit, not a one-off generator.
 - AI-generated Instagram, Naver Place, and weekly-plan outputs can be saved into the queue.
 - Drafts can be copied, moved into the reservation editor, marked as posted, or deleted.
 - Simple status labels now exist: draft, copied, scheduled, posted.
-- Next: connect dashboard "today's marketing tasks" to draft and schedule status.
+- Dashboard "today's marketing tasks" now reads draft and schedule status to suggest the next action.
+- Next: add filters and stronger pilot-store feedback collection.
 
 ### v0.5 Paid MVP Packaging
 
