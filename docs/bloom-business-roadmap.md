@@ -8,6 +8,17 @@ Bloom is currently a polished single-page prototype with working dashboard navig
 
 The GitHub production baseline is v2.2. The local file in this repository preserves v2.3 work that has not yet been pushed or deployed.
 
+## Video-Inspired Reframe
+
+The reference clips show a simple but strong user journey: enter business information, upload a photo, let AI draft the post, preview the result on a phone mockup, schedule it, and watch the dashboard update.
+
+Bloom should keep that flow, but sharpen it for Korean small businesses:
+
+- Start from "what should I do for marketing today?"
+- Support Instagram and Naver Place from the first paid MVP.
+- Make the first version copy-ready rather than integration-heavy.
+- Treat scheduling as a planning workflow until real publishing APIs are stable.
+
 ## Progress Assessment
 
 - UI prototype: high maturity
@@ -44,4 +55,3 @@ Focus on copy-ready, low-risk workflows before live publishing:
 ## Notes
 
 Figma remains useful for brand and layout reference, but the current implementation is ahead of the Figma file. Until Figma MCP limits are resolved, code and live behavior should remain the implementation source of truth.
-

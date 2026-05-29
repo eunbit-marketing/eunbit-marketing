@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Bloom — 소상공인의 인스타가 피어나는 곳. AI 캡션 생성 + 예약 발행 + 성과 분석">
-  <title>Bloom — Instagram 마케팅 대시보드</title>
+  <meta name="description" content="Bloom — 인스타그램과 네이버 플레이스를 함께 관리하는 소상공인 AI 마케팅 비서">
+  <title>Bloom — 소상공인 AI 마케팅 비서</title>
   <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -1149,7 +1149,7 @@
           <span style="font-size: 18px;">🌟</span>
           <div class="pro-card-title">Bloom Pro</div>
         </div>
-        <div class="pro-card-desc">AI 무제한 + 고급 분석</div>
+        <div class="pro-card-desc">인스타 + 네이버 플레이스 AI 비서</div>
         <button class="pro-card-btn" onclick="upgradeProMenu()">월 9,900원 시작</button>
       </div>
       
@@ -1172,7 +1172,7 @@
           <div>
             <div class="breadcrumb">메인</div>
             <h1 class="page-title">안녕하세요, 민지님 🌸</h1>
-            <div class="page-sub">오늘도 멋진 콘텐츠로 팔로워들과 만나볼까요?</div>
+            <div class="page-sub">오늘 할 인스타·네이버 플레이스 마케팅을 Bloom이 정리해드려요</div>
           </div>
           <button class="btn btn-primary" onclick="switchTab('post')">+ 새 게시물</button>
         </div>
@@ -1786,7 +1786,7 @@
           <div>
             <div class="breadcrumb">도구 / AI 어시스턴트</div>
             <h1 class="page-title">AI 어시스턴트 ✨</h1>
-            <div class="page-sub">캡션 · 해시태그 · 콘텐츠 아이디어를 1초 만에</div>
+            <div class="page-sub">인스타 캡션부터 네이버 플레이스 소식까지 한 번에</div>
           </div>
         </div>
 
@@ -1796,7 +1796,7 @@
             <div class="ai-hero-icon">🤖</div>
             <div>
               <div class="ai-hero-title">무엇을 도와드릴까요?</div>
-              <div class="ai-hero-sub">AI가 은빛캘리 맞춤 콘텐츠를 생성해드려요</div>
+              <div class="ai-hero-sub">사진과 매장 정보만 넣으면 오늘 쓸 마케팅 초안을 만들어드려요</div>
             </div>
           </div>
           <div class="ai-mode-tabs">
@@ -1895,6 +1895,32 @@
               </div>
             </div>
 
+            <!-- 네이버 플레이스 문안 -->
+            <div class="ai-tool-card">
+              <div class="ai-tool-head">
+                <div class="ai-tool-icon" style="background: linear-gradient(135deg,#00C73C,#C8F2D9);">N</div>
+                <div>
+                  <div class="ai-tool-name">네이버 플레이스 문안</div>
+                </div>
+              </div>
+              <div class="ai-tool-desc">소식, 쿠폰, 리뷰 답글처럼 사장님이 바로 복사해 쓸 문안을 만들어줘요</div>
+              <textarea class="ai-tool-input" id="ai-naver-topic" rows="2" placeholder="예: 6월 원데이 클래스 모집, 첫 방문 쿠폰, 감사 리뷰 답글"></textarea>
+              <select class="ai-tool-select" id="ai-naver-type">
+                <option value="소식">📢 플레이스 소식</option>
+                <option value="쿠폰">🎟️ 쿠폰 문안</option>
+                <option value="리뷰답글">💬 리뷰 답글</option>
+                <option value="주간계획">🗓️ 주간 마케팅 계획</option>
+              </select>
+              <button class="ai-tool-btn" id="ai-naver-btn" onclick="aiGenerateNaverPlace()">N 문안 만들기</button>
+              <div class="ai-tool-result" id="ai-naver-result">
+                <div id="ai-naver-text"></div>
+                <div class="ai-result-actions">
+                  <button class="ai-result-btn" onclick="aiCopyNaverPlace()">📋 복사</button>
+                  <button class="ai-result-btn primary" onclick="aiUseNaverAsIdea()">→ 아이디어에 저장</button>
+                </div>
+              </div>
+            </div>
+
             <!-- 최적 게시 시간 -->
             <div class="ai-tool-card">
               <div class="ai-tool-head">
@@ -1934,19 +1960,19 @@
             <div class="ai-chat-head">
               <div class="ai-chat-status"></div>
               <div class="ai-chat-title">🌸 Bloom AI</div>
-              <div class="ai-chat-sub">캡션·해시태그·아이디어 뭐든 물어보세요</div>
+              <div class="ai-chat-sub">인스타·네이버 플레이스·주간 계획 뭐든 물어보세요</div>
             </div>
             <div class="ai-messages" id="ai-chat-messages">
               <div class="ai-msg assistant">
                 <div class="ai-msg-avatar">🌸</div>
-                <div class="ai-msg-bubble">안녕하세요! 은빛캘리 마케팅을 도와드릴 Bloom AI예요 ✨<br><br>캡션 작성, 해시태그 추천, 콘텐츠 아이디어 등 뭐든 물어보세요!</div>
+                <div class="ai-msg-bubble">안녕하세요! 은빛캘리 마케팅을 도와드릴 Bloom AI예요 ✨<br><br>인스타 캡션, 해시태그, 네이버 플레이스 소식, 리뷰 답글까지 뭐든 물어보세요!</div>
               </div>
             </div>
             <div class="ai-quick-prompts">
               <button class="ai-quick-prompt" onclick="sendQuickPrompt('오늘 올릴 캡션 추천해줘')">캡션 추천</button>
               <button class="ai-quick-prompt" onclick="sendQuickPrompt('트렌드 해시태그 알려줘')">트렌드 해시태그</button>
-              <button class="ai-quick-prompt" onclick="sendQuickPrompt('이번 주 콘텐츠 아이디어 알려줘')">이번 주 아이디어</button>
-              <button class="ai-quick-prompt" onclick="sendQuickPrompt('게시물 참여율 높이는 팁 알려줘')">참여율 높이기</button>
+              <button class="ai-quick-prompt" onclick="sendQuickPrompt('네이버 플레이스 소식 문안 만들어줘')">플레이스 소식</button>
+              <button class="ai-quick-prompt" onclick="sendQuickPrompt('이번 주 인스타와 네이버 플레이스 마케팅 계획 알려줘')">이번 주 계획</button>
             </div>
             <div class="ai-chat-input-area">
               <textarea class="ai-chat-input" id="ai-chat-input" placeholder="메시지를 입력하세요..." rows="1"
@@ -3050,6 +3076,7 @@
     let aiCaptionResult = '';
     let aiHashtagResult = [];
     let aiIdeasResult = '';
+    let aiNaverResult = '';
     let aiTimeResult = '';
 
     function switchAIMode(mode, el) {
@@ -3186,6 +3213,38 @@
       navigator.clipboard.writeText(aiIdeasResult).then(() => toast('📋 아이디어 복사 완료!'));
     }
 
+    function aiGenerateNaverPlace() {
+      const topic = document.getElementById('ai-naver-topic').value.trim();
+      const type = document.getElementById('ai-naver-type').value;
+      if (!topic) { toast('✏️ 네이버 플레이스에 올릴 내용을 입력해주세요'); return; }
+      setAIBtnLoading('ai-naver-btn', true, 'N 문안 만들기');
+      const store = state.settings.storeName || '우리 매장';
+      const templates = {
+        '소식': `📢 ${store} 소식\n\n${topic}\n\n처음 방문하시는 분도 편하게 오실 수 있도록 준비해둘게요. 궁금한 점은 네이버 톡톡 또는 DM으로 문의해주세요.\n\n#네이버플레이스 #소상공인 #오늘의소식`,
+        '쿠폰': `🎟️ ${store} 방문 쿠폰 안내\n\n${topic}\n\n네이버 플레이스에서 쿠폰을 확인하고 방문 시 보여주세요. 작은 혜택이지만 감사한 마음을 담았습니다.`,
+        '리뷰답글': `소중한 리뷰 정말 감사합니다.\n\n${topic}\n\n방문해주신 시간이 좋은 기억으로 남았다니 저희도 큰 힘이 됩니다. 다음에도 더 따뜻하게 맞이하겠습니다.`,
+        '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`
+      };
+      aiNaverResult = templates[type] || templates['소식'];
+      document.getElementById('ai-naver-text').textContent = aiNaverResult;
+      document.getElementById('ai-naver-result').classList.add('show');
+      setAIBtnLoading('ai-naver-btn', false, 'N 문안 만들기');
+      toast('✅ 네이버 플레이스 문안 생성 완료!');
+    }
+
+    function aiCopyNaverPlace() {
+      if (!aiNaverResult) return;
+      navigator.clipboard.writeText(aiNaverResult).then(() => toast('📋 네이버 플레이스 문안 복사 완료!'));
+    }
+
+    function aiUseNaverAsIdea() {
+      if (!aiNaverResult) return;
+      aiIdeasResult = aiNaverResult;
+      document.getElementById('ai-idea-text').textContent = aiIdeasResult;
+      document.getElementById('ai-idea-result').classList.add('show');
+      toast('💡 콘텐츠 아이디어에 저장했어요');
+    }
+
     async function aiOptimalTime() {
       const category = document.getElementById('ai-time-category').value;
       const day = document.getElementById('ai-time-day').value;
@@ -3236,8 +3295,8 @@
           body: JSON.stringify({
             model: 'claude-sonnet-4-20250514',
             max_tokens: 1000,
-            system: `당신은 Bloom AI, 소상공인(은빛캘리 캘리그래피 공방, @eunbickaelri)의 인스타그램 마케팅을 도와주는 AI 어시스턴트입니다.
-캡션 작성, 해시태그 추천, 콘텐츠 아이디어 제안, 마케팅 전략 조언을 한국어로 친근하게 답변하세요.
+            system: `당신은 Bloom AI, 소상공인(은빛캘리 캘리그래피 공방, @eunbickaelri)의 인스타그램과 네이버 플레이스 마케팅을 도와주는 AI 어시스턴트입니다.
+캡션 작성, 해시태그 추천, 네이버 플레이스 소식/쿠폰/리뷰 답글, 콘텐츠 아이디어 제안, 마케팅 전략 조언을 한국어로 친근하게 답변하세요.
 이모지를 적절히 사용하고 150자 이내로 핵심만 간결하게 답변하세요.`,
             messages: chatHistory
           })
@@ -3252,6 +3311,7 @@
         const quickAnswers = {
           '캡션': '봄날 감성 캘리그래피 ✍️\n한 글자 한 글자에 마음을 담아요 💌\n#캘리그래피 #손글씨 #감성 #은빛캘리',
           '해시태그': '#캘리그래피 #손글씨 #감성캘리 #원데이클래스 #의정부공방 #캘리스타그램 #수공예 #손편지',
+          '네이버': '📢 네이버 플레이스 소식\n이번 주 원데이 클래스 예약을 받고 있어요. 처음 오셔도 편하게 배울 수 있도록 준비해둘게요.',
           '아이디어': '💡 이번 주 추천 콘텐츠:\n1. 작업 과정 Reel\n2. 수강생 후기\n3. 신상 굿즈 소개',
           '팁': '⏰ 최적 게시 시간: 오전 10시, 오후 7시\n💬 질문형 캡션이 댓글을 2배 늘려줘요!\n🏷️ 해시태그 15~20개가 가장 효과적이에요',
         };
