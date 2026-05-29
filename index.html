@@ -831,6 +831,25 @@
       border-radius: 10px; cursor: pointer; font-size: 16px; color: var(--sub);
     }
     .modal-close:hover { background: var(--faint); color: var(--ink); }
+
+    /* ===== ONBOARDING ===== */
+    .onboarding-copy { color: var(--sub); font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
+    .onboarding-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .onboarding-field { display: flex; flex-direction: column; gap: 6px; }
+    .onboarding-field.full { grid-column: 1 / -1; }
+    .onboarding-label { font-size: 11px; font-weight: 700; color: var(--sub); }
+    .onboarding-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 11px; padding: 10px 12px; color: var(--ink);
+      font: inherit; font-size: 13px; outline: none;
+    }
+    .onboarding-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(181,167,255,.15); }
+    .onboarding-actions { display: flex; gap: 8px; margin-top: 18px; }
+    .onboarding-actions .btn { flex: 1; justify-content: center; }
+    .onboarding-note {
+      margin-top: 14px; padding: 12px; border-radius: 12px;
+      background: rgba(181,167,255,.1); color: var(--sub); font-size: 12px; line-height: 1.5;
+    }
     
     /* ===== BOTTOM TAB BAR (모바일 전용) ===== */
     .bottom-tab-bar {
@@ -928,6 +947,8 @@
       .ai-hero-icon { width: 40px; height: 40px; font-size: 18px; }
       .ai-assistant-hero { padding: 22px; }
       .search-dropdown { max-height: 260px; }
+      .onboarding-grid { grid-template-columns: 1fr; }
+      .onboarding-actions { flex-direction: column-reverse; }
     }
 
     /* ============================================================
@@ -2104,6 +2125,8 @@
       tone: '감성적',
       category: '공예',
       darkMode: false,
+      onboardingComplete: false,
+      onboardingDrafts: null,
       scheduledPosts: [
         { id: 1, date: '2026-05-28', time: '10:00', caption: '봄날 햇살처럼 따스한 손편지 💌 #캘리그래피' },
         { id: 2, date: '2026-05-30', time: '20:00', caption: '주말 워크샵 안내 — 5월 봄 캘리 클래스 신청받습니다 🌸' },
@@ -2115,6 +2138,8 @@
         storeName: '은빛캘리', category: '공예',
         instagram: '@eunbickaelri', email: 'hun2620@naver.com',
         phone: '', address: '', description: '',
+        region: '의정부', mainOffer: '캘리그래피 원데이 클래스',
+        brandTone: '따뜻한', targetCustomer: '취미를 찾는 동네 고객',
         postsGoal: 8, followersGoal: 3000, engagementGoal: 5,
       },
       drafts: [],
@@ -2473,8 +2498,120 @@
       renderCalendar();
       renderScheduledPosts();
       updateMobilePreview();
+      if (!state.onboardingComplete) setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
+
+    // ===== ONBOARDING =====
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function showOnboarding() {
+      openModal('Bloom 시작하기', `
+        <p class="onboarding-copy">
+          마케팅을 몰라도 괜찮아요. 매장 정보 몇 가지만 넣으면 Bloom이 인스타와 네이버 플레이스에 바로 쓸 첫 문안을 준비해드릴게요.
+        </p>
+        <div class="onboarding-grid">
+          <label class="onboarding-field">
+            <span class="onboarding-label">매장명</span>
+            <input class="onboarding-input" id="onboard-store" value="${escapeHtml(state.settings.storeName)}" placeholder="예: 우리동네 카페">
+          </label>
+          <label class="onboarding-field">
+            <span class="onboarding-label">업종</span>
+            <select class="onboarding-input" id="onboard-category">
+              ${['공예','음식점','카페','뷰티','패션','학원','운동/건강','기타'].map(c => `<option value="${c}" ${state.settings.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+            </select>
+          </label>
+          <label class="onboarding-field">
+            <span class="onboarding-label">지역</span>
+            <input class="onboarding-input" id="onboard-region" value="${escapeHtml(state.settings.region)}" placeholder="예: 의정부, 성수동">
+          </label>
+          <label class="onboarding-field">
+            <span class="onboarding-label">톤</span>
+            <select class="onboarding-input" id="onboard-tone">
+              ${['따뜻한','감성적','정보형','친근한','트렌디한'].map(t => `<option value="${t}" ${state.settings.brandTone === t ? 'selected' : ''}>${t}</option>`).join('')}
+            </select>
+          </label>
+          <label class="onboarding-field full">
+            <span class="onboarding-label">이번에 홍보할 내용</span>
+            <input class="onboarding-input" id="onboard-offer" value="${escapeHtml(state.settings.mainOffer)}" placeholder="예: 6월 원데이 클래스 모집, 신메뉴 출시">
+          </label>
+          <label class="onboarding-field full">
+            <span class="onboarding-label">주요 고객</span>
+            <input class="onboarding-input" id="onboard-target" value="${escapeHtml(state.settings.targetCustomer)}" placeholder="예: 퇴근 후 취미를 찾는 20~40대">
+          </label>
+        </div>
+        <div class="onboarding-note">입력한 정보는 브라우저에만 저장됩니다. 나중에 설정에서 다시 바꿀 수 있어요.</div>
+        <div class="onboarding-actions">
+          <button class="btn btn-secondary" onclick="skipOnboarding()">나중에 할게요</button>
+          <button class="btn btn-primary" onclick="completeOnboarding()">첫 문안 만들기</button>
+        </div>
+      `);
+    }
+
+    function skipOnboarding() {
+      state.onboardingComplete = true;
+      saveState();
+      closeModal();
+      toast('필요할 때 AI 어시스턴트에서 다시 시작할 수 있어요');
+    }
+
+    function completeOnboarding() {
+      const store = document.getElementById('onboard-store').value.trim() || '우리 매장';
+      const category = document.getElementById('onboard-category').value;
+      const region = document.getElementById('onboard-region').value.trim();
+      const tone = document.getElementById('onboard-tone').value;
+      const offer = document.getElementById('onboard-offer').value.trim() || '이번 주 대표 상품';
+      const target = document.getElementById('onboard-target').value.trim() || '동네 고객';
+
+      state.settings.storeName = store;
+      state.settings.category = category;
+      state.settings.region = region;
+      state.settings.brandTone = tone;
+      state.settings.mainOffer = offer;
+      state.settings.targetCustomer = target;
+      state.category = category;
+      state.tone = tone;
+      state.onboardingComplete = true;
+      state.onboardingDrafts = generateStarterDrafts({ store, category, region, tone, offer, target });
+      saveState();
+
+      closeModal();
+      switchTab('ai');
+      applyStarterDrafts();
+      toast('첫 인스타·네이버 문안을 준비했어요');
+    }
+
+    function generateStarterDrafts({ store, category, region, tone, offer, target }) {
+      const place = region ? `${region} ` : '';
+      return {
+        instagramKeyword: `${place}${store} ${offer}`,
+        naverTopic: `${offer} 안내`,
+        ideaText: `🗓️ ${store} 첫 주 마케팅 계획\n\n1. 인스타그램: ${tone} 톤으로 "${offer}" 소개\n2. 네이버 플레이스: ${place}${category} 고객이 바로 이해할 소식 작성\n3. 리뷰 답글: ${target}에게 감사와 재방문 이유 전달\n4. 주말 전: 쿠폰/예약 가능 시간 다시 안내`
+      };
+    }
+
+    function applyStarterDrafts() {
+      const drafts = state.onboardingDrafts;
+      if (!drafts) return;
+      const captionInput = document.getElementById('ai-caption-keyword');
+      const naverInput = document.getElementById('ai-naver-topic');
+      const ideaText = document.getElementById('ai-idea-text');
+      if (captionInput) captionInput.value = drafts.instagramKeyword;
+      if (naverInput) naverInput.value = drafts.naverTopic;
+      if (ideaText) {
+        aiIdeasResult = drafts.ideaText;
+        ideaText.textContent = drafts.ideaText;
+        document.getElementById('ai-idea-result')?.classList.add('show');
+      }
+    }
+
     function renderCalendar() {
       const cal = document.getElementById('cal-grid');
       const monthEl = document.getElementById('cal-month');

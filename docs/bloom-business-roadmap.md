@@ -81,6 +81,7 @@ Goal: Turn a new owner into a usable workspace in under three minutes.
 - Recommended first-week plan after onboarding.
 - First Instagram draft and first Naver Place draft generated automatically.
 - Pilot-friendly setup for non-technical users.
+- Status: first-pass onboarding modal implemented in the local app and PR branch.
 
 ### v0.4 — Planning Workspace
 
