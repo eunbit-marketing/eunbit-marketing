@@ -89,7 +89,8 @@ Goal: Make Bloom a weekly habit, not a one-off generator.
 - Drafts can be copied, moved into the reservation editor, marked as posted, or deleted.
 - Simple status labels now exist: draft, copied, scheduled, posted.
 - Dashboard "today's marketing tasks" now reads draft and schedule status to suggest the next action.
-- Next: add filters and stronger pilot-store feedback collection.
+- Draft queue filters now support all, Instagram, Naver Place, weekly plan, draft, scheduled, and posted views.
+- Next: add stronger pilot-store feedback collection.
 
 ### v0.5 Paid MVP Packaging
 

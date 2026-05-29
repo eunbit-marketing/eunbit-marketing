@@ -513,6 +513,16 @@
       margin-bottom: 14px;
     }
     .draft-board-sub { font-size: 12px; color: var(--sub); margin-top: 4px; }
+    .draft-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
+    .draft-filter-chip {
+      border: 1px solid var(--border); background: var(--bg); color: var(--sub);
+      border-radius: 999px; padding: 8px 11px; font-size: 12px; font-weight: 800;
+      cursor: pointer; transition: all .2s;
+    }
+    .draft-filter-chip:hover,
+    .draft-filter-chip.active {
+      border-color: var(--purple); background: rgba(181,167,255,.16); color: var(--purple);
+    }
     .draft-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .draft-card {
       border: 1px solid var(--border); background: var(--bg); border-radius: 14px;
@@ -1636,6 +1646,15 @@
             </div>
             <button class="btn btn-secondary" onclick="seedWeeklyDrafts()">✨ 예시 문안 채우기</button>
           </div>
+          <div class="draft-filter-row" id="draft-filter-row" aria-label="문안 저장함 필터">
+            <button class="draft-filter-chip active" onclick="setDraftFilter('all', this)">전체</button>
+            <button class="draft-filter-chip" onclick="setDraftFilter('instagram', this)">인스타</button>
+            <button class="draft-filter-chip" onclick="setDraftFilter('naver', this)">네이버</button>
+            <button class="draft-filter-chip" onclick="setDraftFilter('plan', this)">주간계획</button>
+            <button class="draft-filter-chip" onclick="setDraftFilter('draft', this)">초안</button>
+            <button class="draft-filter-chip" onclick="setDraftFilter('scheduled', this)">예약됨</button>
+            <button class="draft-filter-chip" onclick="setDraftFilter('posted', this)">게시완료</button>
+          </div>
           <div class="draft-list" id="draft-queue"></div>
         </div>
 
@@ -1792,7 +1811,7 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label">🏷️ 카테고리</label>
-                  <select class="form-input">
+                  <select class="form-input" id="settings-category-select">
                     <option>✨ 공예</option>
                     <option>🍽️ 음식점</option>
                     <option>☕ 카페</option>
@@ -2230,6 +2249,7 @@
       analyticsRange: '7d',
       currentTheme: 'bloom',
       weeklyDrafts: [],
+      draftFilter: 'all',
       settings: {
         storeName: '은빛캘리', category: '공예',
         instagram: '@eunbickaelri', email: 'hun2620@naver.com',
@@ -2902,15 +2922,49 @@
       }[status] || '초안';
     }
 
+    function setDraftFilter(filter, btn) {
+      state.draftFilter = filter;
+      saveState();
+      document.querySelectorAll('.draft-filter-chip').forEach(chip => chip.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderDraftQueue();
+    }
+
+    function syncDraftFilterUI() {
+      const filter = state.draftFilter || 'all';
+      const chips = document.querySelectorAll('.draft-filter-chip');
+      chips.forEach(chip => {
+        const onClick = chip.getAttribute('onclick') || '';
+        chip.classList.toggle('active', onClick.includes(`'${filter}'`));
+      });
+    }
+
+    function draftMatchesFilter(draft, filter) {
+      const channel = draft.channel || '';
+      const status = draft.status || 'draft';
+      if (filter === 'all') return true;
+      if (filter === 'instagram') return channel.includes('인스타');
+      if (filter === 'naver') return channel.includes('네이버');
+      if (filter === 'plan') return channel.includes('주간');
+      return status === filter;
+    }
+
     function renderDraftQueue() {
       const c = document.getElementById('draft-queue');
       if (!c) return;
       ensureDraftQueue();
+      syncDraftFilterUI();
       if (state.weeklyDrafts.length === 0) {
         c.innerHTML = `<div class="draft-empty">AI 어시스턴트에서 만든 문안을 저장하면 여기에 모여요. 먼저 예시 문안으로 흐름을 확인해도 좋아요.</div>`;
         return;
       }
-      c.innerHTML = state.weeklyDrafts.slice(0, 9).map(d => {
+      const filter = state.draftFilter || 'all';
+      const visibleDrafts = state.weeklyDrafts.filter(d => draftMatchesFilter(d, filter));
+      if (visibleDrafts.length === 0) {
+        c.innerHTML = `<div class="draft-empty">이 필터에 해당하는 문안이 아직 없어요. 다른 필터를 보거나 AI 어시스턴트에서 새 문안을 만들어보세요.</div>`;
+        return;
+      }
+      c.innerHTML = visibleDrafts.slice(0, 9).map(d => {
         const created = new Date(d.createdAt || Date.now());
         const dateLabel = `${created.getMonth() + 1}/${created.getDate()}`;
         const safeText = escapeHtml(d.text);
