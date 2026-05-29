@@ -45,8 +45,9 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 
 ## Roadmap
 
-- v2.3: stabilize local UI improvements, dark mode, accessibility, keyboard shortcuts, demo-data clarity
-- v2.4: reposition onboarding and copy around Instagram + Naver Place marketing assistant
-- v2.5: add Naver Place content tools and weekly marketing plan MVP
-- v3.0: authentication, database, real Instagram integration, billing, multi-store SaaS structure
-
+- v0.1: Reposition Bloom from an Eunbit-specific dashboard into a general small-business assistant
+- v0.2: Build copy-ready Instagram and Naver Place tools
+- v0.3: Add guided onboarding and "today's marketing plan"
+- v0.4: Improve calendar planning, draft saving, and pilot-store workflows
+- v0.5: Prepare paid MVP packaging around 9,900 KRW/month
+- v1.0: Launch with 3-5 pilot stores before deep platform integrations

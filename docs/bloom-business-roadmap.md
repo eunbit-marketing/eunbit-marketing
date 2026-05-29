@@ -6,7 +6,7 @@ Date: 2026-05-29
 
 Bloom is currently a polished single-page prototype with working dashboard navigation, content drafting, reservation management, analytics mockups, AI assistant tools, dark mode groundwork, and localStorage persistence.
 
-The GitHub production baseline is v2.2. The local file in this repository preserves v2.3 work that has not yet been pushed or deployed.
+The GitHub production baseline came from the Eunbit pilot dashboard. From this point forward, Eunbit is treated as the first pilot customer, not the main identity of the product.
 
 ## Video-Inspired Reframe
 
@@ -51,6 +51,63 @@ Focus on copy-ready, low-risk workflows before live publishing:
 2. Multi-channel MVP with Instagram and Naver Place tools
 3. Pilot recruitment with 3-5 stores
 4. SaaS foundation with auth, database, billing, and real platform integrations
+
+## Version Roadmap
+
+### v0.1 — Product Repositioning
+
+Goal: Move from "Eunbit marketing dashboard" to "Bloom, the small-business AI marketing assistant."
+
+- Make Eunbit the first pilot customer only.
+- Replace product-level copy with general small-business language.
+- Keep Eunbit as default sample data where useful.
+- Clarify the core promise: "월 9,900원으로 오늘 할 마케팅을 AI가 정리합니다."
+
+### v0.2 — Copy-Ready Multi-Channel MVP
+
+Goal: Give owners immediately usable marketing drafts before building hard integrations.
+
+- Instagram caption and hashtag tools.
+- Naver Place news, coupon, and review-reply tools.
+- Weekly marketing plan generator.
+- Copy buttons and "save as idea" flows.
+- Clear labels for demo data vs real data.
+
+### v0.3 — Guided Onboarding
+
+Goal: Turn a new owner into a usable workspace in under three minutes.
+
+- Store name, category, region, offer, tone, and target customer inputs.
+- Recommended first-week plan after onboarding.
+- First Instagram draft and first Naver Place draft generated automatically.
+- Pilot-friendly setup for non-technical users.
+
+### v0.4 — Planning Workspace
+
+Goal: Make Bloom a weekly habit, not a one-off generator.
+
+- "Today's marketing tasks" dashboard.
+- Calendar draft queue across Instagram and Naver Place.
+- Draft history and reusable templates.
+- Simple status labels: draft, copied, scheduled, posted manually.
+
+### v0.5 — Paid MVP Packaging
+
+Goal: Validate whether owners will pay 9,900 KRW/month for the assistant.
+
+- Free vs Pro limits.
+- Landing copy and pricing explanation.
+- Pilot feedback loop.
+- Manual billing or lightweight payment test before full billing integration.
+
+### v1.0 — Pilot Launch
+
+Goal: Launch to 3-5 real stores and learn from actual usage.
+
+- Pilot stores across at least three categories.
+- Weekly feedback review.
+- Track draft generation, copy usage, weekly active use, and willingness to pay.
+- Decide whether to invest next in real Instagram/Naver integrations, database, and auth.
 
 ## Notes
 
