@@ -929,6 +929,147 @@
       .ai-assistant-hero { padding: 22px; }
       .search-dropdown { max-height: 260px; }
     }
+
+    /* ============================================================
+       v2.3 — 다크 모드 (6 테마 × 라이트/다크 = 12조합)
+    ============================================================ */
+    :root[data-dark] {
+      --bg: #0D0A1A; --white: #1A1430; --ink: #F0EAF8;
+      --sub: #A899C8; --ter: #6E6390; --faint: #231840;
+      --border: rgba(181,167,255,.12);
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.35);
+      --shadow-md: 0 4px 24px rgba(0,0,0,.45);
+      --shadow-lg: 0 16px 40px rgba(0,0,0,.6);
+      --shadow-pill: 0 6px 16px rgba(181,167,255,.12);
+      color-scheme: dark;
+    }
+    :root[data-dark][data-theme="sunset"] {
+      --bg: #1A0D0A; --white: #2A1814; --ink: #F8EDE8;
+      --sub: #C8A898; --ter: #806050; --faint: #3A2018;
+      --border: rgba(255,184,158,.12);
+    }
+    :root[data-dark][data-theme="dreamy"] {
+      --bg: #090914; --white: #14142A; --ink: #E8E0F8;
+      --sub: #9890C8; --ter: #606090; --faint: #1E1E3A;
+      --border: rgba(181,167,255,.12);
+    }
+    :root[data-dark][data-theme="spring"] {
+      --bg: #0A1208; --white: #14200F; --ink: #E0F0E8;
+      --sub: #88A880; --ter: #507050; --faint: #1A2E18;
+      --border: rgba(200,242,217,.12);
+    }
+    :root[data-dark][data-theme="mint"] {
+      --bg: #081514; --white: #112220; --ink: #E0F5F2;
+      --sub: #80B8B0; --ter: #4A7875; --faint: #162C2A;
+      --border: rgba(168,240,224,.12);
+    }
+    :root[data-dark][data-theme="dark"] {
+      --bg: #060610; --white: #12122A; --ink: #E0E0FF;
+      --sub: #8888B8; --ter: #505080; --faint: #18183A;
+      --border: rgba(120,120,200,.12);
+    }
+    [data-dark] input, [data-dark] textarea, [data-dark] select { color-scheme: dark; }
+    [data-dark] input::placeholder, [data-dark] textarea::placeholder { color: var(--ter); }
+    [data-dark] .chart-wrap canvas { filter: brightness(.9); }
+
+    /* 다크 토글 버튼 */
+    .dark-toggle {
+      display: flex; align-items: center; gap: 8px; width: 100%;
+      background: var(--faint); border: 1.5px solid transparent;
+      border-radius: var(--r-md); padding: 9px 12px;
+      font-size: 12px; font-weight: 500; color: var(--sub);
+      cursor: pointer; transition: background .2s, color .2s; margin: 6px 0 2px;
+      font-family: inherit; text-align: left;
+    }
+    .dark-toggle:hover { background: var(--border); color: var(--ink); }
+    .dark-toggle .dt-track {
+      margin-left: auto; width: 34px; height: 18px; border-radius: 9px;
+      background: var(--ter); position: relative; transition: background .25s; flex-shrink: 0;
+    }
+    .dark-toggle .dt-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: #fff; transition: left .25s cubic-bezier(.4,0,.2,1);
+      box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    }
+    [data-dark] .dark-toggle .dt-track { background: var(--lavender); }
+    [data-dark] .dark-toggle .dt-thumb { left: 18px; }
+    [data-dark] .dark-toggle { color: var(--sub); }
+
+    /* ============================================================
+       v2.3 — WCAG AA: focus-visible (키보드 접근성)
+    ============================================================ */
+    :focus-visible {
+      outline: 2.5px solid var(--purple);
+      outline-offset: 2px;
+      border-radius: 6px;
+    }
+    button:focus:not(:focus-visible),
+    a:focus:not(:focus-visible) { outline: none; }
+
+    /* ============================================================
+       v2.3 — 스켈레톤 로딩
+    ============================================================ */
+    @keyframes shimmer {
+      0%   { background-position: -600px 0; }
+      100% { background-position:  600px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, var(--faint) 25%, var(--border) 50%, var(--faint) 75%);
+      background-size: 1200px 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: var(--r-sm); color: transparent !important; pointer-events: none;
+    }
+    .sk-line { height: 13px; margin: 7px 0; border-radius: 6px; }
+    .sk-line.lg { height: 20px; }
+    .sk-line.sm { height: 10px; width: 55%; }
+    .sk-line.xs { height: 8px; width: 35%; }
+    .sk-block { height: 80px; border-radius: var(--r-md); margin: 8px 0; }
+    .sk-card { background: var(--white); border-radius: var(--r-lg); padding: 16px; margin-bottom: 10px; box-shadow: var(--shadow-sm); }
+
+    /* ============================================================
+       v2.3 — 빈 상태 (Empty State)
+    ============================================================ */
+    .empty-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 52px 24px; text-align: center;
+      background: var(--white); border-radius: var(--r-xl); box-shadow: var(--shadow-sm);
+    }
+    .es-icon { font-size: 52px; margin-bottom: 16px; opacity: .8; }
+    .es-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+    .es-desc  { font-size: 13px; color: var(--sub); line-height: 1.65; max-width: 260px; margin-bottom: 20px; }
+
+    /* ============================================================
+       v2.3 — 데모 데이터 배너
+    ============================================================ */
+    .demo-banner {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(255,184,158,.12); border: 1px solid rgba(255,184,158,.4);
+      border-radius: var(--r-md); padding: 8px 14px;
+      font-size: 12px; font-weight: 500; color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .demo-banner strong { color: var(--peach); }
+    [data-dark] .demo-banner { background: rgba(255,184,158,.07); }
+
+    /* ============================================================
+       v2.3 — 키보드 단축키 모달
+    ============================================================ */
+    .kbd-grid {
+      display: grid; grid-template-columns: auto 1fr;
+      gap: 10px 20px; align-items: center; padding: 4px 0;
+    }
+    .kbd-row { display: flex; gap: 4px; align-items: center; }
+    .kbd-key {
+      display: inline-block; background: var(--faint);
+      border: 1.5px solid var(--border); border-bottom-width: 3px;
+      border-radius: 6px; padding: 2px 8px;
+      font-size: 11px; font-weight: 700; color: var(--ink);
+      font-family: 'SF Mono', 'Fira Code', monospace; white-space: nowrap;
+    }
+    [data-dark] .kbd-key { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); }
+    .kbd-desc { font-size: 13px; color: var(--sub); }
+    .kbd-sep { grid-column: 1/-1; height: 1px; background: var(--border); margin: 4px 0; }
   </style>
 </head>
 <body>
@@ -955,40 +1096,47 @@
         </label>
         <div class="search-dropdown" id="search-dropdown"></div>
       </div>
+
+      <!-- v2.3 다크 모드 토글 -->
+      <button class="dark-toggle" id="dark-toggle" onclick="toggleDarkMode()" aria-label="다크 모드 전환">
+        <span id="dark-icon">🌙</span>
+        <span id="dark-label">다크 모드</span>
+        <span class="dt-track"><span class="dt-thumb"></span></span>
+      </button>
       
       <div class="nav-section">MAIN</div>
-      <nav class="nav-list">
-        <button class="nav-item active" data-tab="home">
+      <nav class="nav-list" role="navigation" aria-label="메인 메뉴">
+        <button class="nav-item active" data-tab="home" aria-label="대시보드 이동 (G H)">
           <span class="nav-icon">🏠</span>
           <span class="nav-label">대시보드</span>
         </button>
-        <button class="nav-item" data-tab="post">
+        <button class="nav-item" data-tab="post" aria-label="새 게시물 작성 (G P)">
           <span class="nav-icon">✨</span>
           <span class="nav-label">새 게시물</span>
         </button>
-        <button class="nav-item" data-tab="schedule">
+        <button class="nav-item" data-tab="schedule" aria-label="예약 발행 (G S)">
           <span class="nav-icon">📅</span>
           <span class="nav-label">예약 발행</span>
-          <span class="nav-badge">3</span>
+          <span class="nav-badge" aria-label="예약 3건">3</span>
         </button>
-        <button class="nav-item" data-tab="analytics">
+        <button class="nav-item" data-tab="analytics" aria-label="성과 분석 (G A)">
           <span class="nav-icon">📊</span>
           <span class="nav-label">성과 분석</span>
         </button>
       </nav>
       
       <div class="nav-section">TOOLS</div>
-      <nav class="nav-list">
-        <button class="nav-item" data-tab="ai">
+      <nav class="nav-list" role="navigation" aria-label="도구 메뉴">
+        <button class="nav-item" data-tab="ai" aria-label="AI 어시스턴트 (G I)">
           <span class="nav-icon">✨</span>
           <span class="nav-label">AI 어시스턴트</span>
           <span class="nav-chip">NEW</span>
         </button>
-        <button class="nav-item" data-tab="hashtag">
+        <button class="nav-item" data-tab="hashtag" aria-label="해시태그 분석 (G T)">
           <span class="nav-icon">#️⃣</span>
           <span class="nav-label">해시태그 분석</span>
         </button>
-        <button class="nav-item" data-tab="settings">
+        <button class="nav-item" data-tab="settings" aria-label="설정 (G E)">
           <span class="nav-icon">⚙️</span>
           <span class="nav-label">설정</span>
         </button>
@@ -1157,8 +1305,8 @@
             <div class="page-sub">AI가 도와주는 1분 컨텐츠 제작 ✨</div>
           </div>
           <div style="display: flex; gap: 8px;">
-            <button class="btn btn-secondary" onclick="saveDraft()">💾 임시저장</button>
-            <button class="btn btn-primary" onclick="publishPost()">✨ 지금 발행하기</button>
+            <button class="btn btn-secondary" onclick="saveDraft()" aria-label="임시저장">💾 임시저장</button>
+            <button class="btn btn-primary" onclick="publishPost()" aria-label="게시물 발행 (데모 — 실제 발행은 v3.0 예정)">✨ 지금 발행하기</button>
           </div>
         </div>
         
@@ -1396,6 +1544,12 @@
             <button class="btn btn-secondary" onclick="toast('📅 기간 선택은 차트 위 7일/30일/90일 탭에서')">📅 최근 7일</button>
             <button class="btn btn-secondary" onclick="downloadReport()">📥 리포트 다운로드</button>
           </div>
+        </div>
+
+        <!-- v2.3 데모 데이터 안내 배너 -->
+        <div class="demo-banner" role="note" aria-label="데모 데이터 안내">
+          <span>🔔</span>
+          <span>현재 <strong>데모 데이터</strong>가 표시되고 있어요. 인스타그램 계정 연동 후 실제 데이터로 전환됩니다 (v3.0 예정)</span>
         </div>
         
         <div class="analytics-grid">
@@ -1879,7 +2033,7 @@
     </main>
   </div>
   
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   
   <!-- ===== BOTTOM TAB BAR (모바일 전용) ===== -->
   <nav class="bottom-tab-bar" role="navigation" aria-label="하단 탭">
@@ -1923,6 +2077,7 @@
       currentTab: 'home',
       tone: '감성적',
       category: '공예',
+      darkMode: false,
       scheduledPosts: [
         { id: 1, date: '2026-05-28', time: '10:00', caption: '봄날 햇살처럼 따스한 손편지 💌 #캘리그래피' },
         { id: 2, date: '2026-05-30', time: '20:00', caption: '주말 워크샵 안내 — 5월 봄 캘리 클래스 신청받습니다 🌸' },
@@ -2195,6 +2350,19 @@
       const themeIdx = themeMap[state.currentTheme] ?? 0;
       const themeSwatch = document.querySelectorAll('.theme-swatch')[themeIdx];
       if (themeSwatch) themeSwatch.classList.add('active');
+
+      // v2.3 다크 모드 초기 적용 (저장값 or 시스템 설정)
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const savedDark = state.darkMode ?? prefersDark;
+      state.darkMode = savedDark;
+      applyDarkMode(savedDark);
+      // 시스템 다크모드 변경 실시간 반영 (사용자가 수동 설정 안 한 경우만)
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (state.darkMode === prefersDark) { // 아직 기본값이면
+          state.darkMode = e.matches;
+          applyDarkMode(e.matches);
+        }
+      });
       
       // 설정 폼 복원
       const settingsInputs = document.querySelectorAll('#tab-settings input, #tab-settings textarea, #tab-settings select');
@@ -2209,6 +2377,13 @@
         else if (label.includes('월간 게시물')) inp.value = state.settings.postsGoal;
         else if (label.includes('팔로워 목표')) inp.value = state.settings.followersGoal;
         else if (label.includes('참여도')) inp.value = state.settings.engagementGoal;
+        else if (label.includes('카테고리') && inp.tagName === 'SELECT') {
+          // [hotfix] 카테고리 복원 누락 수정
+          inp.value = state.settings.category;
+          // state.category(AI/해시태그용)와 동기화 — 이모지 제거 후 일치
+          const plain = state.settings.category.replace(/[^\uAC00-\uD7A3a-zA-Z0-9\s]/g, '').trim();
+          if (plain) state.category = plain;
+        }
       });
       
       // 검색 이벤트 리스너
@@ -2227,22 +2402,52 @@
         if (wrap && !wrap.contains(e.target)) closeSearch();
       });
 
-      // ⌘K 단축키 → 검색 포커스
+      // v2.3 키보드 단축키 핸들러 (⌘K, Esc, G+key, ?, ⌘D)
+      let _gPending = false, _gTimer = null;
       document.addEventListener('keydown', (e) => {
+        const isTyping = e.target.matches('input, textarea, select, [contenteditable]');
+
+        // ⌘K → 검색 포커스
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
           e.preventDefault();
           searchInput?.focus();
           searchInput?.select();
+          return;
         }
+        // ⌘D → 다크 모드 전환
+        if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
+          e.preventDefault();
+          toggleDarkMode();
+          return;
+        }
+        // Esc → 검색/모달 닫기
         if (e.key === 'Escape') {
           closeSearch();
+          closeModal();
+          return;
+        }
+        if (isTyping) return;
+        // ? → 단축키 도움말
+        if (e.key === '?') { showKeyboardShortcuts(); return; }
+        // G + key → 탭 이동
+        if (e.key.toLowerCase() === 'g') {
+          _gPending = true;
+          clearTimeout(_gTimer);
+          _gTimer = setTimeout(() => { _gPending = false; }, 1200);
+          return;
+        }
+        if (_gPending) {
+          _gPending = false; clearTimeout(_gTimer);
+          const tabMap = { h: 'home', p: 'post', s: 'schedule', a: 'analytics', t: 'hashtag', i: 'ai', e: 'settings' };
+          const dest = tabMap[e.key.toLowerCase()];
+          if (dest) { switchTab(dest); e.preventDefault(); }
         }
       });
       
       renderCalendar();
       renderScheduledPosts();
       updateMobilePreview();
-      console.log('🌸 Bloom Dashboard v2.2 ready! — 검색 강화 + AI 어시스턴트');
+      console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
     function renderCalendar() {
       const cal = document.getElementById('cal-grid');
@@ -2338,6 +2543,10 @@
         const dt = new Date(p.date);
         const m = String(dt.getMonth() + 1).padStart(2, '0');
         const d = String(dt.getDate()).padStart(2, '0');
+        // [hotfix] XSS 방지 — 캡션 이스케이프 (selectDay 모달과 일관성 통일)
+        const safeCaption = p.caption
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         return `
           <div class="schedule-row">
             <div class="schedule-date">
@@ -2345,7 +2554,7 @@
               <div class="schedule-date-m">${m}월</div>
             </div>
             <div class="schedule-row-info">
-              <div class="schedule-row-cap">${p.caption}</div>
+              <div class="schedule-row-cap">${safeCaption}</div>
               <div class="schedule-row-meta">⏰ ${p.time}</div>
             </div>
             <button class="schedule-row-delete" onclick="deleteScheduled(${p.id})">🗑️</button>
@@ -2354,6 +2563,7 @@
     }
     function deleteScheduled(id) {
       state.scheduledPosts = state.scheduledPosts.filter(p => p.id !== id);
+      saveState(); // [hotfix] 삭제 영속화 — 새로고침해도 복원 안 됨
       renderScheduledPosts();
       renderCalendar();
       toast('🗑️ 삭제됐어요');
@@ -2370,6 +2580,7 @@
         date: `${y}-${String(m).padStart(2, '0')}-${String(state.selectedDay).padStart(2, '0')}`,
         time, caption: cap,
       });
+      saveState(); // [hotfix] 예약 영속화 — 새로고침해도 유지
       document.getElementById('schedule-caption').value = '';
       renderScheduledPosts();
       renderCalendar();
@@ -2475,21 +2686,72 @@
       state.currentTheme = name;
       applyTheme(name);
       saveState();
-      toast(`🎨 ${name} 테마 적용`);
+      const themeNames = { bloom: 'Bloom', sunset: 'Sunset', dreamy: 'Dreamy', spring: 'Spring', mint: 'Mint', dark: 'Midnight' };
+      toast(`🎨 ${themeNames[name] || name} 테마 적용`);
     }
     function applyTheme(name) {
       const themes = {
-        bloom: { hero: 'linear-gradient(135deg, #FFB5D8 0%, #B5A7FF 100%)', rainbow: 'linear-gradient(135deg, #D4C9FF 0%, #FFB5D8 60%, #FFB89E 100%)' },
-        sunset: { hero: 'linear-gradient(135deg, #FFB5D8 0%, #FFB89E 100%)', rainbow: 'linear-gradient(135deg, #FFB89E 0%, #FFB5D8 60%, #FFF2BE 100%)' },
-        dreamy: { hero: 'linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 100%)', rainbow: 'linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 60%, #FFB5D8 100%)' },
-        spring: { hero: 'linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 100%)', rainbow: 'linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 60%, #FFB89E 100%)' },
-        mint: { hero: 'linear-gradient(135deg, #B5A7FF 0%, #C8F2D9 100%)', rainbow: 'linear-gradient(135deg, #B5A7FF 0%, #C8F2D9 60%, #FFF2BE 100%)' },
-        dark: { hero: 'linear-gradient(135deg, #1A1A2E 0%, #463272 100%)', rainbow: 'linear-gradient(135deg, #463272 0%, #1A1A2E 100%)' },
+        bloom:   { hero: 'linear-gradient(135deg, #FFB5D8 0%, #B5A7FF 100%)', rainbow: 'linear-gradient(135deg, #D4C9FF 0%, #FFB5D8 60%, #FFB89E 100%)' },
+        sunset:  { hero: 'linear-gradient(135deg, #FFB5D8 0%, #FFB89E 100%)', rainbow: 'linear-gradient(135deg, #FFB89E 0%, #FFB5D8 60%, #FFF2BE 100%)' },
+        dreamy:  { hero: 'linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 100%)', rainbow: 'linear-gradient(135deg, #B5A7FF 0%, #D4C9FF 60%, #FFB5D8 100%)' },
+        spring:  { hero: 'linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 100%)', rainbow: 'linear-gradient(135deg, #C8F2D9 0%, #FFF2BE 60%, #FFB89E 100%)' },
+        mint:    { hero: 'linear-gradient(135deg, #B5A7FF 0%, #C8F2D9 100%)', rainbow: 'linear-gradient(135deg, #B5A7FF 0%, #C8F2D9 60%, #FFF2BE 100%)' },
+        dark:    { hero: 'linear-gradient(135deg, #1A1A2E 0%, #463272 100%)', rainbow: 'linear-gradient(135deg, #463272 0%, #1A1A2E 100%)' },
       };
       const t = themes[name] || themes.bloom;
       document.documentElement.style.setProperty('--grad-hero', t.hero);
       document.documentElement.style.setProperty('--grad-rainbow', t.rainbow);
+      // v2.3: data-theme 속성으로 테마별 다크모드 변수 적용
+      document.documentElement.dataset.theme = name;
     }
+    // ================================================================
+    // v2.3 — 다크 모드
+    // ================================================================
+    function toggleDarkMode() {
+      state.darkMode = !state.darkMode;
+      applyDarkMode(state.darkMode);
+      saveState();
+      toast(state.darkMode ? '🌙 다크 모드 켜짐' : '☀️ 라이트 모드로 전환');
+    }
+    function applyDarkMode(isDark) {
+      if (isDark) {
+        document.documentElement.setAttribute('data-dark', '');
+      } else {
+        document.documentElement.removeAttribute('data-dark');
+      }
+      const icon  = document.getElementById('dark-icon');
+      const label = document.getElementById('dark-label');
+      if (icon)  icon.textContent  = isDark ? '☀️' : '🌙';
+      if (label) label.textContent = isDark ? '라이트 모드' : '다크 모드';
+    }
+
+    // ================================================================
+    // v2.3 — 키보드 단축키 모달
+    // ================================================================
+    function showKeyboardShortcuts() {
+      const rows = [
+        [['G','H'], '대시보드'],
+        [['G','P'], '새 게시물'],
+        [['G','S'], '예약 발행'],
+        [['G','A'], '성과 분석'],
+        [['G','T'], '해시태그 분석'],
+        [['G','E'], '설정'],
+        [['⌘','K'], '검색'],
+        [['⌘','D'], '다크 모드 전환'],
+        [['?'],      '단축키 도움말'],
+        [['Esc'],    '검색 / 모달 닫기'],
+      ];
+      const html = `
+        <div class="kbd-grid">
+          ${rows.map(([keys, desc], i) => `
+            <div class="kbd-row">${keys.map(k => `<span class="kbd-key">${k}</span>`).join('')}</div>
+            <div class="kbd-desc">${desc}</div>
+            ${i === 5 ? '<div class="kbd-sep"></div><div class="kbd-sep"></div>' : ''}
+          `).join('')}
+        </div>`;
+      openModal('⌨️ 키보드 단축키', html);
+    }
+
     function saveSettings() {
       const inputs = document.querySelectorAll('#tab-settings input, #tab-settings textarea, #tab-settings select');
       inputs.forEach(inp => {
@@ -2503,7 +2765,12 @@
         else if (label.includes('월간 게시물')) state.settings.postsGoal = +inp.value;
         else if (label.includes('팔로워 목표')) state.settings.followersGoal = +inp.value;
         else if (label.includes('참여도')) state.settings.engagementGoal = +inp.value;
-        else if (label.includes('카테고리') && inp.tagName === 'SELECT') state.settings.category = inp.value;
+        else if (label.includes('카테고리') && inp.tagName === 'SELECT') {
+          state.settings.category = inp.value;
+          // [hotfix] 카테고리 이원화 해소 — state.category(AI/해시태그용)도 동기화
+          const plain = inp.value.replace(/[^\uAC00-\uD7A3a-zA-Z0-9\s]/g, '').trim();
+          if (plain) state.category = plain;
+        }
       });
       saveState();
       toast('💾 설정이 저장됐어요');
@@ -2612,7 +2879,7 @@
         <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
           <button class="dropdown-item" onclick="closeModal(); switchTab('settings');">⚙️ 설정으로 이동</button>
           <button class="dropdown-item" onclick="upgradeProMenu()">🌟 Bloom Pro 업그레이드</button>
-          <button class="dropdown-item" onclick="closeModal(); toast('📖 도움말 (준비 중)')">📖 도움말</button>
+          <button class="dropdown-item" onclick="closeModal(); showKeyboardShortcuts()">📖 도움말 · 단축키</button>
           <div class="dropdown-divider"></div>
           <button class="dropdown-item danger" onclick="logout()">🚪 로그아웃</button>
         </div>`);
