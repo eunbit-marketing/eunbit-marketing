@@ -29,7 +29,10 @@ Live auto-publishing, account integrations, billing, and multi-tenant data stora
 
 ## Tech
 
-- Frontend: single-file HTML/CSS/JS app
+- Frontend: static HTML app with separated CSS/JS assets
+- UI shell: `index.html`
+- Styles: `assets/css/styles.css`
+- Client behavior: `assets/js/app.js`
 - APIs: Vercel Serverless functions in `api/`
 - AI provider: Anthropic API through `ANTHROPIC_API_KEY`
 - Data today: browser `localStorage`
