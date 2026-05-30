@@ -133,6 +133,20 @@
     .pro-card-head { display: flex; align-items: center; gap: 8px; }
     .pro-card-title { font-size: 13px; font-weight: 700; }
     .pro-card-desc { font-size: 11px; opacity: .9; margin: 4px 0 10px; }
+    .usage-mini { display: grid; gap: 7px; margin: 10px 0 12px; }
+    .usage-mini-row {
+      display: grid; grid-template-columns: 1fr auto; gap: 6px 8px; align-items: center;
+      font-size: 10px; font-weight: 700; color: rgba(255,255,255,.9);
+    }
+    .usage-mini-row strong { font-size: 10px; }
+    .usage-bar {
+      grid-column: 1 / -1; height: 5px; overflow: hidden; border-radius: 999px;
+      background: rgba(255,255,255,.2);
+    }
+    .usage-bar span {
+      display: block; height: 100%; border-radius: inherit; background: white;
+      transition: width .2s ease;
+    }
     .pro-card-btn {
       background: rgba(255,255,255,.95); color: var(--ink); border: none;
       border-radius: 10px; padding: 9px; width: 100%;
@@ -806,6 +820,28 @@
     .ai-result-btn:hover { border-color: var(--purple); background: white; }
     .ai-result-btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
 
+    .settings-usage-panel { margin-bottom: 16px; }
+    .plan-usage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .plan-usage-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+    }
+    .plan-usage-top {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      font-size: 13px; font-weight: 800; color: var(--ink);
+    }
+    .plan-usage-desc { min-height: 30px; margin: 6px 0 10px; font-size: 11px; line-height: 1.4; color: var(--sub); }
+    .plan-usage-card .usage-bar { background: var(--faint); }
+    .plan-usage-card .usage-bar span { background: var(--grad-hero); }
+    .plan-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .plan-compare > div {
+      background: var(--bg); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
+      display: flex; flex-direction: column; gap: 7px; font-size: 12px; color: var(--sub);
+    }
+    .plan-compare strong { color: var(--ink); font-size: 14px; }
+    .plan-limit-modal p { margin: 8px 0 14px; font-size: 13px; line-height: 1.6; color: var(--sub); }
+    .plan-limit-kicker { color: var(--sub); font-size: 12px; font-weight: 700; }
+    .plan-limit-price { margin-top: 4px; font-size: 24px; font-weight: 900; color: var(--ink); letter-spacing: -0.5px; }
+
     .ai-chat-section {
       background: var(--white); border-radius: var(--r-xl);
       box-shadow: var(--shadow-md); overflow: hidden;
@@ -1008,6 +1044,8 @@
       .top-posts { grid-template-columns: 1fr; }
       .theme-grid { grid-template-columns: repeat(3, 1fr); }
       .ai-tools-grid { grid-template-columns: 1fr; }
+      .plan-usage-grid,
+      .plan-compare { grid-template-columns: 1fr; }
       .ai-mode-tabs { gap: 6px; }
       .ai-hero-title { font-size: 18px; }
       .ai-hero-icon { width: 40px; height: 40px; font-size: 18px; }

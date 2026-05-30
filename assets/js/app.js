@@ -16,6 +16,13 @@
       currentTheme: 'bloom',
       weeklyDrafts: [],
       draftFilter: 'all',
+      plan: 'free',
+      usage: {
+        period: '',
+        aiGenerations: 0,
+        savedDrafts: 0,
+        scheduledPlans: 0,
+      },
       settings: {
         storeName: '은빛캘리', category: '공예',
         instagram: '@eunbickaelri', email: 'hun2620@naver.com',
@@ -30,12 +37,136 @@
     function loadState() {
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        return { ...defaultState, ...saved, settings: { ...defaultState.settings, ...(saved.settings || {}) } };
+        return {
+          ...defaultState,
+          ...saved,
+          settings: { ...defaultState.settings, ...(saved.settings || {}) },
+          usage: { ...defaultState.usage, ...(saved.usage || {}) },
+        };
       } catch { return { ...defaultState }; }
     }
     function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
     state.calDate = new Date(2026, 4, 1);
     state.selectedDay = null;
+
+    const FREE_LIMITS = {
+      aiGenerations: 30,
+      savedDrafts: 20,
+      scheduledPlans: 10,
+    };
+
+    function getUsagePeriod() {
+      return new Date().toISOString().slice(0, 7);
+    }
+
+    function ensureUsagePeriod() {
+      const period = getUsagePeriod();
+      if (!state.usage || state.usage.period !== period) {
+        state.usage = { period, aiGenerations: 0, savedDrafts: 0, scheduledPlans: 0 };
+        saveState();
+      }
+    }
+
+    function getUsageLabel(key) {
+      return {
+        aiGenerations: 'AI 생성',
+        savedDrafts: '저장함',
+        scheduledPlans: '예약 계획',
+      }[key] || '사용량';
+    }
+
+    function getUsageValue(key) {
+      ensureUsagePeriod();
+      return Number(state.usage?.[key] || 0);
+    }
+
+    function tryUseFreeQuota(key) {
+      ensureUsagePeriod();
+      if (state.plan === 'pro') return true;
+      const limit = FREE_LIMITS[key];
+      if (!limit) return true;
+      if (getUsageValue(key) >= limit) {
+        showPlanLimitModal(key);
+        return false;
+      }
+      state.usage[key] = getUsageValue(key) + 1;
+      saveState();
+      renderUsageWidgets();
+      return true;
+    }
+
+    function getUsageRows() {
+      return [
+        { key: 'aiGenerations', label: 'AI 생성', desc: '캡션·해시태그·플레이스 문안' },
+        { key: 'savedDrafts', label: '저장함', desc: '이번 주 문안 저장' },
+        { key: 'scheduledPlans', label: '예약 계획', desc: '수동 게시 일정 관리' },
+      ];
+    }
+
+    function renderUsageWidgets() {
+      ensureUsagePeriod();
+      const rows = getUsageRows();
+      const mini = document.getElementById('usage-mini');
+      if (mini) {
+        mini.innerHTML = rows.map(row => {
+          const value = getUsageValue(row.key);
+          const limit = FREE_LIMITS[row.key];
+          const pct = Math.min(100, Math.round((value / limit) * 100));
+          return `
+            <div class="usage-mini-row">
+              <span>${row.label}</span>
+              <strong>${value}/${limit}</strong>
+              <div class="usage-bar"><span style="width:${pct}%"></span></div>
+            </div>`;
+        }).join('');
+      }
+
+      const account = document.getElementById('settings-usage-panel');
+      if (account) {
+        account.innerHTML = `
+          <div class="plan-usage-grid">
+            ${rows.map(row => {
+              const value = getUsageValue(row.key);
+              const limit = FREE_LIMITS[row.key];
+              const pct = Math.min(100, Math.round((value / limit) * 100));
+              return `
+                <div class="plan-usage-card">
+                  <div class="plan-usage-top">
+                    <span>${row.label}</span>
+                    <strong>${value}/${limit}</strong>
+                  </div>
+                  <div class="plan-usage-desc">${row.desc}</div>
+                  <div class="usage-bar"><span style="width:${pct}%"></span></div>
+                </div>`;
+            }).join('')}
+          </div>`;
+      }
+    }
+
+    function showPlanLimitModal(key) {
+      const label = getUsageLabel(key);
+      openModal('Bloom Free 한도 안내', `
+        <div class="plan-limit-modal">
+          <div class="plan-limit-kicker">이번 달 ${label} 한도를 모두 사용했어요</div>
+          <div class="plan-limit-price">Bloom Pro · 월 9,900원</div>
+          <p>파일럿 기간에는 결제 연동 전이라도, 이 화면에서 어떤 기능을 유료 가치로 볼지 먼저 검증해요.</p>
+          <div class="plan-compare">
+            <div>
+              <strong>Free</strong>
+              <span>AI 생성 30회</span>
+              <span>저장함 20개</span>
+              <span>예약 계획 10개</span>
+            </div>
+            <div>
+              <strong>Pro</strong>
+              <span>AI 생성 무제한</span>
+              <span>저장함 무제한</span>
+              <span>파일럿 우선 지원</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="upgradeProMenu()">Pro 자세히 보기</button>
+        </div>`);
+    }
 
     function normalizeCategory(value) {
       return String(value || '')
@@ -297,6 +428,7 @@
     
     async function regenerateCaption() {
       const aiOutput = document.getElementById('ai-output');
+      if (!tryUseFreeQuota('aiGenerations')) return;
       const fallbackSamples = [
         `봄날 햇살처럼 따스한 손편지 💌\n\n오늘은 캘리그래피로 마음을 전하는 시간을 가져봤어요. 한 글자 한 글자에 담긴 정성이 누군가에겐 큰 위로가 되길 ☘️\n\n#캘리그래피 #손글씨 #감성캘리 #봄캘리 #손편지`,
         `잔잔한 오후, 펜 끝에서 피어나는 한 줄 ✨\n\n바쁜 일상 속에서도 잠시 멈추고 손글씨로 마음을 정리하는 시간. 오늘은 어떤 글귀를 적어볼까요? 💭\n\n#감성글귀 #손글씨일상 #캘리그래피 #힐링타임 #작가의방`,
@@ -466,6 +598,7 @@
       renderDraftQueue();
       renderTodayTasks();
       updateMobilePreview();
+      renderUsageWidgets();
       if (!state.onboardingComplete) setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
@@ -705,6 +838,7 @@
       const cap = document.getElementById('schedule-caption').value;
       if (!cap.trim()) { toast('✍️ 캡션을 입력해주세요'); return; }
       if (!state.selectedDay) { toast('📅 날짜를 선택해주세요'); return; }
+      if (!tryUseFreeQuota('scheduledPlans')) return;
       const y = state.calDate.getFullYear();
       const m = state.calDate.getMonth() + 1;
       const time = document.getElementById('schedule-time').value;
@@ -746,6 +880,7 @@
 
     function saveMarketingDraft({ channel, text, source = 'AI 도구', status = 'draft', silent = false }) {
       if (!text || !text.trim()) { toast('저장할 문안이 아직 없어요'); return null; }
+      if (!tryUseFreeQuota('savedDrafts')) return null;
       ensureDraftQueue();
       const draft = {
         id: Date.now(),
@@ -1226,18 +1361,30 @@
     function upgradeProMenu() {
       openModal('🌟 Bloom Pro', `
         <div style="background: var(--grad-rainbow); border-radius: 16px; padding: 20px; color: white; margin-bottom: 16px;">
-          <div style="font-size: 14px; opacity: .9; font-weight: 700;">UPGRADE</div>
+          <div style="font-size: 14px; opacity: .9; font-weight: 700;">PILOT PACKAGE</div>
           <div style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin: 4px 0;">월 9,900원</div>
-          <div style="font-size: 12px; opacity: .9;">언제든 해지 가능</div>
+          <div style="font-size: 12px; opacity: .9;">인스타 + 네이버 플레이스 문안을 매주 바로 쓰게 정리</div>
         </div>
-        <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 13px; padding: 0;">
-          <li style="display: flex; gap: 10px;"><span>✨</span> AI 캡션 무제한 생성</li>
-          <li style="display: flex; gap: 10px;"><span>📊</span> 고급 성과 분석 + 경쟁사 비교</li>
-          <li style="display: flex; gap: 10px;"><span>📅</span> 자동 발행 시간 추천 (AI)</li>
-          <li style="display: flex; gap: 10px;"><span>🏢</span> 멀티 매장 관리 (최대 5개)</li>
-          <li style="display: flex; gap: 10px;"><span>💬</span> 우선 고객지원</li>
-        </ul>
-        <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="closeModal(); toast('💳 결제는 준비 중이에요')">✨ Pro 시작하기</button>`);
+        <div class="plan-compare">
+          <div>
+            <strong>Bloom Free</strong>
+            <span>AI 생성 월 30회</span>
+            <span>저장함 20개</span>
+            <span>예약 계획 10개</span>
+            <span>데모/파일럿 체험용</span>
+          </div>
+          <div>
+            <strong>Bloom Pro</strong>
+            <span>AI 생성 무제한</span>
+            <span>저장함·예약 계획 무제한</span>
+            <span>주간 마케팅 플랜</span>
+            <span>파일럿 우선 피드백 반영</span>
+          </div>
+        </div>
+        <p style="font-size: 12px; color: var(--sub); line-height: 1.6; margin: 14px 0 0;">
+          결제 연동 전까지는 실제 과금 버튼이 아니라, 파일럿 고객이 가격과 기능 구성을 이해하는지 검증하는 화면이에요.
+        </p>
+        <button class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 16px;" onclick="closeModal(); toast('💳 결제 연동 전 파일럿 신청으로 기록할 예정이에요')">Pro 파일럿 신청</button>`);
     }
     function logout() {
       if (confirm('정말 로그아웃 하시겠어요?')) {
@@ -1373,6 +1520,7 @@
       const keyword = document.getElementById('ai-caption-keyword').value.trim();
       const tone = document.getElementById('ai-caption-tone').value;
       if (!keyword) { toast('✏️ 키워드를 입력해주세요'); return; }
+      if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-caption-btn', true, '✨ 캡션 생성하기');
       try {
         const res = await fetch('/api/caption', {
@@ -1425,6 +1573,7 @@
       const keyword = document.getElementById('ai-hashtag-keyword').value.trim();
       const category = document.getElementById('ai-hashtag-category').value;
       if (!keyword) { toast('✏️ 키워드를 입력해주세요'); return; }
+      if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-hashtag-btn', true, '🔖 해시태그 추천받기');
       try {
         const res = await fetch('/api/hashtag', {
@@ -1455,6 +1604,7 @@
     async function aiGenerateIdeas() {
       const category = document.getElementById('ai-idea-category').value;
       const period = document.getElementById('ai-idea-period').value;
+      if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-idea-btn', true, '💡 아이디어 받기');
       try {
         const res = await fetch('/api/analysis', {
@@ -1496,6 +1646,7 @@
       const topic = document.getElementById('ai-naver-topic').value.trim();
       const type = document.getElementById('ai-naver-type').value;
       if (!topic) { toast('✏️ 네이버 플레이스에 올릴 내용을 입력해주세요'); return; }
+      if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-naver-btn', true, 'N 문안 만들기');
       const store = state.settings.storeName || '우리 매장';
       const templates = {
@@ -1531,6 +1682,7 @@
     async function aiOptimalTime() {
       const category = document.getElementById('ai-time-category').value;
       const day = document.getElementById('ai-time-day').value;
+      if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-time-btn', true, '📊 최적 시간 분석');
       try {
         const res = await fetch('/api/analysis', {
@@ -1569,6 +1721,7 @@
       const input = document.getElementById('ai-chat-input');
       const msg = input.value.trim();
       if (!msg) return;
+      if (!tryUseFreeQuota('aiGenerations')) return;
       input.value = '';
       addChatMsg('user', msg);
       chatHistory.push({ role: 'user', content: msg });
@@ -1646,6 +1799,7 @@
       const category = document.getElementById('hashtag-category').value;
       const result = document.getElementById('hashtag-result');
       if (!input) { toast('📝 캡션이나 키워드를 입력해주세요'); return; }
+      if (!tryUseFreeQuota('aiGenerations')) return;
       result.innerHTML = `<div class="ai-analyzing" style="background: var(--bg);"><div class="ai-spinner"></div><span style="font-size: 12px; color: var(--sub); font-weight: 500;">AI가 해시태그를 분석 중이에요...</span></div>`;
       let hashtags;
       try {

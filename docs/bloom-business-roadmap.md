@@ -104,12 +104,29 @@ Goal: Make Bloom a weekly habit, not a one-off generator.
 
 Goal: Validate whether owners will pay 9,900 KRW/month for the assistant.
 
-- Free vs Pro limits and usage counters.
-- 9,900 KRW/month pricing explanation.
-- Pro upgrade screen that no longer feels like a placeholder.
+- Free vs Pro limits and usage counters. Started in v0.5.0 with monthly AI generation, saved draft, and schedule-plan counters.
+- 9,900 KRW/month pricing explanation. Started in v0.5.0 through the Pro comparison modal.
+- Pro upgrade screen that no longer feels like a placeholder. Started in v0.5.0 as a pilot package explanation rather than a fake checkout.
 - Demo and real-data labels.
 - Pilot feedback loop.
 - Manual billing or lightweight payment test before full billing integration.
+
+### v0.5.0 Free/Pro Packaging Start
+
+Implemented:
+
+- Added `state.plan` and monthly `state.usage` counters.
+- Free limits are now explicit: AI generation 30/month, saved drafts 20/month, schedule plans 10/month.
+- Sidebar Pro card now shows live usage progress.
+- Settings account section now shows three usage cards.
+- AI generation, hashtag generation, chat, saved draft, and schedule-plan actions now consume Free quota.
+- When a Free limit is reached, Bloom opens a Pro explanation modal instead of silently continuing.
+- Pro modal now explains the 9,900 KRW pilot package and Free/Pro difference without pretending checkout is live.
+
+Decision:
+
+- v0.4.8 remains a documentation/release-readiness update.
+- v0.5.x is reserved for customer-facing packaging, pricing, onboarding, and pilot-readiness changes.
 
 ### v1.0 Pilot Launch
 
