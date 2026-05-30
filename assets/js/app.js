@@ -78,6 +78,44 @@
         captionTone.value = nextTone;
       }
     }
+
+    const HASHTAG_FALLBACK = {
+      '공예': ['#캘리그래피', '#손글씨', '#감성캘리', '#작가소통', '#손편지', '#공예작가', '#수공예', '#원데이클래스', '#의정부공방', '#캘리스타그램'],
+      '음식점': ['#맛집', '#오늘의메뉴', '#한식', '#가정식', '#맛스타그램', '#먹스타그램', '#JMT', '#존맛탱', '#점심추천', '#저녁추천'],
+      '카페': ['#카페', '#커피', '#디저트', '#카페스타그램', '#감성카페', '#애식', '#아메리카노', '#카페투어', '#오늘의카페', '#커피스타그램'],
+      '패션': ['#패션', '#데일리룩', '#스타일', '#일상룩', '#코디', '#트렌드', '#패션스타그램', '#옷스타그램'],
+      '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#여름네일', '#뷰티스타그램', '#화장품'],
+      '여행': ['#여행', '#여행스타그램', '#풍경', '#자연', '#감성여행', '#국내여행', '#여행기록', '#추천'],
+      '학원': ['#학원', '#수업', '#공부습관', '#교육정보', '#입시정보', '#동네학원', '#학부모소통', '#공부스타그램'],
+      '운동/건강': ['#운동', '#건강관리', '#헬스', '#필라테스', '#다이어트', '#운동스타그램', '#건강습관', '#오늘운동'],
+      '기타': ['#소상공인', '#동네가게', '#오늘의소식', '#신규오픈', '#예약문의', '#고객감사', '#우리매장'],
+    };
+
+    function getHashtagFallback(category, limit) {
+      const tags = HASHTAG_FALLBACK[category] || HASHTAG_FALLBACK['기타'];
+      return Number.isFinite(limit) ? tags.slice(0, limit) : [...tags];
+    }
+
+    const SEARCH_TABS = [
+      { icon: '🏠', name: '대시보드', tab: 'home', desc: '성과 요약 · 최근 게시물' },
+      { icon: '✨', name: '새 게시물', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
+      { icon: '📅', name: '예약 발행', tab: 'schedule', desc: '날짜 선택 · 게시물 예약' },
+      { icon: '📊', name: '성과 분석', tab: 'analytics', desc: '좋아요 · 팔로워 · 참여율 차트' },
+      { icon: '🤖', name: 'AI 어시스턴트', tab: 'ai', desc: '캡션 · 해시태그 · 콘텐츠 아이디어' },
+      { icon: '#️⃣', name: '해시태그 분석', tab: 'hashtag', desc: '트렌드 해시태그 · AI 추천' },
+      { icon: '⚙️', name: '설정', tab: 'settings', desc: '프로필 · 테마 · 목표 설정' },
+    ];
+
+    const SEARCH_FEATURES = [
+      { icon: '🎨', name: 'AI 캡션 생성', tab: 'post', desc: '새 게시물 → AI 생성 버튼' },
+      { icon: '📸', name: '이미지 업로드', tab: 'post', desc: '새 게시물 → 사진 선택' },
+      { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '예약 발행 → 달력 선택' },
+      { icon: '🌈', name: '테마 변경', tab: 'settings', desc: '설정 → 색상 테마' },
+      { icon: '🎯', name: '목표 설정', tab: 'settings', desc: '설정 → 목표 섹션' },
+      { icon: '📋', name: '리포트 다운로드', tab: 'analytics', desc: '성과 분석 → 리포트 내보내기' },
+      { icon: '💬', name: 'AI 채팅', tab: 'ai', desc: 'AI 어시스턴트 → 채팅 모드' },
+      { icon: '⏰', name: '최적 게시 시간', tab: 'ai', desc: 'AI 어시스턴트 → 최적 시간 분석' },
+    ];
     
     // ===== TABS =====
     function switchTab(tab) {
@@ -187,15 +225,7 @@
         renderHashtagChips(data.hashtags || []);
         meta.textContent = `${(data.hashtags || []).length}개 추천`;
       } catch (e) {
-        // Fallback: 카테고리 기반 기본 해시태그
-        const fallback = {
-          '공예': ['#캘리그래피', '#손글씨', '#감성캘리', '#작가의방', '#손편지', '#봄캘리'],
-          '음식점': ['#맛집', '#오늘의메뉴', '#한식', '#가정식', '#맛스타그램', '#먹스타그램'],
-          '카페': ['#카페', '#커피', '#디저트', '#카페스타그램', '#감성카페', '#휴식'],
-          '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드'],
-          '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#아름다움'],
-          '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#추천'],
-        }[state.category] || ['#일상', '#감성', '#추천', '#공유'];
+        const fallback = getHashtagFallback(state.category, 6);
         renderHashtagChips(fallback);
         meta.textContent = '오프라인 추천';
       }
@@ -1248,31 +1278,10 @@
       }
       searchBar?.classList.add('focused');
 
-      // 검색 데이터 소스
-      const TABS = [
-        { icon: '🏠', name: '대시보드', tab: 'home', desc: '성과 요약 · 최근 게시물' },
-        { icon: '✨', name: '새 게시물', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
-        { icon: '📅', name: '예약 발행', tab: 'schedule', desc: '날짜 선택 · 게시물 예약' },
-        { icon: '📊', name: '성과 분석', tab: 'analytics', desc: '좋아요 · 팔로워 · 참여율 차트' },
-        { icon: '🤖', name: 'AI 어시스턴트', tab: 'ai', desc: '캡션 · 해시태그 · 콘텐츠 아이디어' },
-        { icon: '#️⃣', name: '해시태그 분석', tab: 'hashtag', desc: '트렌드 해시태그 · AI 추천' },
-        { icon: '⚙️', name: '설정', tab: 'settings', desc: '프로필 · 테마 · 목표 설정' },
-      ];
-      const FEATURES = [
-        { icon: '🎨', name: 'AI 캡션 생성', tab: 'post', desc: '새 게시물 → AI 생성 버튼' },
-        { icon: '📸', name: '이미지 업로드', tab: 'post', desc: '새 게시물 → 사진 선택' },
-        { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '예약 발행 → 달력 선택' },
-        { icon: '🌈', name: '테마 변경', tab: 'settings', desc: '설정 → 색상 테마' },
-        { icon: '🎯', name: '목표 설정', tab: 'settings', desc: '설정 → 목표 섹션' },
-        { icon: '📋', name: '리포트 다운로드', tab: 'analytics', desc: '성과 분석 → 리포트 내보내기' },
-        { icon: '💬', name: 'AI 채팅', tab: 'ai', desc: 'AI 어시스턴트 → 채팅 모드' },
-        { icon: '⏰', name: '최적 게시 시간', tab: 'ai', desc: 'AI 어시스턴트 → 최적 시간 분석' },
-      ];
-
       const highlight = (text) => text.replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'), m => `<span class="search-highlight">${m}</span>`);
 
-      const matchTabs = TABS.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
-      const matchFeatures = FEATURES.filter(f => f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q));
+      const matchTabs = SEARCH_TABS.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
+      const matchFeatures = SEARCH_FEATURES.filter(f => f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q));
       const matchPosts = state.scheduledPosts.filter(p => p.caption.toLowerCase().includes(q)).slice(0, 3);
 
       let html = '';
@@ -1435,18 +1444,7 @@
         const data = await res.json();
         aiHashtagResult = data.hashtags || [];
       } catch {
-        const fallback = {
-          '공예': ['#캘리그래피', '#손글씨', '#감성캘리', '#작가의방', '#손편지', '#공예작가', '#수공예', '#원데이클래스', '#의정부공방', '#캘리스타그램'],
-          '음식점': ['#맛집', '#오늘의메뉴', '#한식', '#가정식', '#맛스타그램', '#먹스타그램', '#JMT', '#존맛탱', '#점심추천', '#저녁추천'],
-          '카페': ['#카페', '#커피', '#디저트', '#카페스타그램', '#감성카페', '#아메리카노', '#카페투어', '#오늘도커피', '#커피스타그램'],
-          '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드', '#패션스타그램', '#옷스타그램'],
-          '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#뷰티스타그램', '#화장품'],
-          '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#국내여행', '#여행기록'],
-          '학원': ['#학원', '#수업', '#공부습관', '#교육정보', '#입시정보', '#동네학원', '#학부모소통', '#공부스타그램'],
-          '운동/건강': ['#운동', '#건강관리', '#헬스', '#필라테스', '#다이어트', '#운동스타그램', '#건강습관', '#오늘운동'],
-          '기타': ['#소상공인', '#동네가게', '#오늘의소식', '#신규오픈', '#예약문의', '#고객감사', '#우리매장'],
-        };
-        aiHashtagResult = fallback[category] || ['#일상', '#감성', '#추천', '#공유', '#감사'];
+        aiHashtagResult = getHashtagFallback(category, 10);
       } finally {
         setAIBtnLoading('ai-hashtag-btn', false, '🔖 해시태그 추천받기');
       }
@@ -1669,18 +1667,7 @@
         const data = await res.json();
         hashtags = data.hashtags || [];
       } catch (e) {
-        const fallback = {
-          '공예': ['#캘리그래피', '#손글씨', '#감성캘리', '#작가의방', '#손편지', '#공예작가', '#작품', '#수공예'],
-          '음식점': ['#맛집', '#오늘의메뉴', '#한식', '#가정식', '#맛스타그램', '#먹스타그램', '#JMT', '#존맛'],
-          '카페': ['#카페', '#커피', '#디저트', '#카페스타그램', '#감성카페', '#휴식', '#아메리카노', '#카페투어'],
-          '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드', '#패션스타그램'],
-          '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#아름다움'],
-          '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#추천'],
-          '학원': ['#학원', '#교육정보', '#공부습관', '#입시정보', '#학부모소통', '#동네학원'],
-          '운동/건강': ['#운동', '#건강관리', '#헬스', '#필라테스', '#다이어트', '#오늘운동'],
-          '기타': ['#소상공인', '#동네가게', '#오늘의소식', '#예약문의', '#고객감사'],
-        };
-        hashtags = fallback[category] || ['#일상', '#감성', '#추천', '#공유', '#감사', '#함께'];
+        hashtags = getHashtagFallback(category, 8);
       }
       
       if (!state.hashtagStats) state.hashtagStats = {};
