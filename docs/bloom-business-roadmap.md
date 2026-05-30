@@ -8,6 +8,13 @@ Bloom is a polished single-page prototype for a Korean small-business AI marketi
 
 The current app supports dashboard navigation, content drafting, reservation planning, analytics mockups, AI assistant tools, onboarding, dark mode, accessibility improvements, and browser localStorage persistence.
 
+Current release state:
+
+- Production: v2.2 from `main` commit `a175c3d`
+- Preview: v0.4.7 from `codex/bloom-business-roadmap` commit `1a9885a`
+- Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
+- PR #1: Draft, now a Ready candidate after v0.4.5-v0.4.7 stabilization
+
 ## Product Thesis
 
 Small business owners do not first need a complex social media platform. They need a low-friction assistant that answers one question:
@@ -90,14 +97,16 @@ Goal: Make Bloom a weekly habit, not a one-off generator.
 - Simple status labels now exist: draft, copied, scheduled, posted.
 - Dashboard "today's marketing tasks" now reads draft and schedule status to suggest the next action.
 - Draft queue filters now support all, Instagram, Naver Place, weekly plan, draft, scheduled, and posted views.
-- Next: add stronger pilot-store feedback collection.
+- Category sync, server-side AI chat proxy, shared fallback constants, search constants, and data-setting based settings persistence are complete.
+- Status: Ready candidate for PR review and main deployment.
 
 ### v0.5 Paid MVP Packaging
 
 Goal: Validate whether owners will pay 9,900 KRW/month for the assistant.
 
-- Free vs Pro limits.
-- Pricing explanation.
+- Free vs Pro limits and usage counters.
+- 9,900 KRW/month pricing explanation.
+- Pro upgrade screen that no longer feels like a placeholder.
 - Demo and real-data labels.
 - Pilot feedback loop.
 - Manual billing or lightweight payment test before full billing integration.
