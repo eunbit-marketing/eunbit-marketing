@@ -1463,6 +1463,9 @@
                   <button class="cat-chip" data-cat="패션">👗 패션</button>
                   <button class="cat-chip" data-cat="뷰티">💄 뷰티</button>
                   <button class="cat-chip" data-cat="여행">✈️ 여행</button>
+                  <button class="cat-chip" data-cat="학원">📚 학원</button>
+                  <button class="cat-chip" data-cat="운동/건강">🏃 운동/건강</button>
+                  <button class="cat-chip" data-cat="기타">🏪 기타</button>
                 </div>
               </div>
               
@@ -1812,12 +1815,15 @@
                 <div class="form-group">
                   <label class="form-label">🏷️ 카테고리</label>
                   <select class="form-input" id="settings-category-select">
-                    <option>✨ 공예</option>
-                    <option>🍽️ 음식점</option>
-                    <option>☕ 카페</option>
-                    <option>👗 패션</option>
-                    <option>💄 뷰티</option>
-                    <option>✈️ 여행</option>
+                    <option value="공예">✨ 공예</option>
+                    <option value="음식점">🍽️ 음식점</option>
+                    <option value="카페">☕ 카페</option>
+                    <option value="패션">👗 패션</option>
+                    <option value="뷰티">💄 뷰티</option>
+                    <option value="여행">✈️ 여행</option>
+                    <option value="학원">📚 학원</option>
+                    <option value="운동/건강">🏃 운동/건강</option>
+                    <option value="기타">🏪 기타</option>
                   </select>
                 </div>
               </div>
@@ -1986,6 +1992,9 @@
                 <option value="패션">👗 패션</option>
                 <option value="뷰티">💄 뷰티</option>
                 <option value="여행">✈️ 여행</option>
+                <option value="학원">📚 학원</option>
+                <option value="운동/건강">🏃 운동/건강</option>
+                <option value="기타">🏪 기타</option>
               </select>
               <button class="ai-tool-btn" id="ai-hashtag-btn" onclick="aiGenerateHashtags()">🔖 해시태그 추천받기</button>
               <div class="ai-tool-result" id="ai-hashtag-result">
@@ -2012,6 +2021,9 @@
                 <option value="패션">👗 패션</option>
                 <option value="뷰티">💄 뷰티</option>
                 <option value="여행">✈️ 여행</option>
+                <option value="학원">📚 학원</option>
+                <option value="운동/건강">🏃 운동/건강</option>
+                <option value="기타">🏪 기타</option>
               </select>
               <select class="ai-tool-select" id="ai-idea-period">
                 <option value="이번 주">이번 주 아이디어</option>
@@ -2072,6 +2084,9 @@
                 <option value="패션">👗 패션</option>
                 <option value="뷰티">💄 뷰티</option>
                 <option value="여행">✈️ 여행</option>
+                <option value="학원">📚 학원</option>
+                <option value="운동/건강">🏃 운동/건강</option>
+                <option value="기타">🏪 기타</option>
               </select>
               <select class="ai-tool-select" id="ai-time-day">
                 <option value="전체">전체 요일</option>
@@ -2145,6 +2160,9 @@
                 <option value="패션">👗 패션</option>
                 <option value="뷰티">💄 뷰티</option>
                 <option value="여행">✈️ 여행</option>
+                <option value="학원">📚 학원</option>
+                <option value="운동/건강">🏃 운동/건강</option>
+                <option value="기타">🏪 기타</option>
               </select>
             </div>
             <button class="btn btn-primary" onclick="generateHashtags()" style="white-space: nowrap;">✨ 추천받기</button>
@@ -2270,6 +2288,48 @@
     function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
     state.calDate = new Date(2026, 4, 1);
     state.selectedDay = null;
+
+    function normalizeCategory(value) {
+      return String(value || '')
+        .replace(/[^\uAC00-\uD7A3a-zA-Z0-9\s/]/g, '')
+        .trim();
+    }
+
+    function setSelectByNormalizedValue(select, value) {
+      if (!select) return;
+      const normalized = normalizeCategory(value);
+      const option = Array.from(select.options || []).find(opt =>
+        normalizeCategory(opt.value) === normalized || normalizeCategory(opt.textContent) === normalized
+      );
+      if (option) select.value = option.value;
+    }
+
+    function syncCategoryAcrossUI(category) {
+      const normalized = normalizeCategory(category) || defaultState.category;
+      state.category = normalized;
+      state.settings.category = normalized;
+
+      document.querySelectorAll('.cat-chip').forEach(chip => {
+        chip.classList.toggle('active', normalizeCategory(chip.dataset.cat) === normalized);
+      });
+
+      setSelectByNormalizedValue(document.getElementById('settings-category-select'), normalized);
+      ['ai-hashtag-category', 'ai-idea-category', 'ai-time-category', 'hashtag-category'].forEach(id => {
+        setSelectByNormalizedValue(document.getElementById(id), normalized);
+      });
+    }
+
+    function syncToneAcrossUI(tone) {
+      const nextTone = tone || defaultState.tone;
+      state.tone = nextTone;
+      document.querySelectorAll('.tone-chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.tone === nextTone);
+      });
+      const captionTone = document.getElementById('ai-caption-tone');
+      if (captionTone && Array.from(captionTone.options || []).some(opt => opt.value === nextTone)) {
+        captionTone.value = nextTone;
+      }
+    }
     
     // ===== TABS =====
     function switchTab(tab) {
@@ -2285,7 +2345,7 @@
       if (tab === 'home') renderTodayTasks();
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderDraftQueue(); updateMobilePreview(); }
-      if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags('공예'), 100); renderMyHashtags(); }
+      if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags(state.category || '공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2311,16 +2371,20 @@
     // ===== NEW POST =====
     document.querySelectorAll('.tone-chip').forEach(chip => {
       chip.addEventListener('click', () => {
-        document.querySelectorAll('.tone-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        state.tone = chip.dataset.tone;
+        syncToneAcrossUI(chip.dataset.tone);
+        saveState();
       });
     });
     document.querySelectorAll('.cat-chip').forEach(chip => {
       chip.addEventListener('click', () => {
-        document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        state.category = chip.dataset.cat;
+        syncCategoryAcrossUI(chip.dataset.cat);
+        saveState();
+      });
+    });
+    ['ai-hashtag-category', 'ai-idea-category', 'ai-time-category', 'hashtag-category'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', (e) => {
+        syncCategoryAcrossUI(e.target.value);
+        saveState();
       });
     });
     
@@ -2547,13 +2611,11 @@
         else if (label.includes('팔로워 목표')) inp.value = state.settings.followersGoal;
         else if (label.includes('참여도')) inp.value = state.settings.engagementGoal;
         else if (label.includes('카테고리') && inp.tagName === 'SELECT') {
-          // [hotfix] 카테고리 복원 누락 수정
-          inp.value = state.settings.category;
-          // state.category(AI/해시태그용)와 동기화 — 이모지 제거 후 일치
-          const plain = state.settings.category.replace(/[^\uAC00-\uD7A3a-zA-Z0-9\s]/g, '').trim();
-          if (plain) state.category = plain;
+          syncCategoryAcrossUI(state.settings.category || state.category);
         }
       });
+      syncCategoryAcrossUI(state.settings.category || state.category);
+      syncToneAcrossUI(state.tone || state.settings.brandTone);
       
       // 검색 이벤트 리스너
       const searchInput = document.getElementById('search-input');
@@ -2696,8 +2758,8 @@
       state.settings.brandTone = tone;
       state.settings.mainOffer = offer;
       state.settings.targetCustomer = target;
-      state.category = category;
-      state.tone = tone;
+      syncCategoryAcrossUI(category);
+      syncToneAcrossUI(tone);
       state.onboardingComplete = true;
       state.onboardingDrafts = generateStarterDrafts({ store, category, region, tone, offer, target });
       saveState();
@@ -2725,6 +2787,8 @@
       const ideaText = document.getElementById('ai-idea-text');
       if (captionInput) captionInput.value = drafts.instagramKeyword;
       if (naverInput) naverInput.value = drafts.naverTopic;
+      syncCategoryAcrossUI(state.settings.category || state.category);
+      syncToneAcrossUI(state.tone || state.settings.brandTone);
       if (ideaText) {
         aiIdeasResult = drafts.ideaText;
         ideaText.textContent = drafts.ideaText;
@@ -3257,12 +3321,11 @@
         else if (label.includes('팔로워 목표')) state.settings.followersGoal = +inp.value;
         else if (label.includes('참여도')) state.settings.engagementGoal = +inp.value;
         else if (label.includes('카테고리') && inp.tagName === 'SELECT') {
-          state.settings.category = inp.value;
-          // [hotfix] 카테고리 이원화 해소 — state.category(AI/해시태그용)도 동기화
-          const plain = inp.value.replace(/[^\uAC00-\uD7A3a-zA-Z0-9\s]/g, '').trim();
-          if (plain) state.category = plain;
+          syncCategoryAcrossUI(inp.value);
         }
       });
+      syncCategoryAcrossUI(state.settings.category || state.category);
+      syncToneAcrossUI(state.tone || state.settings.brandTone);
       saveState();
       toast('💾 설정이 저장됐어요');
     }
@@ -3631,6 +3694,9 @@
           '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드', '#패션스타그램', '#옷스타그램'],
           '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#뷰티스타그램', '#화장품'],
           '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#국내여행', '#여행기록'],
+          '학원': ['#학원', '#수업', '#공부습관', '#교육정보', '#입시정보', '#동네학원', '#학부모소통', '#공부스타그램'],
+          '운동/건강': ['#운동', '#건강관리', '#헬스', '#필라테스', '#다이어트', '#운동스타그램', '#건강습관', '#오늘운동'],
+          '기타': ['#소상공인', '#동네가게', '#오늘의소식', '#신규오픈', '#예약문의', '#고객감사', '#우리매장'],
         };
         aiHashtagResult = fallback[category] || ['#일상', '#감성', '#추천', '#공유', '#감사'];
       } finally {
@@ -3666,6 +3732,9 @@
           '공예': ['🌸 봄맞이 캘리 원데이 클래스 모집 안내', '✍️ 손편지 쓰는 방법 튜토리얼', '🎁 맞춤 캘리 굿즈 소개', '📸 작업실 일상 behind the scene', '💌 수강생 후기 스토리텔링'],
           '음식점': ['🍱 오늘의 메뉴 소개', '👨‍🍳 요리 과정 Reel 영상', '⭐ 단골 손님 인터뷰', '🎉 기간 한정 메뉴 출시', '🌿 식재료 신선도 어필'],
           '카페': ['☕ 시그니처 메뉴 스토리', '🏠 카페 인테리어 투어', '📖 카페에서 책 읽기 감성', '🎵 오늘의 플레이리스트', '🧁 신메뉴 티저'],
+          '학원': ['📚 이번 주 수업 포인트 안내', '📝 공부 습관 체크리스트', '👩‍🏫 선생님 소개 콘텐츠', '⭐ 학부모 후기 소개', '🎯 시험 대비 일정 공지'],
+          '운동/건강': ['🏃 이번 주 운동 루틴 제안', '💪 초보자 자세 팁', '🥗 건강 습관 체크리스트', '📸 회원 변화 스토리', '🗓️ 체험 수업 안내'],
+          '기타': ['📢 이번 주 대표 소식', '📸 매장 일상 공유', '⭐ 고객 후기 소개', '🎟️ 첫 방문 혜택 안내', '💬 자주 묻는 질문 답변'],
         };
         const list = ideas[category] || ['💡 이번 주 콘텐츠 아이디어', '📸 일상 공유', '✨ 신제품 소개', '🎯 이벤트 진행', '💬 팔로워 소통'];
         aiIdeasResult = `📌 ${period} ${category} 콘텐츠 아이디어\n\n` + list.map((idea, i) => `${i+1}. ${idea}`).join('\n');
@@ -3739,6 +3808,8 @@
           '공예_전체': '🕐 오전 10:00 — 오후 12:00 사이가 가장 반응이 좋아요\n🕕 저녁 7:00 — 9:00도 높은 참여율!\n\n💡 공예 팬들은 주로 점심시간과 저녁 여가 시간에 활동해요.',
           '공예_평일': '🕙 오전 10:30 — 이른 오전 출근 전 브라우징 시간대\n🕕 오후 12:00 — 점심 시간 피크\n🕗 오후 7:30 — 퇴근 후 여가 시간',
           '공예_주말': '🕙 오전 10:00 — 주말 여유 브런치 타임\n🕒 오후 3:00 — 오후 나들이 후 확인\n🌙 오후 9:00 — 주말 저녁 릴랙스 타임',
+          '학원_전체': '🕗 오전 8:00 — 등교 전 학부모 확인 시간\n🕕 오후 6:00 — 하교 후 상담 문의가 늘어나는 시간\n\n💡 학원 콘텐츠는 평일 저녁 공지와 주말 상담 안내가 잘 맞아요.',
+          '운동/건강_전체': '🕖 오전 7:00 — 운동 의지가 높은 출근 전 시간\n🕘 오후 9:00 — 하루 마무리 운동 계획 시간\n\n💡 운동/건강 콘텐츠는 루틴, 전후 변화, 체험권 안내가 반응을 만들기 좋아요.',
         };
         aiTimeResult = times[`${category}_${day}`] || times['공예_전체'] || '오전 10:00 ~ 12:00, 오후 7:00 ~ 9:00 사이가 최적 시간이에요!';
       } finally {
@@ -3857,6 +3928,9 @@
           '패션': ['#패션', '#오오티디', '#스타일', '#데일리룩', '#코디', '#트렌드', '#패션스타그램'],
           '뷰티': ['#뷰티', '#스킨케어', '#메이크업', '#K뷰티', '#피부관리', '#아름다움'],
           '여행': ['#여행', '#여행스타그램', '#풍경', '#힐링', '#감성여행', '#추천'],
+          '학원': ['#학원', '#교육정보', '#공부습관', '#입시정보', '#학부모소통', '#동네학원'],
+          '운동/건강': ['#운동', '#건강관리', '#헬스', '#필라테스', '#다이어트', '#오늘운동'],
+          '기타': ['#소상공인', '#동네가게', '#오늘의소식', '#예약문의', '#고객감사'],
         };
         hashtags = fallback[category] || ['#일상', '#감성', '#추천', '#공유', '#감사', '#함께'];
       }
@@ -3897,6 +3971,9 @@
         '공예': [['#캘리그래피', 4200], ['#손글씨', 3800], ['#감성캘리', 2900], ['#손편지', 2200], ['#작가의방', 1800], ['#봄캘리', 1500], ['#공예작가', 1200], ['#수공예', 950]],
         '음식점': [['#맛집', 12800], ['#먹스타그램', 9500], ['#JMT', 7200], ['#한식', 5800], ['#가정식', 3900], ['#오늘의메뉴', 2700], ['#존맛탱', 2100], ['#맛스타그램', 1800]],
         '카페': [['#카페', 15200], ['#커피', 11000], ['#디저트', 8400], ['#카페스타그램', 6900], ['#감성카페', 4500], ['#아메리카노', 3200], ['#휴식', 2400], ['#카페투어', 1900]],
+        '학원': [['#학원', 7800], ['#공부습관', 5200], ['#교육정보', 4100], ['#학부모소통', 3400], ['#입시정보', 3100], ['#수업후기', 1900]],
+        '운동/건강': [['#운동', 13900], ['#건강관리', 8600], ['#헬스', 7600], ['#필라테스', 6900], ['#다이어트', 6400], ['#오늘운동', 3500]],
+        '기타': [['#소상공인', 6200], ['#동네가게', 4700], ['#오늘의소식', 3600], ['#예약문의', 2400], ['#고객감사', 1800], ['#신규오픈', 1600]],
       };
       const data = trending[category] || trending['공예'];
       const canvas = document.getElementById('chart-hashtag-trend');

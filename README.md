@@ -48,6 +48,6 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.1: Reposition Bloom from an Eunbit-specific dashboard into a general small-business assistant
 - v0.2: Build copy-ready Instagram and Naver Place tools
 - v0.3: Add guided onboarding and "today's marketing plan"
-- v0.4: Improve calendar planning, draft saving, and pilot-store workflows (in progress: weekly draft queue, today's tasks, and draft filters added)
+- v0.4: Improve calendar planning, draft saving, and pilot-store workflows (in progress: weekly draft queue, today's tasks, draft filters, and category sync added)
 - v0.5: Prepare paid MVP packaging around 9,900 KRW/month
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations
