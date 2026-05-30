@@ -9,6 +9,7 @@ Bloom now keeps the static deployment model but separates the largest file into 
 - `assets/js/app.js`: local state, event handlers, AI tool flows, calendar logic, settings, and hashtag tools
 - `api/chat.js`: serverless chat proxy so the browser never calls Anthropic directly
 - Shared constants in `assets/js/app.js`: `HASHTAG_FALLBACK`, `SEARCH_TABS`, and `SEARCH_FEATURES` now live once near the top of the app instead of being recreated inside feature functions
+- Settings form fields use `data-setting` attributes so labels can change without breaking save/restore behavior
 
 This keeps Vercel deployment simple while making future changes easier to review.
 

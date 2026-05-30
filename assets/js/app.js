@@ -96,6 +96,8 @@
       return Number.isFinite(limit) ? tags.slice(0, limit) : [...tags];
     }
 
+    const NUMERIC_SETTINGS = new Set(['postsGoal', 'followersGoal', 'engagementGoal']);
+
     const SEARCH_TABS = [
       { icon: '🏠', name: '대시보드', tab: 'home', desc: '성과 요약 · 최근 게시물' },
       { icon: '✨', name: '새 게시물', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
@@ -116,6 +118,30 @@
       { icon: '💬', name: 'AI 채팅', tab: 'ai', desc: 'AI 어시스턴트 → 채팅 모드' },
       { icon: '⏰', name: '최적 게시 시간', tab: 'ai', desc: 'AI 어시스턴트 → 최적 시간 분석' },
     ];
+
+    function getSettingsControls() {
+      return document.querySelectorAll('#tab-settings [data-setting]');
+    }
+
+    function restoreSettingsForm() {
+      getSettingsControls().forEach(control => {
+        const key = control.dataset.setting;
+        const value = state.settings[key];
+        if (value !== undefined && value !== null) control.value = value;
+      });
+      syncCategoryAcrossUI(state.settings.category || state.category);
+      syncToneAcrossUI(state.tone || state.settings.brandTone);
+    }
+
+    function applySettingsForm() {
+      getSettingsControls().forEach(control => {
+        const key = control.dataset.setting;
+        if (!key) return;
+        state.settings[key] = NUMERIC_SETTINGS.has(key) ? Number(control.value || 0) : control.value;
+      });
+      syncCategoryAcrossUI(state.settings.category || state.category);
+      syncToneAcrossUI(state.tone || state.settings.brandTone);
+    }
     
     // ===== TABS =====
     function switchTab(tab) {
@@ -375,25 +401,7 @@
         }
       });
       
-      // 설정 폼 복원
-      const settingsInputs = document.querySelectorAll('#tab-settings input, #tab-settings textarea, #tab-settings select');
-      settingsInputs.forEach(inp => {
-        const label = inp.previousElementSibling?.textContent?.trim() || '';
-        if (label.includes('매장명')) inp.value = state.settings.storeName;
-        else if (label.includes('인스타그램')) inp.value = state.settings.instagram;
-        else if (label.includes('이메일')) inp.value = state.settings.email;
-        else if (label.includes('연락처')) inp.value = state.settings.phone;
-        else if (label.includes('주소')) inp.value = state.settings.address;
-        else if (label.includes('매장 소개')) inp.value = state.settings.description;
-        else if (label.includes('월간 게시물')) inp.value = state.settings.postsGoal;
-        else if (label.includes('팔로워 목표')) inp.value = state.settings.followersGoal;
-        else if (label.includes('참여도')) inp.value = state.settings.engagementGoal;
-        else if (label.includes('카테고리') && inp.tagName === 'SELECT') {
-          syncCategoryAcrossUI(state.settings.category || state.category);
-        }
-      });
-      syncCategoryAcrossUI(state.settings.category || state.category);
-      syncToneAcrossUI(state.tone || state.settings.brandTone);
+      restoreSettingsForm();
       
       // 검색 이벤트 리스너
       const searchInput = document.getElementById('search-input');
@@ -1086,24 +1094,7 @@
     }
 
     function saveSettings() {
-      const inputs = document.querySelectorAll('#tab-settings input, #tab-settings textarea, #tab-settings select');
-      inputs.forEach(inp => {
-        const label = inp.previousElementSibling?.textContent?.trim() || '';
-        if (label.includes('매장명')) state.settings.storeName = inp.value;
-        else if (label.includes('인스타그램')) state.settings.instagram = inp.value;
-        else if (label.includes('이메일')) state.settings.email = inp.value;
-        else if (label.includes('연락처')) state.settings.phone = inp.value;
-        else if (label.includes('주소')) state.settings.address = inp.value;
-        else if (label.includes('매장 소개')) state.settings.description = inp.value;
-        else if (label.includes('월간 게시물')) state.settings.postsGoal = +inp.value;
-        else if (label.includes('팔로워 목표')) state.settings.followersGoal = +inp.value;
-        else if (label.includes('참여도')) state.settings.engagementGoal = +inp.value;
-        else if (label.includes('카테고리') && inp.tagName === 'SELECT') {
-          syncCategoryAcrossUI(inp.value);
-        }
-      });
-      syncCategoryAcrossUI(state.settings.category || state.category);
-      syncToneAcrossUI(state.tone || state.settings.brandTone);
+      applySettingsForm();
       saveState();
       toast('💾 설정이 저장됐어요');
     }

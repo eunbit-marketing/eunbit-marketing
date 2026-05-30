@@ -648,11 +648,11 @@
               <div class="settings-row">
                 <div class="form-group">
                   <label class="form-label">🏪 매장명</label>
-                  <input type="text" class="form-input" value="은빛캘리">
+                  <input type="text" class="form-input" data-setting="storeName" value="은빛캘리">
                 </div>
                 <div class="form-group">
                   <label class="form-label">🏷️ 카테고리</label>
-                  <select class="form-input" id="settings-category-select">
+                  <select class="form-input" id="settings-category-select" data-setting="category">
                     <option value="공예">✨ 공예</option>
                     <option value="음식점">🍽️ 음식점</option>
                     <option value="카페">☕ 카페</option>
@@ -668,26 +668,26 @@
               <div class="settings-row">
                 <div class="form-group">
                   <label class="form-label">📱 인스타그램</label>
-                  <input type="text" class="form-input" value="@eunbickaelri">
+                  <input type="text" class="form-input" data-setting="instagram" value="@eunbickaelri">
                 </div>
                 <div class="form-group">
                   <label class="form-label">📧 이메일</label>
-                  <input type="email" class="form-input" value="hun2620@naver.com">
+                  <input type="email" class="form-input" data-setting="email" value="hun2620@naver.com">
                 </div>
               </div>
               <div class="settings-row">
                 <div class="form-group">
                   <label class="form-label">📞 연락처</label>
-                  <input type="text" class="form-input" placeholder="010-0000-0000">
+                  <input type="text" class="form-input" data-setting="phone" placeholder="010-0000-0000">
                 </div>
                 <div class="form-group">
                   <label class="form-label">📍 주소</label>
-                  <input type="text" class="form-input" placeholder="의정부시 ...">
+                  <input type="text" class="form-input" data-setting="address" placeholder="의정부시 ...">
                 </div>
               </div>
               <div class="form-group">
                 <label class="form-label">📝 매장 소개</label>
-                <textarea class="caption-textarea" placeholder="매장에 대해 짧게 소개해주세요 (100자 이내)"></textarea>
+                <textarea class="caption-textarea" data-setting="description" placeholder="매장에 대해 짧게 소개해주세요 (100자 이내)"></textarea>
               </div>
             </div>
             
@@ -697,16 +697,16 @@
               <div class="settings-row">
                 <div class="form-group">
                   <label class="form-label">📅 월간 게시물 목표</label>
-                  <input type="number" class="form-input" value="8">
+                  <input type="number" class="form-input" data-setting="postsGoal" value="8">
                 </div>
                 <div class="form-group">
                   <label class="form-label">👥 팔로워 목표</label>
-                  <input type="number" class="form-input" value="3000">
+                  <input type="number" class="form-input" data-setting="followersGoal" value="3000">
                 </div>
               </div>
               <div class="form-group">
                 <label class="form-label">📊 참여도 목표 (%)</label>
-                <input type="number" class="form-input" value="5" step="0.1">
+                <input type="number" class="form-input" data-setting="engagementGoal" value="5" step="0.1">
               </div>
             </div>
             
