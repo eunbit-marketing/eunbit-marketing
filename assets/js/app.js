@@ -1585,20 +1585,19 @@
       chatHistory.push({ role: 'user', content: msg });
       addChatMsg('assistant', '...', 'typing');
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            system: `당신은 Bloom AI, 소상공인과 1인 매장의 인스타그램과 네이버 플레이스 마케팅을 도와주는 AI 어시스턴트입니다. 현재 선택된 매장은 ${state.settings.storeName || '우리 매장'}입니다.
-캡션 작성, 해시태그 추천, 네이버 플레이스 소식/쿠폰/리뷰 답글, 콘텐츠 아이디어 제안, 마케팅 전략 조언을 한국어로 친근하게 답변하세요.
-이모지를 적절히 사용하고 150자 이내로 핵심만 간결하게 답변하세요.`,
-            messages: chatHistory
+            messages: chatHistory,
+            storeName: state.settings.storeName,
+            category: state.category,
+            tone: state.tone || state.settings.brandTone,
           })
         });
+        if (!res.ok) throw new Error('Chat API error');
         const data = await res.json();
-        const text = data.content?.[0]?.text || '죄송해요, 다시 시도해주세요 😅';
+        const text = data.message || '죄송해요, 다시 시도해주세요 😅';
         removeTyping();
         addChatMsg('assistant', text);
         chatHistory.push({ role: 'assistant', content: text });
@@ -1625,9 +1624,10 @@
       const msgs = document.getElementById('ai-chat-messages');
       const div = document.createElement('div');
       div.className = `ai-msg ${role}${cls ? ' ' + cls : ''}`;
+      const safeText = escapeHtml(text).replace(/\n/g, '<br>');
       div.innerHTML = `
         <div class="ai-msg-avatar">${role === 'assistant' ? '🌸' : '😊'}</div>
-        <div class="ai-msg-bubble">${text.replace(/\n/g, '<br>')}</div>`;
+        <div class="ai-msg-bubble">${safeText}</div>`;
       msgs.appendChild(div);
       msgs.scrollTop = msgs.scrollHeight;
     }

@@ -34,6 +34,7 @@ Live auto-publishing, account integrations, billing, and multi-tenant data stora
 - Styles: `assets/css/styles.css`
 - Client behavior: `assets/js/app.js`
 - APIs: Vercel Serverless functions in `api/`
+- AI chat proxy: `api/chat.js`
 - AI provider: Anthropic API through `ANTHROPIC_API_KEY`
 - Data today: browser `localStorage`
 - Deployment target: Vercel

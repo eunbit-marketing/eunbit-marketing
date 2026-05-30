@@ -7,6 +7,7 @@ Bloom now keeps the static deployment model but separates the largest file into 
 - `index.html`: page shell and static markup
 - `assets/css/styles.css`: design tokens, layout, responsive styles, and component styles
 - `assets/js/app.js`: local state, event handlers, AI tool flows, calendar logic, settings, and hashtag tools
+- `api/chat.js`: serverless chat proxy so the browser never calls Anthropic directly
 
 This keeps Vercel deployment simple while making future changes easier to review.
 
