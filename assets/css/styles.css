@@ -977,6 +977,152 @@
       max-height: 170px;
       overflow: auto;
     }
+
+    /* ===== PILOT PROPOSAL ===== */
+    .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .proposal-hero {
+      background:
+        linear-gradient(135deg, rgba(255,181,216,.96), rgba(200,242,217,.9) 56%, rgba(255,242,190,.92)),
+        var(--white);
+      border: 1px solid rgba(255,255,255,.65);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      padding: 38px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .proposal-hero::after {
+      content: '';
+      position: absolute;
+      right: -36px;
+      bottom: -48px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.32);
+    }
+    .proposal-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.72);
+      color: #7A4A12;
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 11px;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+    .proposal-brand { font-size: 15px; font-weight: 900; color: var(--ink); margin-bottom: 10px; }
+    .proposal-hero h2 {
+      max-width: 760px;
+      font-size: 34px;
+      line-height: 1.2;
+      letter-spacing: -0.8px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .proposal-hero p {
+      max-width: 720px;
+      color: rgba(26,26,46,.78);
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .proposal-quote {
+      max-width: 760px;
+      margin-top: 18px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(255,255,255,.72);
+      border-radius: var(--r-md);
+      padding: 13px 15px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+    }
+    .proposal-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; position: relative; z-index: 1; }
+    .proposal-section, .proposal-flow {
+      margin-top: 18px;
+      background: var(--white);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+    }
+    .proposal-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .proposal-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .proposal-feature, .proposal-price-card, .proposal-benefit-card, .proposal-step {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 16px;
+    }
+    .proposal-feature span { font-size: 22px; display: inline-block; margin-bottom: 10px; }
+    .proposal-feature strong, .proposal-step strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .proposal-feature p, .proposal-step p {
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .proposal-pricing {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .proposal-price-card.featured {
+      background: linear-gradient(135deg, rgba(26,26,46,.96), rgba(70,50,114,.92));
+      color: white;
+      border-color: transparent;
+      box-shadow: var(--shadow-lg);
+    }
+    .proposal-plan-name { font-size: 12px; font-weight: 900; color: var(--purple); margin-bottom: 6px; }
+    .proposal-price-card.featured .proposal-plan-name { color: var(--yellow); }
+    .proposal-plan-price { font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 14px; }
+    .proposal-pricing ul {
+      display: grid;
+      gap: 8px;
+      list-style: none;
+      font-size: 13px;
+      color: var(--sub);
+    }
+    .proposal-pricing li::before { content: '✓'; color: #10794A; font-weight: 900; margin-right: 8px; }
+    .proposal-price-card.featured ul { color: rgba(255,255,255,.84); }
+    .proposal-price-card.featured li::before { color: var(--mint); }
+    .proposal-step-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .proposal-step span {
+      display: inline-block;
+      color: var(--purple);
+      font-size: 10px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
     
     /* ===== BOTTOM TAB BAR (모바일 전용) ===== */
     .bottom-tab-bar {
@@ -1073,6 +1219,13 @@
       .ai-tools-grid { grid-template-columns: 1fr; }
       .plan-usage-grid,
       .plan-compare { grid-template-columns: 1fr; }
+      .proposal-hero { padding: 24px; }
+      .proposal-hero h2 { font-size: 24px; }
+      .proposal-feature-grid,
+      .proposal-pricing,
+      .proposal-step-grid { grid-template-columns: 1fr; }
+      .proposal-section,
+      .proposal-flow { padding: 18px; }
       .ai-mode-tabs { gap: 6px; }
       .ai-hero-title { font-size: 18px; }
       .ai-hero-icon { width: 40px; height: 40px; font-size: 18px; }

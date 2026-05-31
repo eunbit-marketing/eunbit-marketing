@@ -234,6 +234,7 @@
       { icon: '✨', name: '새 게시물', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
       { icon: '📅', name: '예약 발행', tab: 'schedule', desc: '날짜 선택 · 게시물 예약' },
       { icon: '📊', name: '성과 분석', tab: 'analytics', desc: '좋아요 · 팔로워 · 참여율 차트' },
+      { icon: '📄', name: '파일럿 제안서', tab: 'proposal', desc: '고객 설명 · 가격 · 파일럿 혜택' },
       { icon: '🤖', name: 'AI 어시스턴트', tab: 'ai', desc: '캡션 · 해시태그 · 콘텐츠 아이디어' },
       { icon: '#️⃣', name: '해시태그 분석', tab: 'hashtag', desc: '트렌드 해시태그 · AI 추천' },
       { icon: '⚙️', name: '설정', tab: 'settings', desc: '프로필 · 테마 · 목표 설정' },
@@ -245,6 +246,7 @@
       { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '예약 발행 → 달력 선택' },
       { icon: '🌈', name: '테마 변경', tab: 'settings', desc: '설정 → 색상 테마' },
       { icon: '🎯', name: '목표 설정', tab: 'settings', desc: '설정 → 목표 섹션' },
+      { icon: '🌸', name: '파일럿 제안 복사', tab: 'proposal', desc: '파일럿 제안서 → 라이브 링크 복사' },
       { icon: '📋', name: '리포트 다운로드', tab: 'analytics', desc: '성과 분석 → 리포트 내보내기' },
       { icon: '💬', name: 'AI 채팅', tab: 'ai', desc: 'AI 어시스턴트 → 채팅 모드' },
       { icon: '⏰', name: '최적 게시 시간', tab: 'ai', desc: 'AI 어시스턴트 → 최적 시간 분석' },
@@ -472,6 +474,12 @@
       const text = document.getElementById('ai-output').textContent;
       navigator.clipboard.writeText(text).then(() => toast('📋 클립보드에 복사됐어요'));
     }
+    function copyPilotLink() {
+      const url = 'https://eunbit-marketing.vercel.app/#proposal';
+      navigator.clipboard.writeText(url)
+        .then(() => toast('🌸 파일럿 링크를 복사했어요'))
+        .catch(() => toast(url));
+    }
     function useCaption() {
       const text = document.getElementById('ai-output').textContent;
       document.getElementById('caption-final').value = text;
@@ -534,6 +542,11 @@
       });
       
       restoreSettingsForm();
+
+      const hashTab = window.location.hash.replace('#', '');
+      const validTabs = new Set(SEARCH_TABS.map(tab => tab.tab));
+      const initialTab = validTabs.has(hashTab) ? hashTab : state.currentTab;
+      if (validTabs.has(initialTab)) switchTab(initialTab);
       
       // 검색 이벤트 리스너
       const searchInput = document.getElementById('search-input');
@@ -587,7 +600,7 @@
         }
         if (_gPending) {
           _gPending = false; clearTimeout(_gTimer);
-          const tabMap = { h: 'home', p: 'post', s: 'schedule', a: 'analytics', t: 'hashtag', i: 'ai', e: 'settings' };
+          const tabMap = { h: 'home', p: 'post', s: 'schedule', a: 'analytics', f: 'proposal', t: 'hashtag', i: 'ai', e: 'settings' };
           const dest = tabMap[e.key.toLowerCase()];
           if (dest) { switchTab(dest); e.preventDefault(); }
         }
@@ -599,7 +612,7 @@
       renderTodayTasks();
       updateMobilePreview();
       renderUsageWidgets();
-      if (!state.onboardingComplete) setTimeout(showOnboarding, 500);
+      if (!state.onboardingComplete && state.currentTab !== 'proposal') setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
 

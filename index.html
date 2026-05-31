@@ -66,6 +66,11 @@
       
       <div class="nav-section">TOOLS</div>
       <nav class="nav-list" role="navigation" aria-label="도구 메뉴">
+        <button class="nav-item" data-tab="proposal" aria-label="파일럿 제안서 (G F)">
+          <span class="nav-icon">📄</span>
+          <span class="nav-label">파일럿 제안서</span>
+          <span class="nav-chip">PILOT</span>
+        </button>
         <button class="nav-item" data-tab="ai" aria-label="AI 어시스턴트 (G I)">
           <span class="nav-icon">✨</span>
           <span class="nav-label">AI 어시스턴트</span>
@@ -114,7 +119,10 @@
             <h1 class="page-title">안녕하세요, 민지님 🌸</h1>
             <div class="page-sub">오늘 할 인스타·네이버 플레이스 마케팅을 Bloom이 정리해드려요</div>
           </div>
-          <button class="btn btn-primary" onclick="switchTab('post')">+ 새 게시물</button>
+          <div class="header-actions">
+            <button class="btn btn-secondary" onclick="switchTab('proposal')">파일럿 제안서</button>
+            <button class="btn btn-primary" onclick="switchTab('post')">+ 새 게시물</button>
+          </div>
         </div>
         
         <div class="bento">
@@ -759,6 +767,100 @@
         </div>
       </section>
       
+      <!-- ====== PILOT PROPOSAL ====== -->
+      <section class="tab" id="tab-proposal">
+        <div class="page-header">
+          <div>
+            <div class="breadcrumb">파일럿 / 제안서</div>
+            <h1 class="page-title">파일럿 고객 제안서</h1>
+            <div class="page-sub">소상공인에게 Bloom을 1분 안에 설명하는 고객용 화면입니다</div>
+          </div>
+          <div class="header-actions">
+            <button class="btn btn-secondary" onclick="copyPilotLink()">라이브 링크 복사</button>
+            <button class="btn btn-primary" onclick="showOnboarding()">지금 무료로 시작</button>
+          </div>
+        </div>
+
+        <div class="proposal-hero">
+          <div class="proposal-eyebrow">PILOT 초대</div>
+          <div class="proposal-brand">🌸 bloom</div>
+          <h2>업체 문의 없이, 비싼 대행 없이, 오늘 할 마케팅을 AI가 대신 정리합니다.</h2>
+          <p>
+            Bloom은 인스타그램 게시글, 해시태그, 네이버 플레이스 소식과 리뷰 답글을
+            사장님 말투에 맞춰 바로 복사해 쓸 수 있게 만들어주는 소상공인 AI 마케팅 비서입니다.
+          </p>
+          <div class="proposal-quote">씨앗처럼 작은 첫 게시물부터, 만개하는 비즈니스까지. Bloom이 사장님 곁에서 함께 가꿉니다.</div>
+          <div class="proposal-actions">
+            <button class="btn btn-primary" onclick="showOnboarding()">3분 만에 첫 문안 만들기</button>
+            <button class="btn btn-secondary" onclick="switchTab('ai')">AI 도구 보기</button>
+          </div>
+        </div>
+
+        <div class="proposal-section">
+          <div class="proposal-section-head">
+            <div>
+              <div class="breadcrumb">기능</div>
+              <h2 class="section-title">처음 보여줄 핵심 기능 6가지</h2>
+            </div>
+          </div>
+          <div class="proposal-feature-grid">
+            <article class="proposal-feature"><span>✍️</span><strong>인스타 캡션 · 해시태그</strong><p>사진 설명 한 줄만 넣으면 게시글 초안과 해시태그를 같이 준비합니다.</p></article>
+            <article class="proposal-feature"><span>📍</span><strong>네이버 플레이스 문안</strong><p>소식, 쿠폰, 공지에 바로 붙여넣을 수 있는 문장을 만듭니다.</p></article>
+            <article class="proposal-feature"><span>🗓️</span><strong>주간 마케팅 플랜</strong><p>이번 주에 무엇을 올릴지 막막할 때 날짜별 아이디어를 정리합니다.</p></article>
+            <article class="proposal-feature"><span>📚</span><strong>이번 주 문안 저장함</strong><p>마음에 드는 문안을 저장하고 복사, 예약, 게시완료 상태로 관리합니다.</p></article>
+            <article class="proposal-feature"><span>✅</span><strong>오늘 할 마케팅 위젯</strong><p>저장함과 예약 상태를 보고 오늘 먼저 할 일을 골라줍니다.</p></article>
+            <article class="proposal-feature"><span>💬</span><strong>AI 채팅 비서</strong><p>이벤트 문구, 리뷰 답글, 게시 타이밍 같은 질문을 편하게 물어볼 수 있습니다.</p></article>
+          </div>
+        </div>
+
+        <div class="proposal-pricing">
+          <article class="proposal-price-card">
+            <div class="proposal-plan-name">Bloom Free</div>
+            <div class="proposal-plan-price">무료</div>
+            <ul>
+              <li>AI 생성 30회/월</li>
+              <li>저장함 20개/월</li>
+              <li>예약 계획 10개/월</li>
+              <li>모든 AI 도구 체험</li>
+            </ul>
+          </article>
+          <article class="proposal-price-card featured">
+            <div class="proposal-plan-name">Bloom Pro</div>
+            <div class="proposal-plan-price">월 9,900원</div>
+            <ul>
+              <li>AI 생성 무제한</li>
+              <li>저장함/예약 무제한</li>
+              <li>주간 마케팅 플랜</li>
+              <li>파일럿 피드백 우선 반영</li>
+            </ul>
+          </article>
+          <article class="proposal-benefit-card">
+            <div class="proposal-plan-name">파일럿 혜택</div>
+            <ul>
+              <li>초기 파일럿 Pro 6개월 무료</li>
+              <li>1:1 온보딩 지원</li>
+              <li>사장님 피드백을 제품 로드맵에 반영</li>
+              <li>정식 출시 전 얼리버드 조건 우선 안내</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="proposal-flow">
+          <div class="proposal-section-head">
+            <div>
+              <div class="breadcrumb">사용 흐름</div>
+              <h2 class="section-title">복사해서 바로 쓰는 4단계</h2>
+            </div>
+          </div>
+          <div class="proposal-step-grid">
+            <div class="proposal-step"><span>STEP 1</span><strong>매장 정보 입력</strong><p>업종, 지역, 대표 상품을 적습니다.</p></div>
+            <div class="proposal-step"><span>STEP 2</span><strong>오늘 소식 한 줄 입력</strong><p>이벤트나 메뉴 같은 내용을 짧게 씁니다.</p></div>
+            <div class="proposal-step"><span>STEP 3</span><strong>AI 문안 자동 생성</strong><p>인스타와 네이버 플레이스 문안을 같이 받습니다.</p></div>
+            <div class="proposal-step"><span>STEP 4</span><strong>복사해서 바로 게시</strong><p>자동 발행 전에도 사장님이 직접 확인하고 사용할 수 있습니다.</p></div>
+          </div>
+        </div>
+      </section>
+
       <!-- ====== AI ASSISTANT (간단) ====== -->
       <section class="tab" id="tab-ai">
         <div class="page-header">

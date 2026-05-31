@@ -145,6 +145,23 @@ Decision:
 
 - Onboarding should not only collect data. It must create the first visible win before the owner explores the dashboard.
 
+### v0.5.2 Pilot Proposal Page
+
+Implemented:
+
+- Added a customer-facing pilot proposal tab inside the app.
+- Turned 새봄's one-page proposal copy into a live product screen covering:
+  - Bloom's core promise for small-business owners.
+  - Six pilot-visible features.
+  - Free and Pro packaging.
+  - Pilot benefits and the copy-ready four-step flow.
+- Added a homepage entry button so mobile users can reach the proposal without opening the desktop sidebar.
+- Added proposal search coverage, `G F` keyboard navigation, and a live-link copy action.
+
+Decision:
+
+- Before adding more product depth, Bloom needs a clear page that explains the pilot offer to real store owners. v0.5.2 makes the production link easier to send and discuss in 1:1 pilot outreach.
+
 ### v1.0 Pilot Launch
 
 Goal: Launch to 3-5 real stores and learn from actual usage.
