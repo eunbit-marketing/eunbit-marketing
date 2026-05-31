@@ -950,6 +950,33 @@
       margin-top: 14px; padding: 12px; border-radius: 12px;
       background: rgba(181,167,255,.1); color: var(--sub); font-size: 12px; line-height: 1.5;
     }
+    .onboarding-result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .onboarding-result-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .onboarding-result-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--purple);
+    }
+    .onboarding-result-text {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink);
+      max-height: 170px;
+      overflow: auto;
+    }
     
     /* ===== BOTTOM TAB BAR (모바일 전용) ===== */
     .bottom-tab-bar {
@@ -1052,6 +1079,7 @@
       .ai-assistant-hero { padding: 22px; }
       .search-dropdown { max-height: 260px; }
       .onboarding-grid { grid-template-columns: 1fr; }
+      .onboarding-result-grid { grid-template-columns: 1fr; }
       .onboarding-actions { flex-direction: column-reverse; }
       .draft-board-head { flex-direction: column; }
       .draft-list { grid-template-columns: 1fr; }

@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v2.2 on Vercel from GitHub commit `a175c3d`
-- Preview baseline: v0.5.0 on branch `codex/bloom-business-roadmap`
+- Production baseline: v0.5.0 on Vercel from GitHub commit `26a5584`
+- Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
 - Figma baseline: v0.4.7 update notes exist, but production UI capture/prototype work should start in v0.5
@@ -55,5 +55,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.2: Build copy-ready Instagram and Naver Place tools
 - v0.3: Add guided onboarding and "today's marketing plan"
 - v0.4: Improve calendar planning, draft saving, and pilot-store workflows (ready candidate: weekly draft queue, today's tasks, draft filters, category sync, chat proxy, shared fallback constants, and data-setting based settings forms added)
-- v0.5: Prepare paid MVP packaging around 9,900 KRW/month (started: Free usage counters, Pro comparison, pilot pricing modal)
+- v0.5: Prepare paid MVP packaging around 9,900 KRW/month (started: Free usage counters, Pro comparison, pilot pricing modal, and 3-minute onboarding result flow)
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

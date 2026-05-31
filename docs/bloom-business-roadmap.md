@@ -10,8 +10,8 @@ The current app supports dashboard navigation, content drafting, reservation pla
 
 Current release state:
 
-- Production: v2.2 from `main` commit `a175c3d`
-- Preview: v0.4.7 from `codex/bloom-business-roadmap` commit `1a9885a`
+- Production: v0.5.0 from `main` commit `26a5584`
+- Preview: aligned with `main` from `codex/bloom-business-roadmap` commit `26a5584`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR #1: Draft, now a Ready candidate after v0.4.5-v0.4.7 stabilization
 
@@ -127,6 +127,23 @@ Decision:
 
 - v0.4.8 remains a documentation/release-readiness update.
 - v0.5.x is reserved for customer-facing packaging, pricing, onboarding, and pilot-readiness changes.
+
+### v0.5.1 Three-Minute Onboarding Result Flow
+
+Implemented:
+
+- Onboarding now generates three concrete outputs immediately after store setup:
+  - Instagram starter copy.
+  - Naver Place notice copy.
+  - First-week marketing plan.
+- The result modal lets the owner review the three drafts before leaving onboarding.
+- The owner can save all three drafts to the weekly draft queue in one action.
+- Saved onboarding drafts are counted against Free saved-draft usage so the pricing model is visible during pilot testing.
+- The Settings account section now includes a button to rerun the 3-minute onboarding flow.
+
+Decision:
+
+- Onboarding should not only collect data. It must create the first visible win before the owner explores the dashboard.
 
 ### v1.0 Pilot Launch
 

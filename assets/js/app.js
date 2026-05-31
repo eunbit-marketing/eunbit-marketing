@@ -683,18 +683,21 @@
       state.onboardingDrafts = generateStarterDrafts({ store, category, region, tone, offer, target });
       saveState();
 
-      closeModal();
-      switchTab('ai');
       applyStarterDrafts();
-      toast('첫 인스타·네이버 문안을 준비했어요');
+      showOnboardingResultModal();
     }
 
     function generateStarterDrafts({ store, category, region, tone, offer, target }) {
       const place = region ? `${region} ` : '';
+      const instagramText = `${place}${store}에서 준비한 ${offer} 소식이에요.\n\n${target}에게 부담 없이 전하고 싶은 마음을 ${tone} 톤으로 담아봤어요. 처음 방문하시는 분도 편하게 문의해주세요.\n\n#${category} #소상공인 #동네가게 #오늘의소식`;
+      const naverText = `📢 ${store} 소식\n\n${offer} 안내드립니다. ${place}${category}을 찾고 계신 분들이 바로 이해하실 수 있도록 준비했어요.\n\n궁금한 점은 네이버 톡톡 또는 전화로 편하게 문의해주세요.`;
+      const weeklyPlan = `🗓️ ${store} 첫 주 마케팅 계획\n\n1. 오늘: 인스타그램에 "${offer}" 소개 문안 업로드\n2. 내일: 네이버 플레이스 소식에 같은 내용을 더 정보형으로 등록\n3. 주중: 고객 후기 또는 작업 과정을 짧게 공유\n4. 주말 전: 예약 가능 시간이나 쿠폰/혜택을 한 번 더 안내`;
       return {
         instagramKeyword: `${place}${store} ${offer}`,
         naverTopic: `${offer} 안내`,
-        ideaText: `🗓️ ${store} 첫 주 마케팅 계획\n\n1. 인스타그램: ${tone} 톤으로 "${offer}" 소개\n2. 네이버 플레이스: ${place}${category} 고객이 바로 이해할 소식 작성\n3. 리뷰 답글: ${target}에게 감사와 재방문 이유 전달\n4. 주말 전: 쿠폰/예약 가능 시간 다시 안내`
+        instagramText,
+        naverText,
+        ideaText: weeklyPlan,
       };
     }
 
@@ -708,11 +711,69 @@
       if (naverInput) naverInput.value = drafts.naverTopic;
       syncCategoryAcrossUI(state.settings.category || state.category);
       syncToneAcrossUI(state.tone || state.settings.brandTone);
+      if (drafts.instagramText) {
+        aiCaptionResult = drafts.instagramText;
+        const captionText = document.getElementById('ai-caption-text');
+        if (captionText) {
+          captionText.textContent = drafts.instagramText;
+          document.getElementById('ai-caption-result')?.classList.add('show');
+        }
+      }
+      if (drafts.naverText) {
+        aiNaverResult = drafts.naverText;
+        const naverText = document.getElementById('ai-naver-text');
+        if (naverText) {
+          naverText.textContent = drafts.naverText;
+          document.getElementById('ai-naver-result')?.classList.add('show');
+        }
+      }
       if (ideaText) {
         aiIdeasResult = drafts.ideaText;
         ideaText.textContent = drafts.ideaText;
         document.getElementById('ai-idea-result')?.classList.add('show');
       }
+    }
+
+    function showOnboardingResultModal() {
+      const drafts = state.onboardingDrafts;
+      if (!drafts) return;
+      openModal('첫 마케팅 문안 준비 완료', `
+        <p class="onboarding-copy">이제 막막한 첫 화면이 아니라, 바로 복사하거나 저장함에 넣을 수 있는 초안에서 시작해요.</p>
+        <div class="onboarding-result-grid">
+          ${renderOnboardingResultCard('인스타그램', drafts.instagramText)}
+          ${renderOnboardingResultCard('네이버 플레이스', drafts.naverText)}
+          ${renderOnboardingResultCard('이번 주 계획', drafts.ideaText)}
+        </div>
+        <div class="onboarding-note">저장함에 넣으면 Free 저장함 사용량 3개가 차감돼요. 파일럿 고객에게 유료 전환 기준을 보여주기 위한 v0.5 흐름입니다.</div>
+        <div class="onboarding-actions">
+          <button class="btn btn-secondary" onclick="closeModal(); switchTab('ai'); applyStarterDrafts();">AI에서 수정하기</button>
+          <button class="btn btn-primary" onclick="saveStarterDraftsToQueue()">저장함에 넣고 시작</button>
+        </div>
+      `);
+    }
+
+    function renderOnboardingResultCard(title, text) {
+      return `
+        <article class="onboarding-result-card">
+          <div class="onboarding-result-title">${escapeHtml(title)}</div>
+          <div class="onboarding-result-text">${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+        </article>`;
+    }
+
+    function saveStarterDraftsToQueue() {
+      const drafts = state.onboardingDrafts;
+      if (!drafts) return;
+      const items = [
+        { channel: '인스타그램', text: drafts.instagramText, source: '3분 온보딩' },
+        { channel: '네이버 플레이스', text: drafts.naverText, source: '3분 온보딩' },
+        { channel: '주간 계획', text: drafts.ideaText, source: '3분 온보딩' },
+      ];
+      const saved = items.map(item => saveMarketingDraft({ ...item, silent: true })).filter(Boolean);
+      closeModal();
+      switchTab('schedule');
+      renderDraftQueue();
+      renderTodayTasks();
+      toast(`저장함에 첫 문안 ${saved.length}개를 넣었어요`);
     }
 
     function renderCalendar() {
