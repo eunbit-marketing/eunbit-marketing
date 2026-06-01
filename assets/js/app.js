@@ -16,6 +16,7 @@
       currentTheme: 'bloom',
       weeklyDrafts: [],
       marketingKits: [],
+      pilotFeedback: [],
       draftFilter: 'all',
       plan: 'free',
       usage: {
@@ -291,6 +292,7 @@
       if (tab === 'home') renderTodayTasks();
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderMarketingKits(); renderDraftQueue(); updateMobilePreview(); }
+      if (tab === 'settings') renderPilotFeedbackPanel();
       if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags(state.category || '공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
@@ -481,6 +483,11 @@
         .then(() => toast('🌸 파일럿 링크를 복사했어요'))
         .catch(() => toast(url));
     }
+
+    function copyPilotInviteText() {
+      const text = `Bloom 파일럿 테스트 안내\n\n인스타그램과 네이버 플레이스에 올릴 문안을 한 번에 만들어주는 소상공인 AI 마케팅 비서입니다.\n현재는 자동 발행 전 단계라, AI가 만든 문안을 복사해서 바로 쓰는 방식으로 테스트하고 있어요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal`;
+      navigator.clipboard.writeText(text).then(() => toast('📋 파일럿 소개 문구를 복사했어요'));
+    }
     function useCaption() {
       const text = document.getElementById('ai-output').textContent;
       document.getElementById('caption-final').value = text;
@@ -619,6 +626,7 @@
       renderTodayTasks();
       updateMobilePreview();
       renderUsageWidgets();
+      renderPilotFeedbackPanel();
       if (!state.onboardingComplete && state.currentTab !== 'proposal') setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
@@ -994,6 +1002,7 @@
         naver: bundle.naver,
         visualDirection: bundle.visualDirection,
         checklist: bundle.checklist,
+        bannerTemplates: bundle.bannerTemplates,
         draftIds,
         status: 'ready',
       };
@@ -1009,7 +1018,8 @@
       if (!kit) return '';
       const tags = (kit.instagram?.hashtags || []).join(' ');
       const checks = (kit.checklist || []).map(item => `- ${item}`).join('\n');
-      return `[딸깍 마케팅 키트]\n${kit.title || '마케팅 키트'}\n\n[인스타그램]\n${kit.instagram?.caption || ''}\n\n${tags}\n\n[네이버 플레이스]\n${kit.naver?.copyText || ''}\n\n[사진/배너 방향]\n${kit.visualDirection || ''}\n\n[올리기 전 확인]\n${checks}`;
+      const banners = (kit.bannerTemplates || []).map(b => `- ${b.name}: ${b.headline} / ${b.subline} / ${b.cta}`).join('\n');
+      return `[딸깍 마케팅 키트]\n${kit.title || '마케팅 키트'}\n\n[인스타그램]\n${kit.instagram?.caption || ''}\n\n${tags}\n\n[네이버 플레이스]\n${kit.naver?.copyText || ''}\n\n[배너 문구]\n${banners}\n\n[사진/배너 방향]\n${kit.visualDirection || ''}\n\n[올리기 전 확인]\n${checks}`;
     }
 
     function findMarketingKit(id) {
@@ -1033,6 +1043,7 @@
         const created = new Date(kit.createdAt || Date.now());
         const dateLabel = `${created.getMonth() + 1}/${created.getDate()}`;
         const checks = (kit.checklist || []).slice(0, 2).map(item => `• ${escapeHtml(item)}`).join('<br>');
+        const banners = kit.bannerTemplates || [];
         return `
           <article class="kit-card">
             <div class="kit-card-head">
@@ -1056,6 +1067,15 @@
               <strong>사진/배너 방향</strong><br>${escapeHtml(kit.visualDirection || '매장 분위기가 잘 보이는 사진을 사용하세요.')}
               ${checks ? `<br><br><strong>체크</strong><br>${checks}` : ''}
             </div>
+            ${banners.length ? `
+              <div class="kit-banner-row">
+                ${banners.slice(0, 3).map((banner, idx) => `
+                  <button class="kit-banner-chip ${escapeHtml(banner.style || '')}" onclick="copyMarketingKitBanner(${kit.id}, ${idx})">
+                    <strong>${escapeHtml(banner.headline || '')}</strong>
+                    <span>${escapeHtml(banner.cta || '')}</span>
+                  </button>
+                `).join('')}
+              </div>` : ''}
             <div class="kit-actions">
               <button class="primary" onclick="copyMarketingKitBundle(${kit.id})">전체 복사</button>
               <button onclick="useMarketingKitInstagram(${kit.id})">인스타 계획</button>
@@ -1070,6 +1090,14 @@
       const kit = findMarketingKit(id);
       if (!kit) return;
       navigator.clipboard.writeText(getMarketingKitBundleText(kit)).then(() => toast('📋 딸깍 키트 전체를 복사했어요'));
+    }
+
+    function copyMarketingKitBanner(id, index) {
+      const kit = findMarketingKit(id);
+      const banner = kit?.bannerTemplates?.[index];
+      if (!banner) return;
+      const text = `${banner.headline}\n${banner.subline}\n${banner.cta}`;
+      navigator.clipboard.writeText(text).then(() => toast('🖼️ 배너 문구를 복사했어요'));
     }
 
     function useMarketingKitInstagram(id) {
@@ -1480,6 +1508,107 @@
     }
     function closeModal() { document.getElementById('modal').classList.remove('show'); }
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+    function ensurePilotFeedback() {
+      if (!Array.isArray(state.pilotFeedback)) state.pilotFeedback = [];
+    }
+
+    function showPilotFeedbackModal() {
+      ensurePilotFeedback();
+      const store = escapeHtml(state.settings.storeName || '');
+      const category = escapeHtml(state.settings.category || state.category || '');
+      openModal('🧪 파일럿 신청/피드백', `
+        <div class="feedback-form">
+          <div class="feedback-grid">
+            <label class="feedback-field">
+              <span class="feedback-label">매장명</span>
+              <input class="feedback-input" id="pilot-store" value="${store}" placeholder="예: 우리동네 카페">
+            </label>
+            <label class="feedback-field">
+              <span class="feedback-label">업종</span>
+              <input class="feedback-input" id="pilot-category" value="${category}" placeholder="예: 카페, 미용실, 공방">
+            </label>
+          </div>
+          <label class="feedback-field">
+            <span class="feedback-label">가장 필요한 기능</span>
+            <select class="feedback-input" id="pilot-need">
+              <option>인스타그램 게시글 만들기</option>
+              <option>네이버 플레이스 소식 만들기</option>
+              <option>리뷰 답글 만들기</option>
+              <option>이번 주 마케팅 계획</option>
+              <option>자동 발행/예약 연동</option>
+              <option>가격이 저렴한 대행 대체</option>
+            </select>
+          </label>
+          <label class="feedback-field">
+            <span class="feedback-label">월 9,900원이라면?</span>
+            <select class="feedback-input" id="pilot-price">
+              <option>써보고 괜찮으면 결제 가능</option>
+              <option>무료 체험 후 판단하고 싶음</option>
+              <option>조금 부담됨</option>
+              <option>필요 기능만 확실하면 저렴함</option>
+            </select>
+          </label>
+          <label class="feedback-field">
+            <span class="feedback-label">남기고 싶은 말</span>
+            <textarea class="feedback-input" id="pilot-note" rows="4" placeholder="예: 네이버 리뷰 답글이 제일 필요해요. 음식점 예시가 많으면 좋겠어요."></textarea>
+          </label>
+          <div class="feedback-actions">
+            <button class="btn btn-secondary" style="flex:1; justify-content:center;" onclick="copyPilotInviteText()">소개 문구 복사</button>
+            <button class="btn btn-primary" style="flex:1; justify-content:center;" onclick="submitPilotFeedback()">피드백 저장</button>
+          </div>
+        </div>`);
+    }
+
+    function submitPilotFeedback() {
+      ensurePilotFeedback();
+      const item = {
+        id: Date.now(),
+        store: document.getElementById('pilot-store')?.value.trim() || state.settings.storeName || '이름 없음',
+        category: document.getElementById('pilot-category')?.value.trim() || state.settings.category || state.category,
+        need: document.getElementById('pilot-need')?.value || '',
+        price: document.getElementById('pilot-price')?.value || '',
+        note: document.getElementById('pilot-note')?.value.trim() || '',
+        createdAt: new Date().toISOString(),
+      };
+      state.pilotFeedback.unshift(item);
+      state.pilotFeedback = state.pilotFeedback.slice(0, 30);
+      saveState();
+      renderPilotFeedbackPanel();
+      closeModal();
+      toast('💬 파일럿 피드백을 저장했어요. 다음 개선에 반영할게요.');
+    }
+
+    function renderPilotFeedbackPanel() {
+      const panel = document.getElementById('pilot-feedback-panel');
+      if (!panel) return;
+      ensurePilotFeedback();
+      const items = state.pilotFeedback || [];
+      if (!items.length) {
+        panel.innerHTML = `
+          <div class="pilot-feedback-head">
+            <strong>파일럿 피드백 기록</strong>
+            <span>0개</span>
+          </div>
+          <div class="pilot-feedback-empty">아직 저장된 피드백이 없어요. 파일럿 상담이나 데모 중 받은 의견을 여기에 빠르게 남겨둘 수 있습니다.</div>`;
+        return;
+      }
+      panel.innerHTML = `
+        <div class="pilot-feedback-head">
+          <strong>파일럿 피드백 기록</strong>
+          <span>${items.length}개</span>
+        </div>
+        <div class="pilot-feedback-list">
+          ${items.slice(0, 3).map(item => `
+            <article class="pilot-feedback-item">
+              <strong>${escapeHtml(item.store)} · ${escapeHtml(item.category)}</strong>
+              <p>필요 기능: ${escapeHtml(item.need)}</p>
+              <p>가격 반응: ${escapeHtml(item.price)}</p>
+              ${item.note ? `<p>${escapeHtml(item.note)}</p>` : ''}
+            </article>
+          `).join('')}
+        </div>`;
+    }
     
     // ===== POST/STORY CLICKS =====
     function openStoryDetail(label) {
@@ -1770,7 +1899,7 @@
       const naverCta = (naver.cta || '문의와 예약은 네이버 플레이스에서 편하게 남겨주세요.').trim();
       const naverCopyText = (naver.copyText || [naverTitle, naverBody, naverCta].filter(Boolean).join('\n\n')).trim();
       const checklist = Array.isArray(kit?.checklist) ? kit.checklist.filter(Boolean).slice(0, 4) : [];
-      return {
+      const normalized = {
         title: (kit?.title || `${store} 오늘의 마케팅 키트`).trim(),
         instagram: {
           caption: (instagram.caption || topic).trim(),
@@ -1780,6 +1909,39 @@
         visualDirection: (kit?.visualDirection || '매장 분위기와 대표 상품이 한눈에 보이는 사진을 사용하세요.').trim(),
         checklist: checklist.length ? checklist : ['운영 시간과 날짜를 확인하세요', '가격/혜택 문구가 실제와 맞는지 확인하세요', '문의 채널이 맞는지 확인하세요'],
       };
+      normalized.bannerTemplates = Array.isArray(kit?.bannerTemplates) && kit.bannerTemplates.length
+        ? kit.bannerTemplates.slice(0, 3)
+        : buildBannerTemplates(normalized, topic);
+      return normalized;
+    }
+
+    function buildBannerTemplates(kit, topic = '') {
+      const store = state.settings.storeName || '우리 매장';
+      const offer = topic || state.settings.mainOffer || kit.title || '오늘의 소식';
+      const naverCta = kit.naver?.cta || '예약과 문의는 네이버 플레이스에서';
+      return [
+        {
+          name: '첫 화면 안내형',
+          style: 'soft',
+          headline: offer.length > 24 ? `${offer.slice(0, 24)}...` : offer,
+          subline: `${store}에서 준비한 오늘의 소식`,
+          cta: naverCta.replace(/[.!?。]$/g, ''),
+        },
+        {
+          name: '혜택 강조형',
+          style: 'bold',
+          headline: '오늘만 놓치지 마세요',
+          subline: offer,
+          cta: '방문 전 문의하면 더 편하게 안내드려요',
+        },
+        {
+          name: '동네 단골형',
+          style: 'local',
+          headline: `${store} 소식`,
+          subline: '처음 오시는 분도 편하게 들러주세요',
+          cta: '네이버 플레이스에서 확인하기',
+        },
+      ];
     }
 
     function buildFallbackMarketingKit(topic) {
@@ -1820,6 +1982,19 @@
           </div>
           <div class="marketing-kit-footer">
             <div class="marketing-kit-visual"><strong>사진/배너 방향</strong><br>${escapeHtml(data.visualDirection)}</div>
+            <div class="marketing-kit-banners">
+              <strong>복사용 배너 문구</strong>
+              <div class="banner-template-grid">
+                ${data.bannerTemplates.map((banner, idx) => `
+                  <button class="banner-template ${escapeHtml(banner.style || '')}" onclick="copyCurrentMarketingKitBanner(${idx})">
+                    <span>${escapeHtml(banner.name || `템플릿 ${idx + 1}`)}</span>
+                    <strong>${escapeHtml(banner.headline || '')}</strong>
+                    <em>${escapeHtml(banner.subline || '')}</em>
+                    <small>${escapeHtml(banner.cta || '')}</small>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
             <div class="marketing-kit-checklist">
               <strong>올리기 전 확인</strong>
               ${data.checklist.map(item => `<span>✓ ${escapeHtml(item)}</span>`).join('')}
@@ -1837,6 +2012,13 @@
       const text = getMarketingKitCopyText();
       if (!text) return;
       navigator.clipboard.writeText(text).then(() => toast('📋 마케팅 키트 전체 복사 완료!'));
+    }
+
+    function copyCurrentMarketingKitBanner(index) {
+      const banner = aiMarketingKit?.bannerTemplates?.[index];
+      if (!banner) return;
+      navigator.clipboard.writeText(`${banner.headline}\n${banner.subline}\n${banner.cta}`)
+        .then(() => toast('🖼️ 배너 문구를 복사했어요'));
     }
 
     function aiSaveMarketingKitDrafts() {

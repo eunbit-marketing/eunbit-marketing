@@ -250,6 +250,36 @@ Why it matters:
 - Pilot owners can return to one campaign bundle instead of hunting for separate drafts.
 - This prepares Bloom for the v0.6 simplified "딸깍 / 저장함 / 내 매장" navigation.
 
+### v0.5.8 Pilot Feedback Flow
+
+Goal: Close the loop after sending the production link to real owners.
+
+Implemented:
+- Added pilot feedback CTAs on home and the proposal page.
+- Added a modal for store/category/needed feature/price reaction/free-form notes.
+- Stored feedback locally in `state.pilotFeedback` for demo and 1:1 interview use.
+- Added a settings panel to review the latest saved feedback.
+- Added a shareable pilot invite copy action.
+
+Why it matters:
+- Bloom should not only show a demo. It should collect what the owner actually needs next.
+- This gives the project a lightweight research loop before database/auth/CRM work.
+
+### v0.5.9 Banner Text Templates
+
+Goal: Expand the one-click kit beyond captions into reusable visual copy.
+
+Implemented:
+- Added three banner text templates to each marketing kit.
+- Rendered banner cards in the AI kit result.
+- Added one-click copy for each banner template.
+- Saved kit bundles keep banner template chips for later reuse.
+- Full kit copy now includes a banner text section.
+
+Why it matters:
+- Instagram/Naver marketing is not only body copy. Owners often need a short image headline, subline, and CTA.
+- This moves Bloom closer to the "one-click package" vision without requiring image generation yet.
+
 ## Tooling Notes
 
 - GitHub remains the source for version control and PR review.

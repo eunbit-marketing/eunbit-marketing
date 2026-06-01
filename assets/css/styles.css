@@ -561,6 +561,17 @@
       border-radius: 12px; padding: 12px; color: var(--sub); font-size: 12px; line-height: 1.6;
     }
     .kit-detail strong { color: var(--ink); }
+    .kit-banner-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .kit-banner-chip {
+      border: 1px solid var(--border); border-radius: 12px;
+      background: #FFF7ED; color: #7C2D12;
+      padding: 10px; text-align: left; cursor: pointer;
+      display: flex; flex-direction: column; gap: 4px; font-family: inherit;
+    }
+    .kit-banner-chip.bold { background: #111827; color: white; border-color: #111827; }
+    .kit-banner-chip.local { background: #ECFDF5; color: #14532D; border-color: #BBF7D0; }
+    .kit-banner-chip strong { font-size: 12px; line-height: 1.25; }
+    .kit-banner-chip span { font-size: 10px; font-weight: 800; opacity: .78; }
     .kit-actions { display: flex; flex-wrap: wrap; gap: 7px; }
     .kit-actions button {
       border: 1px solid var(--border); background: var(--white); color: var(--ink);
@@ -946,14 +957,54 @@
     }
     .marketing-kit-footer { grid-column: 1 / -1; display: grid; gap: 8px; }
     .marketing-kit-visual,
+    .marketing-kit-banners,
     .marketing-kit-checklist {
       padding: 10px 12px; border-radius: 10px; background: rgba(0,199,60,.07);
       color: #10794A; font-size: 12px; line-height: 1.5;
     }
+    .marketing-kit-banners { background: rgba(255,184,158,.11); color: var(--ink); }
+    .banner-template-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px; margin-top: 8px;
+    }
+    .banner-template {
+      min-height: 132px; border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px; text-align: left;
+      background: linear-gradient(135deg, #FFF7ED, #FFF2BE);
+      color: #7C2D12; cursor: pointer; font-family: inherit;
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .banner-template.bold { background: linear-gradient(135deg, #111827, #463272); color: white; }
+    .banner-template.local { background: linear-gradient(135deg, #ECFDF5, #EFF6FF); color: #14532D; }
+    .banner-template span { font-size: 10px; font-weight: 900; opacity: .75; }
+    .banner-template strong { font-size: 16px; line-height: 1.25; color: inherit; }
+    .banner-template em { font-style: normal; font-size: 12px; line-height: 1.35; opacity: .86; }
+    .banner-template small { margin-top: auto; font-size: 11px; font-weight: 800; opacity: .92; }
     .marketing-kit-checklist { background: rgba(181,167,255,.10); color: var(--ink); }
     .marketing-kit-checklist span { display: block; color: var(--sub); margin-top: 4px; }
 
     .settings-usage-panel { margin-bottom: 16px; }
+    .pilot-feedback-panel {
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--bg);
+      padding: 14px;
+    }
+    .pilot-feedback-head {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .pilot-feedback-head strong { font-size: 13px; color: var(--ink); }
+    .pilot-feedback-head span { font-size: 11px; color: var(--ter); font-weight: 800; }
+    .pilot-feedback-list { display: grid; gap: 8px; }
+    .pilot-feedback-item {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px; display: grid; gap: 5px;
+    }
+    .pilot-feedback-item strong { color: var(--ink); font-size: 12px; }
+    .pilot-feedback-item p { color: var(--sub); font-size: 11px; line-height: 1.45; }
+    .pilot-feedback-empty { color: var(--sub); font-size: 12px; line-height: 1.55; }
     .plan-usage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
     .plan-usage-card {
       background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
@@ -1256,6 +1307,34 @@
       font-weight: 900;
       margin-bottom: 8px;
     }
+    .pilot-cta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .pilot-cta-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pilot-cta-card span { font-size: 24px; }
+    .pilot-cta-card strong { color: var(--ink); font-size: 15px; font-weight: 900; }
+    .pilot-cta-card p { color: var(--sub); font-size: 12px; line-height: 1.6; flex: 1; }
+    .feedback-form { display: grid; gap: 12px; }
+    .feedback-field { display: grid; gap: 6px; }
+    .feedback-label { font-size: 12px; font-weight: 800; color: var(--ink); }
+    .feedback-input {
+      width: 100%; border: 1px solid var(--border); background: var(--bg);
+      border-radius: 12px; padding: 11px 12px;
+      color: var(--ink); font-family: inherit; font-size: 13px; outline: none;
+    }
+    .feedback-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(181,167,255,.16); }
+    .feedback-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .feedback-actions { display: flex; gap: 8px; margin-top: 4px; }
     
     /* ===== BOTTOM TAB BAR (모바일 전용) ===== */
     .bottom-tab-bar {
@@ -1335,7 +1414,9 @@
       .draft-board-head { flex-direction: column; }
       .draft-board-actions { width: 100%; justify-content: stretch; }
       .draft-board-actions .btn { flex: 1; justify-content: center; }
-      .kit-preview-grid { grid-template-columns: 1fr; }
+      .kit-preview-grid,
+      .kit-banner-row,
+      .banner-template-grid { grid-template-columns: 1fr; }
       .bento { grid-template-columns: 1fr; }
       .stat-hero { grid-column: auto; min-height: 180px; padding: 22px; }
       .stat-value { font-size: 42px; }
@@ -1362,9 +1443,12 @@
       .proposal-hero h2 { font-size: 24px; }
       .proposal-feature-grid,
       .proposal-pricing,
-      .proposal-step-grid { grid-template-columns: 1fr; }
+      .proposal-step-grid,
+      .pilot-cta-grid,
+      .feedback-grid { grid-template-columns: 1fr; }
       .proposal-section,
       .proposal-flow { padding: 18px; }
+      .feedback-actions { flex-direction: column; }
       .ai-mode-tabs { gap: 6px; }
       .ai-hero-title { font-size: 18px; }
       .ai-hero-icon { width: 40px; height: 40px; font-size: 18px; }

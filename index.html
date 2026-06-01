@@ -121,6 +121,7 @@
           </div>
           <div class="header-actions">
             <button class="btn btn-secondary" onclick="switchTab('proposal')">파일럿 제안서</button>
+            <button class="btn btn-secondary" onclick="showPilotFeedbackModal()">피드백 남기기</button>
             <button class="btn btn-primary" onclick="switchTab('post')">+ 새 게시물</button>
           </div>
         </div>
@@ -788,7 +789,9 @@
                 <button style="background: white; color: var(--ink); border: none; border-radius: 10px; padding: 9px 16px; font-size: 12px; font-weight: 700; cursor: pointer;" onclick="upgradeProMenu()">🌟 Bloom Pro 업그레이드</button>
               </div>
               <div id="settings-usage-panel" class="settings-usage-panel"></div>
+              <div id="pilot-feedback-panel" class="pilot-feedback-panel"></div>
               <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="showOnboarding()">3분 온보딩 다시 실행</button>
+              <button class="btn btn-secondary" style="width: 100%; justify-content: center; margin-bottom: 10px;" onclick="showPilotFeedbackModal()">파일럿 피드백 남기기</button>
               <button style="background: none; border: 1px solid #FCA5A5; color: #C53030; padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; cursor: pointer;" onclick="deleteAccount()">계정 삭제</button>
             </div>
           </div>
@@ -805,6 +808,7 @@
           </div>
           <div class="header-actions">
             <button class="btn btn-secondary" onclick="copyPilotLink()">라이브 링크 복사</button>
+            <button class="btn btn-secondary" onclick="showPilotFeedbackModal()">파일럿 신청/피드백</button>
             <button class="btn btn-primary" onclick="showOnboarding()">지금 무료로 시작</button>
           </div>
         </div>
@@ -821,6 +825,7 @@
           <div class="proposal-actions">
             <button class="btn btn-primary" onclick="showOnboarding()">3분 만에 첫 문안 만들기</button>
             <button class="btn btn-secondary" onclick="switchTab('ai')">AI 도구 보기</button>
+            <button class="btn btn-secondary" onclick="showPilotFeedbackModal()">파일럿 신청하기</button>
           </div>
         </div>
 
@@ -885,6 +890,35 @@
             <div class="proposal-step"><span>STEP 2</span><strong>오늘 소식 한 줄 입력</strong><p>이벤트나 메뉴 같은 내용을 짧게 씁니다.</p></div>
             <div class="proposal-step"><span>STEP 3</span><strong>AI 문안 자동 생성</strong><p>인스타와 네이버 플레이스 문안을 같이 받습니다.</p></div>
             <div class="proposal-step"><span>STEP 4</span><strong>복사해서 바로 게시</strong><p>자동 발행 전에도 사장님이 직접 확인하고 사용할 수 있습니다.</p></div>
+          </div>
+        </div>
+
+        <div class="proposal-section">
+          <div class="proposal-section-head">
+            <div>
+              <div class="breadcrumb">파일럿 신청</div>
+              <h2 class="section-title">써보고 싶은 사장님 의견을 바로 남겨주세요</h2>
+            </div>
+          </div>
+          <div class="pilot-cta-grid">
+            <article class="pilot-cta-card">
+              <span>💬</span>
+              <strong>30초 피드백</strong>
+              <p>필요한 채널, 업종, 가격 부담, 자동 발행 필요 여부를 간단히 남길 수 있어요.</p>
+              <button class="btn btn-primary" onclick="showPilotFeedbackModal()">피드백 남기기</button>
+            </article>
+            <article class="pilot-cta-card">
+              <span>📋</span>
+              <strong>공유용 문구</strong>
+              <p>지인 사장님에게 Bloom을 소개할 때 쓸 짧은 안내 문구를 복사합니다.</p>
+              <button class="btn btn-secondary" onclick="copyPilotInviteText()">소개 문구 복사</button>
+            </article>
+            <article class="pilot-cta-card">
+              <span>🧪</span>
+              <strong>파일럿 기준</strong>
+              <p>현재는 복사해서 쓰는 테스트 버전입니다. 피드백은 이 브라우저에 저장돼요.</p>
+              <button class="btn btn-secondary" onclick="switchTab('ai')">딸깍 키트 만들기</button>
+            </article>
           </div>
         </div>
       </section>
