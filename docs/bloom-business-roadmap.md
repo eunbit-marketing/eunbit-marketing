@@ -202,6 +202,21 @@ Why it matters:
 - The checklist makes Bloom feel like a marketing assistant, not only a writing box.
 - This structure can be reused for the next combined Instagram + Naver Place kit.
 
+### v0.5.5 One-Click Marketing Kit
+
+Goal: Turn Saebom's "매장 마케팅 원클릭 키트" idea into a visible first workflow.
+
+Implemented:
+- Added `/api/marketing-kit` for one AI call that returns Instagram and Naver Place outputs together.
+- Added a wide "딸깍 마케팅 키트" card at the top of the AI tools screen.
+- The kit returns Instagram caption, hashtags, Naver Place notice, visual direction, and a pre-publish checklist.
+- Owners can copy the full kit, save both channel drafts, or send the Instagram draft to the post editor.
+
+Why it matters:
+- This gives pilot users one obvious first button instead of several disconnected tools.
+- It makes Bloom feel more like an assistant that prepares a small marketing package.
+- It creates a reusable structure for future banner/image/BGM/profile recommendations.
+
 ## Tooling Notes
 
 - GitHub remains the source for version control and PR review.

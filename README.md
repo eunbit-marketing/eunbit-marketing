@@ -38,6 +38,7 @@ Live auto-publishing, account integrations, billing, and multi-tenant data stora
 - APIs: Vercel Serverless functions in `api/`
 - AI chat proxy: `api/chat.js`
 - AI prompt backdata: `api/_prompt-data.js`
+- One-click marketing kit: `api/marketing-kit.js`
 - Naver Place writer: `api/naver-place.js`
 - Naver Place API output: copy-ready `text` plus structured `package` data for title/body/CTA/checklist UI.
 - AI provider: Anthropic API through `ANTHROPIC_API_KEY`
@@ -60,5 +61,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.2: Build copy-ready Instagram and Naver Place tools
 - v0.3: Add guided onboarding and "today's marketing plan"
 - v0.4: Improve calendar planning, draft saving, and pilot-store workflows (ready candidate: weekly draft queue, today's tasks, draft filters, category sync, chat proxy, shared fallback constants, and data-setting based settings forms added)
-- v0.5: Prepare paid MVP packaging around 9,900 KRW/month (started: Free usage counters, Pro comparison, pilot pricing modal, 3-minute onboarding result flow, pilot proposal page, and AI-backed Naver Place writing)
+- v0.5: Prepare paid MVP packaging around 9,900 KRW/month (started: Free usage counters, Pro comparison, pilot pricing modal, 3-minute onboarding result flow, pilot proposal page, AI-backed Naver Place writing, and one-click Instagram+Naver kit)
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

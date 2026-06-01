@@ -890,6 +890,34 @@
         <div id="ai-mode-tools">
           <div class="ai-tools-grid">
 
+            <!-- 딸깍 마케팅 키트 -->
+            <div class="ai-tool-card ai-tool-card-wide">
+              <div class="ai-tool-head">
+                <div class="ai-tool-icon" style="background: linear-gradient(135deg,#1F2937,#00C73C); color: white;">KIT</div>
+                <div>
+                  <div class="ai-tool-name">딸깍 마케팅 키트</div>
+                </div>
+              </div>
+              <div class="ai-tool-desc">한 가지 소식만 입력하면 인스타그램 캡션과 네이버 플레이스 소식을 함께 만들어줘요</div>
+              <div class="ai-tool-note">파일럿 고객에게 보여줄 핵심 기능입니다. 복사하기 전 체크리스트까지 함께 제공합니다.</div>
+              <textarea class="ai-tool-input" id="ai-kit-topic" rows="3" placeholder="예: 6월 원데이 클래스 모집, 신메뉴 출시, 첫 방문 혜택"></textarea>
+              <select class="ai-tool-select" id="ai-kit-tone">
+                <option value="따뜻한">🌸 따뜻한</option>
+                <option value="정보형">📚 정보형</option>
+                <option value="감성적">💝 감성적</option>
+                <option value="트렌디한">✨ 트렌디한</option>
+              </select>
+              <button class="ai-tool-btn" id="ai-kit-btn" onclick="aiGenerateMarketingKit()">⚡ 키트 만들기</button>
+              <div class="ai-tool-result" id="ai-kit-result">
+                <div id="ai-kit-text"></div>
+                <div class="ai-result-actions">
+                  <button class="ai-result-btn" onclick="aiCopyMarketingKit()">📋 전체 복사</button>
+                  <button class="ai-result-btn" onclick="aiSaveMarketingKitDrafts()">🗂️ 둘 다 저장</button>
+                  <button class="ai-result-btn primary" onclick="aiUseKitInstagram()">→ 인스타에 사용</button>
+                </div>
+              </div>
+            </div>
+
             <!-- 캡션 생성 -->
             <div class="ai-tool-card">
               <div class="ai-tool-head">

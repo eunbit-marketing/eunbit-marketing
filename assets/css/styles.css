@@ -793,6 +793,7 @@
       padding: 20px; box-shadow: var(--shadow-md);
       display: flex; flex-direction: column; gap: 12px;
     }
+    .ai-tool-card-wide { grid-column: 1 / -1; }
     .ai-tool-head { display: flex; align-items: center; gap: 10px; }
     .ai-tool-icon { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 18px; flex-shrink: 0; }
     .ai-tool-name { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; }
@@ -870,6 +871,32 @@
     }
     .naver-package-checklist strong { color: var(--ink); font-size: 12px; }
     .naver-package-checklist span { display: block; }
+    .marketing-kit { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .marketing-kit-head { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 4px; }
+    .marketing-kit-kicker {
+      width: fit-content; padding: 5px 9px; border-radius: 999px;
+      background: rgba(31,41,55,.08); color: var(--ink); font-size: 10px; font-weight: 900;
+    }
+    .marketing-kit-title { font-size: 17px; font-weight: 900; color: var(--ink); line-height: 1.35; }
+    .marketing-kit-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+    }
+    .marketing-kit-card strong { color: var(--ink); font-size: 13px; }
+    .marketing-kit-copy { color: var(--ink); line-height: 1.62; white-space: pre-wrap; }
+    .marketing-kit-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .marketing-kit-tags span {
+      padding: 5px 7px; border-radius: 999px; background: var(--bg);
+      border: 1px solid var(--border); color: var(--sub); font-size: 11px; font-weight: 700;
+    }
+    .marketing-kit-footer { grid-column: 1 / -1; display: grid; gap: 8px; }
+    .marketing-kit-visual,
+    .marketing-kit-checklist {
+      padding: 10px 12px; border-radius: 10px; background: rgba(0,199,60,.07);
+      color: #10794A; font-size: 12px; line-height: 1.5;
+    }
+    .marketing-kit-checklist { background: rgba(181,167,255,.10); color: var(--ink); }
+    .marketing-kit-checklist span { display: block; color: var(--sub); margin-top: 4px; }
 
     .settings-usage-panel { margin-bottom: 16px; }
     .plan-usage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
@@ -1268,6 +1295,7 @@
       .top-posts { grid-template-columns: 1fr; }
       .theme-grid { grid-template-columns: repeat(3, 1fr); }
       .ai-tools-grid { grid-template-columns: 1fr; }
+      .marketing-kit { grid-template-columns: 1fr; }
       .plan-usage-grid,
       .plan-compare { grid-template-columns: 1fr; }
       .proposal-hero { padding: 24px; }

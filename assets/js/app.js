@@ -1575,6 +1575,7 @@
     let aiIdeasResult = '';
     let aiNaverResult = '';
     let aiNaverPackage = null;
+    let aiMarketingKit = null;
     let aiTimeResult = '';
 
     function switchAIMode(mode, el) {
@@ -1589,6 +1590,143 @@
       if (!btn) return;
       btn.classList.toggle('loading', loading);
       btn.textContent = loading ? '⏳ 생성 중...' : defaultText;
+    }
+
+    async function aiGenerateMarketingKit() {
+      const topic = document.getElementById('ai-kit-topic').value.trim();
+      const tone = document.getElementById('ai-kit-tone').value;
+      if (!topic) { toast('✏️ 키트로 만들 소식을 입력해주세요'); return; }
+      if (!tryUseFreeQuota('aiGenerations')) return;
+      setAIBtnLoading('ai-kit-btn', true, '⚡ 키트 만들기');
+      try {
+        const res = await fetch('/api/marketing-kit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic,
+            tone,
+            storeName: state.settings.storeName,
+            category: state.settings.category || state.category,
+            region: state.settings.region,
+            mainOffer: state.settings.mainOffer,
+            targetCustomer: state.settings.targetCustomer,
+            brandTone: state.settings.brandTone,
+            description: state.settings.description,
+          })
+        });
+        if (!res.ok) throw new Error('API 오류');
+        const data = await res.json();
+        aiMarketingKit = normalizeMarketingKit(data.kit, topic);
+        toast('✅ 마케팅 키트 생성 완료!');
+      } catch {
+        aiMarketingKit = buildFallbackMarketingKit(topic);
+        toast('✅ 마케팅 키트 생성 완료! (오프라인 모드)');
+      } finally {
+        document.getElementById('ai-kit-text').innerHTML = renderMarketingKit(aiMarketingKit);
+        document.getElementById('ai-kit-result').classList.add('show');
+        setAIBtnLoading('ai-kit-btn', false, '⚡ 키트 만들기');
+      }
+    }
+
+    function normalizeMarketingKit(kit, topic) {
+      const store = state.settings.storeName || '우리 매장';
+      const instagram = kit?.instagram || {};
+      const naver = kit?.naver || {};
+      const hashtags = Array.isArray(instagram.hashtags)
+        ? instagram.hashtags.map(tag => String(tag || '').trim()).filter(Boolean).slice(0, 12)
+        : [];
+      const naverTitle = (naver.title || `${store} 소식`).trim();
+      const naverBody = (naver.body || topic).trim();
+      const naverCta = (naver.cta || '문의와 예약은 네이버 플레이스에서 편하게 남겨주세요.').trim();
+      const naverCopyText = (naver.copyText || [naverTitle, naverBody, naverCta].filter(Boolean).join('\n\n')).trim();
+      const checklist = Array.isArray(kit?.checklist) ? kit.checklist.filter(Boolean).slice(0, 4) : [];
+      return {
+        title: (kit?.title || `${store} 오늘의 마케팅 키트`).trim(),
+        instagram: {
+          caption: (instagram.caption || topic).trim(),
+          hashtags: hashtags.length ? hashtags : ['#소상공인', '#동네가게', '#오늘의소식'],
+        },
+        naver: { title: naverTitle, body: naverBody, cta: naverCta, copyText: naverCopyText },
+        visualDirection: (kit?.visualDirection || '매장 분위기와 대표 상품이 한눈에 보이는 사진을 사용하세요.').trim(),
+        checklist: checklist.length ? checklist : ['운영 시간과 날짜를 확인하세요', '가격/혜택 문구가 실제와 맞는지 확인하세요', '문의 채널이 맞는지 확인하세요'],
+      };
+    }
+
+    function buildFallbackMarketingKit(topic) {
+      const store = state.settings.storeName || '우리 매장';
+      return normalizeMarketingKit({
+        title: `${store} 딸깍 마케팅 키트`,
+        instagram: {
+          caption: `${topic}\n\n${store}에서 오늘 준비한 소식이에요. 처음 보시는 분도 편하게 문의하실 수 있도록 자세히 안내해둘게요.\n\n궁금한 점은 댓글이나 DM으로 남겨주세요.`,
+          hashtags: ['#소상공인', '#동네가게', '#오늘의소식', '#네이버플레이스', '#인스타마케팅'],
+        },
+        naver: {
+          title: `${store} 소식`,
+          body: `${topic}\n\n처음 방문하시는 분도 쉽게 이해하실 수 있도록 준비했습니다.`,
+          cta: '예약과 문의는 네이버 플레이스에서 편하게 남겨주세요.',
+        },
+        visualDirection: '대표 상품이나 매장 입구가 선명하게 보이는 밝은 사진을 사용하세요.',
+      }, topic);
+    }
+
+    function renderMarketingKit(kit) {
+      const data = normalizeMarketingKit(kit, document.getElementById('ai-kit-topic')?.value || '');
+      return `
+        <div class="marketing-kit">
+          <div class="marketing-kit-head">
+            <div class="marketing-kit-kicker">인스타 + 네이버 동시 생성</div>
+            <div class="marketing-kit-title">${escapeHtml(data.title)}</div>
+          </div>
+          <div class="marketing-kit-card">
+            <strong>인스타그램 캡션</strong>
+            <div class="marketing-kit-copy">${escapeHtml(data.instagram.caption)}</div>
+            <div class="marketing-kit-tags">
+              ${data.instagram.hashtags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}
+            </div>
+          </div>
+          <div class="marketing-kit-card">
+            <strong>네이버 플레이스 소식</strong>
+            <div class="marketing-kit-copy">${escapeHtml(data.naver.copyText)}</div>
+          </div>
+          <div class="marketing-kit-footer">
+            <div class="marketing-kit-visual"><strong>사진/배너 방향</strong><br>${escapeHtml(data.visualDirection)}</div>
+            <div class="marketing-kit-checklist">
+              <strong>올리기 전 확인</strong>
+              ${data.checklist.map(item => `<span>✓ ${escapeHtml(item)}</span>`).join('')}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function getMarketingKitCopyText() {
+      if (!aiMarketingKit) return '';
+      const tags = aiMarketingKit.instagram.hashtags.join(' ');
+      return `[인스타그램]\n${aiMarketingKit.instagram.caption}\n\n${tags}\n\n[네이버 플레이스]\n${aiMarketingKit.naver.copyText}`;
+    }
+
+    function aiCopyMarketingKit() {
+      const text = getMarketingKitCopyText();
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => toast('📋 마케팅 키트 전체 복사 완료!'));
+    }
+
+    function aiSaveMarketingKitDrafts() {
+      if (!aiMarketingKit) return;
+      const instagramText = `${aiMarketingKit.instagram.caption}\n\n${aiMarketingKit.instagram.hashtags.join(' ')}`;
+      const savedInstagram = saveMarketingDraft({ channel: '인스타그램', text: instagramText, source: '딸깍 마케팅 키트', silent: true });
+      const savedNaver = saveMarketingDraft({ channel: '네이버 플레이스', text: aiMarketingKit.naver.copyText, source: '딸깍 마케팅 키트', silent: true });
+      if (savedInstagram || savedNaver) toast('🗂️ 인스타·네이버 초안을 저장함에 넣었어요');
+    }
+
+    function aiUseKitInstagram() {
+      if (!aiMarketingKit) return;
+      const text = `${aiMarketingKit.instagram.caption}\n\n${aiMarketingKit.instagram.hashtags.join(' ')}`;
+      aiCaptionResult = text;
+      state.draftCaption = text;
+      const el = document.getElementById('caption-final');
+      if (el) { el.value = text; updateCaptionMeta(); }
+      switchTab('post');
+      toast('✅ 인스타 초안을 게시물 탭에 넣었어요!');
     }
 
     async function aiGenerateCaption() {
