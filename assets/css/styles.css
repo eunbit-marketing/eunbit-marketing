@@ -829,6 +829,47 @@
     .ai-result-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; font-size: 11px; font-weight: 600; color: var(--ink); cursor: pointer; transition: all .15s; }
     .ai-result-btn:hover { border-color: var(--purple); background: white; }
     .ai-result-btn.primary { background: var(--ink); color: white; border-color: var(--ink); }
+    .naver-package { display: flex; flex-direction: column; gap: 10px; }
+    .naver-package-kicker {
+      width: fit-content;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(0,199,60,.1);
+      color: #047857;
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .naver-package-title {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .naver-package-body {
+      padding: 12px;
+      border-radius: 10px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+    .naver-package-cta {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(181,167,255,.12);
+      color: var(--ink);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    .naver-package-checklist {
+      display: grid;
+      gap: 6px;
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .naver-package-checklist strong { color: var(--ink); font-size: 12px; }
+    .naver-package-checklist span { display: block; }
 
     .settings-usage-panel { margin-bottom: 16px; }
     .plan-usage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }

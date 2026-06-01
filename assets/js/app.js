@@ -1574,6 +1574,7 @@
     let aiHashtagResult = [];
     let aiIdeasResult = '';
     let aiNaverResult = '';
+    let aiNaverPackage = null;
     let aiTimeResult = '';
 
     function switchAIMode(mode, el) {
@@ -1751,22 +1752,71 @@
         });
         if (!res.ok) throw new Error('API 오류');
         const data = await res.json();
-        aiNaverResult = data.text || '';
+        aiNaverPackage = normalizeNaverPackage(data.package, data.text, type, topic);
+        aiNaverResult = aiNaverPackage.copyText;
         toast('✅ 네이버 플레이스 AI 문안 생성 완료!');
       } catch {
         const templates = {
           '소식': `📢 ${store} 소식\n\n${topic}\n\n처음 방문하시는 분도 편하게 오실 수 있도록 준비해둘게요. 궁금한 점은 네이버 톡톡 또는 DM으로 문의해주세요.\n\n#네이버플레이스 #소상공인 #오늘의소식`,
           '쿠폰': `🎟️ ${store} 방문 쿠폰 안내\n\n${topic}\n\n네이버 플레이스에서 쿠폰을 확인하고 방문 시 보여주세요. 작은 혜택이지만 감사한 마음을 담았습니다.`,
           '리뷰답글': `소중한 리뷰 정말 감사합니다.\n\n${topic}\n\n방문해주신 시간이 좋은 기억으로 남았다니 저희도 큰 힘이 됩니다. 다음에도 더 따뜻하게 맞이하겠습니다.`,
-          '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`
+          '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`,
+          '프로필': `🏪 ${store} 소개\n\n${topic}\n\n처음 방문하시는 분도 편하게 문의하실 수 있도록 네이버 플레이스에서 운영 시간과 예약 정보를 확인해주세요.`
         };
         aiNaverResult = templates[type] || templates['소식'];
+        aiNaverPackage = normalizeNaverPackage(null, aiNaverResult, type, topic);
         toast('✅ 네이버 플레이스 문안 생성 완료! (오프라인 모드)');
       } finally {
-        document.getElementById('ai-naver-text').textContent = aiNaverResult;
+        document.getElementById('ai-naver-text').innerHTML = renderNaverPackage(aiNaverPackage, type);
         document.getElementById('ai-naver-result').classList.add('show');
         setAIBtnLoading('ai-naver-btn', false, 'N 문안 만들기');
       }
+    }
+
+    function normalizeNaverPackage(pkg, fallbackText, type, topic) {
+      const text = (fallbackText || '').trim();
+      if (pkg && (pkg.title || pkg.body || pkg.copyText)) {
+        const title = (pkg.title || `${type} 문안`).trim();
+        const body = (pkg.body || text || topic).trim();
+        const cta = (pkg.cta || '문의와 예약은 네이버 플레이스에서 편하게 남겨주세요.').trim();
+        const checklist = Array.isArray(pkg.checklist) ? pkg.checklist.filter(Boolean).slice(0, 4) : [];
+        const copyText = (pkg.copyText || [title, body, cta].filter(Boolean).join('\n\n')).trim();
+        return { title, body, cta, checklist: checklist.length ? checklist : getDefaultNaverChecklist(type), copyText };
+      }
+      const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+      const title = lines[0] || `${type} 문안`;
+      const body = lines.slice(1).join('\n\n') || topic;
+      return {
+        title,
+        body,
+        cta: '문의와 예약은 네이버 플레이스에서 편하게 남겨주세요.',
+        checklist: getDefaultNaverChecklist(type),
+        copyText: text || [title, body].join('\n\n'),
+      };
+    }
+
+    function getDefaultNaverChecklist(type) {
+      const common = ['날짜와 운영 시간을 확인하세요', '문의/예약 방법이 맞는지 확인하세요'];
+      if (type === '쿠폰') return ['혜택 조건이 실제와 맞는지 확인하세요', '사용 기간을 넣었는지 확인하세요', ...common.slice(1)];
+      if (type === '리뷰답글') return ['고객 이름이나 상황을 공개하지 않았는지 확인하세요', '감사와 개선 의지가 들어갔는지 확인하세요', '과한 변명 표현은 없는지 확인하세요'];
+      if (type === '주간계획') return ['이번 주 실제 운영일과 맞는지 확인하세요', '인스타/네이버 각각 하나 이상 들어갔는지 확인하세요', '실행하기 어려운 일정은 줄이세요'];
+      if (type === '프로필') return ['대표 서비스가 분명한지 확인하세요', '처음 방문 고객에게 쉬운 표현인지 확인하세요', '문의 채널이 맞는지 확인하세요'];
+      return [...common, '가격/혜택 문구가 실제와 맞는지 확인하세요'];
+    }
+
+    function renderNaverPackage(pkg, type) {
+      const data = normalizeNaverPackage(pkg, aiNaverResult, type, document.getElementById('ai-naver-topic')?.value || '');
+      return `
+        <div class="naver-package">
+          <div class="naver-package-kicker">네이버 플레이스 ${escapeHtml(type)} 패키지</div>
+          <div class="naver-package-title">${escapeHtml(data.title)}</div>
+          <div class="naver-package-body">${escapeHtml(data.body).replace(/\n/g, '<br>')}</div>
+          <div class="naver-package-cta">${escapeHtml(data.cta)}</div>
+          <div class="naver-package-checklist">
+            <strong>올리기 전 확인</strong>
+            ${data.checklist.map(item => `<span>✓ ${escapeHtml(item)}</span>`).join('')}
+          </div>
+        </div>`;
     }
 
     function aiCopyNaverPlace() {

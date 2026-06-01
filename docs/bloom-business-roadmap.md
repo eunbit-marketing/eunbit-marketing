@@ -187,6 +187,21 @@ Goal: Launch to 3-5 real stores and learn from actual usage.
 - Track draft generation, copy usage, weekly active use, and willingness to pay.
 - Decide whether to invest next in real Instagram/Naver integrations, database, auth, and billing.
 
+### v0.5.4 Naver Place Package Card
+
+Goal: Move Naver Place from a plain generated text block toward Saebom's "딸깍 마케팅 키트" direction.
+
+Implemented:
+- `/api/naver-place` now returns structured package data: title, body, CTA, checklist, and copy-ready text.
+- The frontend renders Naver Place results as an execution card with an "올리기 전 확인" checklist.
+- Existing copy/save/idea actions continue to work from the full copy-ready text.
+- Offline fallback templates are normalized into the same package format.
+
+Why it matters:
+- Pilot users need a clear next action after generation.
+- The checklist makes Bloom feel like a marketing assistant, not only a writing box.
+- This structure can be reused for the next combined Instagram + Naver Place kit.
+
 ## Tooling Notes
 
 - GitHub remains the source for version control and PR review.

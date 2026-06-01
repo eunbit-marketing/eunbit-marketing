@@ -39,6 +39,7 @@ Live auto-publishing, account integrations, billing, and multi-tenant data stora
 - AI chat proxy: `api/chat.js`
 - AI prompt backdata: `api/_prompt-data.js`
 - Naver Place writer: `api/naver-place.js`
+- Naver Place API output: copy-ready `text` plus structured `package` data for title/body/CTA/checklist UI.
 - AI provider: Anthropic API through `ANTHROPIC_API_KEY`
 - Optional model override: `ANTHROPIC_MODEL`
 - If a configured Anthropic model is unavailable in the current workspace, the API retries compatible fallback models so pilot users do not hit a dead end.
