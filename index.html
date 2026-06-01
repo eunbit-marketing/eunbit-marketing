@@ -43,46 +43,46 @@
         <span class="dt-track"><span class="dt-thumb"></span></span>
       </button>
       
-      <div class="nav-section">MAIN</div>
-      <nav class="nav-list" role="navigation" aria-label="메인 메뉴">
-        <button class="nav-item active" data-tab="home" aria-label="대시보드 이동 (G H)">
+      <div class="nav-section">START</div>
+      <nav class="nav-list" role="navigation" aria-label="핵심 메뉴">
+        <button class="nav-item active" data-tab="home" aria-label="홈 이동 (G H)">
           <span class="nav-icon">🏠</span>
-          <span class="nav-label">대시보드</span>
+          <span class="nav-label">홈</span>
         </button>
-        <button class="nav-item" data-tab="post" aria-label="새 게시물 작성 (G P)">
+        <button class="nav-item" data-tab="ai" aria-label="딸깍 만들기 (G I)">
           <span class="nav-icon">✨</span>
-          <span class="nav-label">새 게시물</span>
+          <span class="nav-label">딸깍 만들기</span>
+          <span class="nav-chip">AI</span>
         </button>
-        <button class="nav-item" data-tab="schedule" aria-label="예약 계획 (G S)">
+        <button class="nav-item" data-tab="schedule" aria-label="저장함과 예약 계획 (G S)">
           <span class="nav-icon">📅</span>
-          <span class="nav-label">예약 계획</span>
+          <span class="nav-label">저장함</span>
           <span class="nav-badge" aria-label="예약 3건">3</span>
         </button>
-        <button class="nav-item" data-tab="analytics" aria-label="성과 분석 (G A)">
-          <span class="nav-icon">📊</span>
-          <span class="nav-label">성과 분석</span>
+        <button class="nav-item" data-tab="settings" aria-label="내 매장 정보 (G E)">
+          <span class="nav-icon">🏪</span>
+          <span class="nav-label">내 매장</span>
         </button>
       </nav>
       
-      <div class="nav-section">TOOLS</div>
-      <nav class="nav-list" role="navigation" aria-label="도구 메뉴">
+      <div class="nav-section">SUPPORT</div>
+      <nav class="nav-list" role="navigation" aria-label="보조 도구 메뉴">
         <button class="nav-item" data-tab="proposal" aria-label="파일럿 제안서 (G F)">
           <span class="nav-icon">📄</span>
           <span class="nav-label">파일럿 제안서</span>
           <span class="nav-chip">PILOT</span>
         </button>
-        <button class="nav-item" data-tab="ai" aria-label="AI 어시스턴트 (G I)">
-          <span class="nav-icon">✨</span>
-          <span class="nav-label">AI 어시스턴트</span>
-          <span class="nav-chip">NEW</span>
+        <button class="nav-item" data-tab="post" aria-label="새 게시물 작성 (G P)">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">인스타 단품</span>
+        </button>
+        <button class="nav-item" data-tab="analytics" aria-label="성과 분석 (G A)">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">성과 분석</span>
         </button>
         <button class="nav-item" data-tab="hashtag" aria-label="해시태그 분석 (G T)">
           <span class="nav-icon">#️⃣</span>
           <span class="nav-label">해시태그 분석</span>
-        </button>
-        <button class="nav-item" data-tab="settings" aria-label="설정 (G E)">
-          <span class="nav-icon">⚙️</span>
-          <span class="nav-label">설정</span>
         </button>
       </nav>
       
@@ -122,15 +122,38 @@
           <div class="header-actions">
             <button class="btn btn-secondary" onclick="switchTab('proposal')">파일럿 제안서</button>
             <button class="btn btn-secondary" onclick="showPilotFeedbackModal()">피드백 남기기</button>
-            <button class="btn btn-primary" onclick="switchTab('post')">+ 새 게시물</button>
+            <button class="btn btn-primary" onclick="switchTab('ai')">✨ 딸깍 만들기</button>
           </div>
+        </div>
+
+        <div class="simple-flow" aria-label="Bloom 4단계 핵심 흐름">
+          <button class="flow-step active" data-tab="home">
+            <span>1</span>
+            <strong>홈</strong>
+            <small>오늘 할 일 확인</small>
+          </button>
+          <button class="flow-step" data-tab="ai">
+            <span>2</span>
+            <strong>딸깍</strong>
+            <small>인스타·네이버 문안 생성</small>
+          </button>
+          <button class="flow-step" data-tab="schedule">
+            <span>3</span>
+            <strong>저장함</strong>
+            <small>복사·예약·초안 관리</small>
+          </button>
+          <button class="flow-step" data-tab="settings">
+            <span>4</span>
+            <strong>내 매장</strong>
+            <small>매장 정보와 목표 저장</small>
+          </button>
         </div>
 
         <div class="pilot-banner" role="note" aria-label="파일럿 테스트 버전 안내">
           <span>🧪</span>
           <div>
             <strong>파일럿 테스트 버전</strong>
-            <p>지금은 자동 발행 전 단계예요. 생성한 문안과 예약 계획은 이 브라우저에 저장되며, 실제 인스타그램·네이버에는 사장님이 복사해서 올리는 흐름입니다.</p>
+            <p>v0.6부터는 홈 → 딸깍 → 저장함 → 내 매장 4단계로 사용해요. 지금은 자동 발행 전 단계라 생성한 문안은 저장함에 모아두고 사장님이 복사해서 올리는 흐름입니다.</p>
           </div>
         </div>
         
@@ -388,9 +411,9 @@
       <section class="tab" id="tab-schedule">
         <div class="page-header">
           <div>
-            <div class="breadcrumb">메인 / 예약 계획</div>
-            <h1 class="page-title">예약 계획</h1>
-            <div class="page-sub">올릴 날짜와 시간을 정해두고, 알맞은 문안을 준비해보세요</div>
+            <div class="breadcrumb">핵심 / 저장함</div>
+            <h1 class="page-title">저장함 · 예약 계획</h1>
+            <div class="page-sub">딸깍으로 만든 문안과 키트를 모아두고, 올릴 날짜까지 정리해보세요</div>
           </div>
           <button class="btn btn-primary" onclick="schedulePost()">📅 계획 추가</button>
         </div>
@@ -664,9 +687,9 @@
       <section class="tab" id="tab-settings">
         <div class="page-header">
           <div>
-            <div class="breadcrumb">설정</div>
-            <h1 class="page-title">설정</h1>
-            <div class="page-sub">매장 정보, 목표, 테마를 관리해보세요</div>
+            <div class="breadcrumb">핵심 / 내 매장</div>
+            <h1 class="page-title">내 매장</h1>
+            <div class="page-sub">AI가 더 잘 써주도록 매장 정보, 목표, 톤앤매너를 관리해보세요</div>
           </div>
           <button class="btn btn-primary" onclick="saveSettings()">💾 변경사항 저장</button>
         </div>
@@ -927,9 +950,9 @@
       <section class="tab" id="tab-ai">
         <div class="page-header">
           <div>
-            <div class="breadcrumb">도구 / AI 어시스턴트</div>
-            <h1 class="page-title">AI 어시스턴트 ✨</h1>
-            <div class="page-sub">인스타 캡션부터 네이버 플레이스 소식까지 한 번에</div>
+            <div class="breadcrumb">핵심 / 딸깍 만들기</div>
+            <h1 class="page-title">딸깍 만들기 ✨</h1>
+            <div class="page-sub">인스타 캡션부터 네이버 플레이스 소식까지 한 번에 만들어 저장함으로 보내요</div>
           </div>
         </div>
 
@@ -938,12 +961,12 @@
           <div class="ai-hero-head">
             <div class="ai-hero-icon">🤖</div>
             <div>
-              <div class="ai-hero-title">무엇을 도와드릴까요?</div>
-              <div class="ai-hero-sub">사진과 매장 정보만 넣으면 오늘 쓸 마케팅 초안을 만들어드려요</div>
+              <div class="ai-hero-title">오늘 홍보할 내용을 한 번만 적어주세요</div>
+              <div class="ai-hero-sub">사진과 매장 정보만 넣으면 인스타·네이버·쿠폰·배너 문안을 한 묶음으로 만들어드려요</div>
             </div>
           </div>
           <div class="ai-mode-tabs">
-            <button class="ai-mode-tab active" onclick="switchAIMode('tools', this)">🛠️ 도구 모음</button>
+            <button class="ai-mode-tab active" onclick="switchAIMode('tools', this)">✨ 딸깍 도구</button>
             <button class="ai-mode-tab" onclick="switchAIMode('chat', this)">💬 AI 채팅</button>
           </div>
         </div>
@@ -1250,26 +1273,22 @@
   <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   
   <!-- ===== BOTTOM TAB BAR (모바일 전용) ===== -->
-  <nav class="bottom-tab-bar" role="navigation" aria-label="하단 탭">
+  <nav class="bottom-tab-bar" role="navigation" aria-label="하단 핵심 탭">
     <button class="bottom-tab active" data-tab="home">
       <span class="bottom-tab-icon">🏠</span>
       <span class="bottom-tab-label">홈</span>
     </button>
+    <button class="bottom-tab" data-tab="ai">
+      <span class="bottom-tab-icon">✨</span>
+      <span class="bottom-tab-label">딸깍</span>
+    </button>
     <button class="bottom-tab" data-tab="schedule">
       <span class="bottom-tab-icon">📅</span>
-      <span class="bottom-tab-label">예약</span>
-    </button>
-    <button class="bottom-tab fab" data-tab="post" aria-label="새 게시물">
-      <span class="bottom-tab-icon">+</span>
-      <span class="bottom-tab-label">새 글</span>
-    </button>
-    <button class="bottom-tab" data-tab="analytics">
-      <span class="bottom-tab-icon">📊</span>
-      <span class="bottom-tab-label">분석</span>
+      <span class="bottom-tab-label">저장함</span>
     </button>
     <button class="bottom-tab" data-tab="settings">
-      <span class="bottom-tab-icon">👤</span>
-      <span class="bottom-tab-label">내정보</span>
+      <span class="bottom-tab-icon">🏪</span>
+      <span class="bottom-tab-label">내 매장</span>
     </button>
   </nav>
   

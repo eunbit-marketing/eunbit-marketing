@@ -232,26 +232,28 @@
     const NUMERIC_SETTINGS = new Set(['postsGoal', 'followersGoal', 'engagementGoal']);
 
     const SEARCH_TABS = [
-      { icon: '🏠', name: '대시보드', tab: 'home', desc: '성과 요약 · 최근 게시물' },
-      { icon: '✨', name: '새 게시물', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
-      { icon: '📅', name: '예약 계획', tab: 'schedule', desc: '날짜 선택 · 게시물 계획' },
+      { icon: '🏠', name: '홈', tab: 'home', desc: '오늘 할 일 · 파일럿 흐름 · 성과 요약' },
+      { icon: '✨', name: '딸깍 만들기', tab: 'ai', desc: '인스타 · 네이버 · 쿠폰 · 배너 문안 생성' },
+      { icon: '📅', name: '저장함', tab: 'schedule', desc: '초안 저장 · 예약 계획 · 마케팅 키트 보관' },
+      { icon: '🏪', name: '내 매장', tab: 'settings', desc: '매장 정보 · 목표 · 톤앤매너 설정' },
+      { icon: '📝', name: '인스타 단품', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
       { icon: '📊', name: '성과 분석', tab: 'analytics', desc: '좋아요 · 팔로워 · 참여율 차트' },
       { icon: '📄', name: '파일럿 제안서', tab: 'proposal', desc: '고객 설명 · 가격 · 파일럿 혜택' },
-      { icon: '🤖', name: 'AI 어시스턴트', tab: 'ai', desc: '캡션 · 해시태그 · 콘텐츠 아이디어' },
       { icon: '#️⃣', name: '해시태그 분석', tab: 'hashtag', desc: '트렌드 해시태그 · AI 추천' },
-      { icon: '⚙️', name: '설정', tab: 'settings', desc: '프로필 · 테마 · 목표 설정' },
     ];
 
     const SEARCH_FEATURES = [
-      { icon: '🎨', name: 'AI 캡션 생성', tab: 'post', desc: '새 게시물 → AI 생성 버튼' },
-      { icon: '📸', name: '이미지 업로드', tab: 'post', desc: '새 게시물 → 사진 선택' },
-      { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '예약 계획 → 달력 선택' },
-      { icon: '🌈', name: '테마 변경', tab: 'settings', desc: '설정 → 색상 테마' },
-      { icon: '🎯', name: '목표 설정', tab: 'settings', desc: '설정 → 목표 섹션' },
+      { icon: '✨', name: '딸깍 키트', tab: 'ai', desc: '딸깍 만들기 → 인스타·네이버 묶음 생성' },
+      { icon: '🎨', name: 'AI 캡션 생성', tab: 'post', desc: '인스타 단품 → AI 생성 버튼' },
+      { icon: '📸', name: '이미지 업로드', tab: 'post', desc: '인스타 단품 → 사진 선택' },
+      { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '저장함 → 달력 선택' },
+      { icon: '🗂️', name: '문안 저장함', tab: 'schedule', desc: '저장함 → 초안과 마케팅 키트 관리' },
+      { icon: '🌈', name: '테마 변경', tab: 'settings', desc: '내 매장 → 색상 테마' },
+      { icon: '🎯', name: '목표 설정', tab: 'settings', desc: '내 매장 → 목표 섹션' },
       { icon: '🌸', name: '파일럿 제안 복사', tab: 'proposal', desc: '파일럿 제안서 → 라이브 링크 복사' },
       { icon: '📋', name: '리포트 다운로드', tab: 'analytics', desc: '성과 분석 → 리포트 내보내기' },
-      { icon: '💬', name: 'AI 채팅', tab: 'ai', desc: 'AI 어시스턴트 → 채팅 모드' },
-      { icon: '⏰', name: '최적 게시 시간', tab: 'ai', desc: 'AI 어시스턴트 → 최적 시간 분석' },
+      { icon: '💬', name: 'AI 채팅', tab: 'ai', desc: '딸깍 만들기 → 채팅 모드' },
+      { icon: '⏰', name: '최적 게시 시간', tab: 'ai', desc: '딸깍 만들기 → 최적 시간 분석' },
     ];
 
     function getSettingsControls() {
@@ -285,6 +287,7 @@
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
       document.querySelectorAll('.bottom-tab').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.flow-step').forEach(n => n.classList.remove('active'));
       const tabEl = document.getElementById('tab-' + tab);
       if (tabEl) tabEl.classList.add('active');
       document.querySelectorAll(`[data-tab="${tab}"]`).forEach(n => n.classList.add('active'));
@@ -1438,12 +1441,13 @@
     // ================================================================
     function showKeyboardShortcuts() {
       const rows = [
-        [['G','H'], '대시보드'],
-        [['G','P'], '새 게시물'],
-        [['G','S'], '예약 계획'],
+        [['G','H'], '홈'],
+        [['G','I'], '딸깍 만들기'],
+        [['G','S'], '저장함'],
+        [['G','E'], '내 매장'],
+        [['G','P'], '인스타 단품'],
         [['G','A'], '성과 분석'],
         [['G','T'], '해시태그 분석'],
-        [['G','E'], '설정'],
         [['⌘','K'], '검색'],
         [['⌘','D'], '다크 모드 전환'],
         [['?'],      '단축키 도움말'],
@@ -1454,7 +1458,7 @@
           ${rows.map(([keys, desc], i) => `
             <div class="kbd-row">${keys.map(k => `<span class="kbd-key">${k}</span>`).join('')}</div>
             <div class="kbd-desc">${desc}</div>
-            ${i === 5 ? '<div class="kbd-sep"></div><div class="kbd-sep"></div>' : ''}
+            ${i === 6 ? '<div class="kbd-sep"></div><div class="kbd-sep"></div>' : ''}
           `).join('')}
         </div>`;
       openModal('⌨️ 키보드 단축키', html);
