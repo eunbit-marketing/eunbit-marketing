@@ -232,7 +232,7 @@
     const SEARCH_TABS = [
       { icon: '🏠', name: '대시보드', tab: 'home', desc: '성과 요약 · 최근 게시물' },
       { icon: '✨', name: '새 게시물', tab: 'post', desc: 'AI 캡션 생성 · 이미지 업로드' },
-      { icon: '📅', name: '예약 발행', tab: 'schedule', desc: '날짜 선택 · 게시물 예약' },
+      { icon: '📅', name: '예약 계획', tab: 'schedule', desc: '날짜 선택 · 게시물 계획' },
       { icon: '📊', name: '성과 분석', tab: 'analytics', desc: '좋아요 · 팔로워 · 참여율 차트' },
       { icon: '📄', name: '파일럿 제안서', tab: 'proposal', desc: '고객 설명 · 가격 · 파일럿 혜택' },
       { icon: '🤖', name: 'AI 어시스턴트', tab: 'ai', desc: '캡션 · 해시태그 · 콘텐츠 아이디어' },
@@ -243,7 +243,7 @@
     const SEARCH_FEATURES = [
       { icon: '🎨', name: 'AI 캡션 생성', tab: 'post', desc: '새 게시물 → AI 생성 버튼' },
       { icon: '📸', name: '이미지 업로드', tab: 'post', desc: '새 게시물 → 사진 선택' },
-      { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '예약 발행 → 달력 선택' },
+      { icon: '📆', name: '날짜 예약', tab: 'schedule', desc: '예약 계획 → 달력 선택' },
       { icon: '🌈', name: '테마 변경', tab: 'settings', desc: '설정 → 색상 테마' },
       { icon: '🎯', name: '목표 설정', tab: 'settings', desc: '설정 → 목표 섹션' },
       { icon: '🌸', name: '파일럿 제안 복사', tab: 'proposal', desc: '파일럿 제안서 → 라이브 링크 복사' },
@@ -510,12 +510,17 @@
       saveState();
       toast(`💾 임시저장 완료 (총 ${state.drafts.length}개)`);
     }
-    function publishPost() {
+    async function publishPost() {
       const cap = document.getElementById('caption-final').value;
       if (!cap.trim()) { toast('✍️ 캡션을 입력해주세요'); return; }
-      toast('🎉 게시물이 발행됐어요!');
-      document.getElementById('caption-final').value = '';
-      updateCaptionMeta();
+      try {
+        await navigator.clipboard.writeText(cap);
+        saveMarketingDraft({ channel: '인스타그램', text: cap, source: '게시물 작성 복사', status: 'copied', silent: true });
+        toast('📋 문안을 복사하고 저장했어요. 실제 업로드는 인스타그램에서 직접 진행해주세요.');
+      } catch {
+        saveMarketingDraft({ channel: '인스타그램', text: cap, source: '게시물 작성 저장', status: 'draft', silent: true });
+        toast('🗂️ 문안을 저장했어요. 복사가 안 되면 저장함에서 다시 복사해주세요.');
+      }
     }
     
     // ===== INIT =====
@@ -931,7 +936,7 @@
       renderScheduledPosts();
       renderDraftQueue();
       renderCalendar();
-      toast('📅 예약 완료!');
+      toast('📅 예약 계획을 저장했어요. 실제 자동 발행은 계정 연동 이후 제공됩니다.');
     }
     function previewSchedule(input) {
       if (input.files[0]) {
@@ -1068,7 +1073,7 @@
       markDraftStatus(id, 'scheduled', false);
       updateMobilePreview();
       switchTab('schedule');
-      toast('📅 예약 발행에 문안을 넣었어요');
+      toast('📅 예약 계획에 문안을 넣었어요');
     }
 
     function markDraftStatus(id, status, showToast = true) {
@@ -1122,7 +1127,7 @@
         {
           kicker: '1순위',
           title: draftCount ? `저장된 초안 ${draftCount}개 확인` : '오늘 쓸 문안 만들기',
-          desc: draftCount ? '초안을 복사하거나 예약 발행에 넣어 이번 주 흐름을 이어가세요.' : 'AI 어시스턴트에서 인스타/네이버 문안을 하나 만들어보세요.',
+          desc: draftCount ? '초안을 복사하거나 예약 계획에 넣어 이번 주 흐름을 이어가세요.' : 'AI 어시스턴트에서 인스타/네이버 문안을 하나 만들어보세요.',
           action: draftCount ? '저장함 보기' : 'AI로 만들기',
           tab: draftCount ? 'schedule' : 'ai',
         },
@@ -1282,7 +1287,7 @@
       const rows = [
         [['G','H'], '대시보드'],
         [['G','P'], '새 게시물'],
-        [['G','S'], '예약 발행'],
+        [['G','S'], '예약 계획'],
         [['G','A'], '성과 분석'],
         [['G','T'], '해시태그 분석'],
         [['G','E'], '설정'],
@@ -1388,8 +1393,8 @@
           <div style="background: var(--bg); border-radius: 14px; padding: 14px; display: flex; gap: 12px;">
             <span style="font-size: 22px;">📅</span>
             <div style="flex: 1;">
-              <div style="font-size: 13px; font-weight: 600;">예약 게시물이 30분 후 발행됩니다</div>
-              <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">오후 8시 발행 예정</div>
+              <div style="font-size: 13px; font-weight: 600;">예약 계획 시간이 30분 남았어요</div>
+              <div style="font-size: 11px; color: var(--sub); margin-top: 2px;">오후 8시 직접 게시 예정</div>
             </div>
           </div>
           <div style="background: var(--bg); border-radius: 14px; padding: 14px; display: flex; gap: 12px;">
@@ -2006,7 +2011,7 @@
 
     function aiApplyTime() {
       switchTab('schedule');
-      toast('📅 예약 발행 탭으로 이동했어요!');
+      toast('📅 예약 계획 탭으로 이동했어요!');
     }
 
     // ===== AI CHAT =====

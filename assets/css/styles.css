@@ -1439,6 +1439,41 @@
     .demo-banner strong { color: var(--peach); }
     [data-dark] .demo-banner { background: rgba(255,184,158,.07); }
 
+    .pilot-banner {
+      display: flex; align-items: flex-start; gap: 12px;
+      background: linear-gradient(135deg, rgba(0,199,60,.10), rgba(181,167,255,.12));
+      border: 1px solid rgba(0,199,60,.25);
+      border-radius: var(--r-lg);
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+    .pilot-banner > span {
+      flex: 0 0 auto; display: grid; place-items: center;
+      width: 30px; height: 30px; border-radius: 10px;
+      background: rgba(255,255,255,.78);
+      font-size: 16px;
+    }
+    .pilot-banner strong {
+      display: block; margin-bottom: 3px;
+      font-size: 13px; font-weight: 800;
+    }
+    .pilot-banner p {
+      margin: 0; color: var(--sub);
+      font-size: 12px; line-height: 1.55;
+    }
+    .pilot-banner.compact {
+      border-radius: var(--r-md);
+      padding: 10px 12px;
+      margin-bottom: 16px;
+      box-shadow: none;
+    }
+    [data-dark] .pilot-banner {
+      background: linear-gradient(135deg, rgba(0,199,60,.12), rgba(181,167,255,.09));
+      border-color: rgba(255,255,255,.12);
+    }
+
     /* ============================================================
        v2.3 — 키보드 단축키 모달
     ============================================================ */

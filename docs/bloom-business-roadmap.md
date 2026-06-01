@@ -217,6 +217,22 @@ Why it matters:
 - It makes Bloom feel more like an assistant that prepares a small marketing package.
 - It creates a reusable structure for future banner/image/BGM/profile recommendations.
 
+### v0.5.6 Pilot Clarity and Copy-Ready Language
+
+Goal: Remove the biggest trust risk before showing the production link to real store owners.
+
+Implemented:
+- Added a homepage pilot banner that explains Bloom is currently a browser-stored test version.
+- Added post and schedule notices that clearly say Bloom prepares copy and plans, not automatic platform uploads.
+- Changed the post editor primary action from live-publish language to "복사하고 저장".
+- Updated the action so it copies the caption and saves it to the weekly draft queue.
+- Renamed visible scheduling language from "예약 발행" to "예약 계획" where it could mislead pilot users.
+
+Why it matters:
+- First users should not feel tricked by a button that sounds like it already posts to Instagram.
+- This keeps Bloom honest while preserving the core promise: copy-ready marketing help for owners who do not know what to write today.
+- It prepares the app for pilot outreach before deeper account integrations.
+
 ## Tooling Notes
 
 - GitHub remains the source for version control and PR review.
