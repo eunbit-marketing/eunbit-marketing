@@ -1,4 +1,4 @@
-export const DEFAULT_MODEL = 'claude-sonnet-4-20250514';
+export const DEFAULT_MODEL = 'claude-sonnet-4-6';
 
 export const CATEGORY_BACKDATA = {
   '공예': {

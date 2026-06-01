@@ -44,7 +44,7 @@ The practical v0.5.3 interpretation is:
 
 The project already uses Anthropic through `ANTHROPIC_API_KEY`.
 
-v0.5.3 makes this more usable by standardizing the default model to `claude-sonnet-4-20250514` while still allowing deployment override through `ANTHROPIC_MODEL`. If the deployment workspace cannot access that model, the server retries compatible fallback models before returning an error.
+v0.5.3 makes this more usable by standardizing the default model to `claude-sonnet-4-6` while still allowing deployment override through `ANTHROPIC_MODEL`. If the deployment workspace cannot access that model, the server retries compatible fallback models before returning an error.
 
 ## Next Recommended Update
 

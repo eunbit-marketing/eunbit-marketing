@@ -1,4 +1,5 @@
 import { callAnthropicMessages } from './_anthropic.js';
+import { DEFAULT_MODEL } from './_prompt-data.js';
 
 export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -46,7 +47,7 @@ export default async (req, res) => {
 사용자가 바로 복사해 쓸 수 있도록 구체적으로 답변하되, 150자 이내로 핵심만 간결하게 답변하세요.`;
 
     const { response, data, model } = await callAnthropicMessages(apiKey, {
-        model: 'claude-sonnet-4-20250514',
+        model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: 500,
         system,
         messages: safeMessages,

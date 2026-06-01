@@ -2,6 +2,7 @@ import { DEFAULT_MODEL } from './_prompt-data.js';
 
 const FALLBACK_MODELS = [
   DEFAULT_MODEL,
+  'claude-haiku-4-5-20251001',
   'claude-3-5-sonnet-20241022',
   'claude-3-haiku-20240307',
 ];

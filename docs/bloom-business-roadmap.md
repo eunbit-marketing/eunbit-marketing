@@ -171,7 +171,7 @@ Implemented:
 - Added a real `/api/naver-place` endpoint for Naver Place writing.
 - Connected the frontend Naver Place tool to the new API while preserving offline fallback templates.
 - Added Naver Place profile introduction generation as a new output type.
-- Standardized AI model selection through `ANTHROPIC_MODEL` with `claude-sonnet-4-20250514` as the default.
+- Standardized AI model selection through `ANTHROPIC_MODEL` with `claude-sonnet-4-6` as the default.
 - Added model fallback handling so unavailable Anthropic model access does not block pilot users.
 
 Decision:
