@@ -33,7 +33,7 @@ export default async (req, res) => {
 
     const { response, data, model } = await callAnthropicMessages(apiKey, {
       model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
-      max_tokens: 1500,
+      max_tokens: 2800,
       temperature: 0.72,
       system: buildKitSystem(context),
       messages: [{ role: 'user', content: buildKitPrompt({ context, topic, tone }) }],
@@ -90,16 +90,16 @@ ${tone || context.brandTone}
 {
   "title": "키트 전체 제목",
   "instagram": {
-    "caption": "인스타그램에 바로 올릴 캡션. 줄바꿈은 \\n 사용",
+    "caption": "인스타그램에 바로 올릴 캡션. 120~220자. 줄바꿈은 \\n 사용",
     "hashtags": ["#태그1", "#태그2", "#태그3", "#태그4", "#태그5", "#태그6", "#태그7", "#태그8"]
   },
   "naver": {
     "title": "네이버 플레이스 소식 제목",
-    "body": "네이버 플레이스 본문",
+    "body": "네이버 플레이스 본문. 220~360자",
     "cta": "문의/예약/방문 안내",
     "copyText": "네이버 플레이스에 그대로 복사할 전체 문안"
   },
-  "visualDirection": "사진이나 배너를 고를 때 참고할 방향 1~2문장",
+  "visualDirection": "사진이나 배너를 고를 때 참고할 방향 1문장",
   "checklist": ["게시 전 확인 1", "게시 전 확인 2", "게시 전 확인 3"]
 }`;
 }
