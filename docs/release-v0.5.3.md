@@ -38,12 +38,13 @@ The practical v0.5.3 interpretation is:
 - Updated the frontend Naver Place tool to call `/api/naver-place`.
 - Preserved offline fallback templates when the API key or local server is unavailable.
 - Updated hashtag generation to use `ANTHROPIC_MODEL` or the stable default model.
+- Added shared Anthropic model fallback handling for caption, hashtag, chat, and Naver Place endpoints.
 
 ## AI Connection
 
 The project already uses Anthropic through `ANTHROPIC_API_KEY`.
 
-v0.5.3 makes this more usable by standardizing the default model to `claude-sonnet-4-20250514` while still allowing deployment override through `ANTHROPIC_MODEL`.
+v0.5.3 makes this more usable by standardizing the default model to `claude-sonnet-4-20250514` while still allowing deployment override through `ANTHROPIC_MODEL`. If the deployment workspace cannot access that model, the server retries compatible fallback models before returning an error.
 
 ## Next Recommended Update
 

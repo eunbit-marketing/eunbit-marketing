@@ -1,3 +1,4 @@
+import { callAnthropicMessages } from './_anthropic.js';
 import { DEFAULT_MODEL, buildStoreContext, getToneBackdata } from './_prompt-data.js';
 
 export default async (req, res) => {
@@ -43,29 +44,20 @@ export default async (req, res) => {
       { type: 'text', text: prompt },
     ] : prompt;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
+    const { response, data, model } = await callAnthropicMessages(apiKey, {
         model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: 900,
         temperature: 0.75,
         system: buildCaptionSystem(context),
         messages: [{ role: 'user', content }],
-      }),
     });
 
-    const data = await response.json();
     if (!response.ok) {
       return res.status(response.status).json({ error: data.error?.message || 'Caption API failed' });
     }
 
     const text = data.content?.[0]?.text || '';
-    return res.status(200).json({ caption: text.trim(), model: data.model });
+    return res.status(200).json({ caption: text.trim(), model: data.model || model });
   } catch (error) {
     console.error('Caption API error:', error);
     return res.status(500).json({ error: error.message || 'Internal server error' });

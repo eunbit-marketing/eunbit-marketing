@@ -1,3 +1,5 @@
+import { callAnthropicMessages } from './_anthropic.js';
+
 export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -43,22 +45,12 @@ export default async (req, res) => {
 캡션 작성, 해시태그 추천, 네이버 플레이스 소식/쿠폰/리뷰 답글, 콘텐츠 아이디어 제안, 마케팅 전략 조언을 한국어로 친근하게 답변하세요.
 사용자가 바로 복사해 쓸 수 있도록 구체적으로 답변하되, 150자 이내로 핵심만 간결하게 답변하세요.`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
+    const { response, data, model } = await callAnthropicMessages(apiKey, {
         model: 'claude-sonnet-4-20250514',
         max_tokens: 500,
         system,
         messages: safeMessages,
-      }),
     });
-
-    const data = await response.json();
 
     if (!response.ok) {
       return res.status(response.status).json({
@@ -67,7 +59,7 @@ export default async (req, res) => {
     }
 
     const text = data.content?.[0]?.text || '';
-    return res.status(200).json({ message: text, raw: data });
+    return res.status(200).json({ message: text, model: data.model || model, raw: data });
   } catch (error) {
     console.error('Chat API error:', error);
     return res.status(500).json({

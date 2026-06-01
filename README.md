@@ -41,6 +41,7 @@ Live auto-publishing, account integrations, billing, and multi-tenant data stora
 - Naver Place writer: `api/naver-place.js`
 - AI provider: Anthropic API through `ANTHROPIC_API_KEY`
 - Optional model override: `ANTHROPIC_MODEL`
+- If a configured Anthropic model is unavailable in the current workspace, the API retries compatible fallback models so pilot users do not hit a dead end.
 - Data today: browser `localStorage`
 - Deployment target: Vercel
 

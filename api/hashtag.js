@@ -1,3 +1,4 @@
+import { callAnthropicMessages } from './_anthropic.js';
 import { DEFAULT_MODEL } from './_prompt-data.js';
 
 export default async (req, res) => {
@@ -98,21 +99,11 @@ export default async (req, res) => {
       }];
     }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
+    const { response, data } = await callAnthropicMessages(apiKey, {
         model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: 200,
         messages: messages
-      })
     });
-
-    const data = await response.json();
 
     if (!response.ok) {
       return res.status(response.status).json({

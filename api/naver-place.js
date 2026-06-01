@@ -1,3 +1,4 @@
+import { callAnthropicMessages } from './_anthropic.js';
 import { DEFAULT_MODEL, NAVER_PLACE_TYPES, buildStoreContext } from './_prompt-data.js';
 
 export default async (req, res) => {
@@ -31,14 +32,7 @@ export default async (req, res) => {
     });
     const typeGuide = NAVER_PLACE_TYPES[type] || NAVER_PLACE_TYPES['소식'];
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
+    const { response, data, model } = await callAnthropicMessages(apiKey, {
         model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: type === '주간계획' ? 1100 : 750,
         temperature: 0.68,
@@ -47,16 +41,14 @@ export default async (req, res) => {
           role: 'user',
           content: buildNaverPrompt({ context, type, typeGuide, topic }),
         }],
-      }),
     });
 
-    const data = await response.json();
     if (!response.ok) {
       return res.status(response.status).json({ error: data.error?.message || 'Naver Place API failed' });
     }
 
     const text = data.content?.[0]?.text || '';
-    return res.status(200).json({ text: text.trim(), model: data.model });
+    return res.status(200).json({ text: text.trim(), model: data.model || model });
   } catch (error) {
     console.error('Naver Place API error:', error);
     return res.status(500).json({ error: error.message || 'Internal server error' });
