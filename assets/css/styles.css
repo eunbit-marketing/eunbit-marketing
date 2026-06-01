@@ -514,7 +514,62 @@
       display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
       margin-bottom: 14px;
     }
+    .draft-board-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .draft-board-sub { font-size: 12px; color: var(--sub); margin-top: 4px; }
+    .kit-vault {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px; margin: 4px 0 18px;
+    }
+    .kit-vault-empty {
+      grid-column: 1 / -1;
+      border: 1px dashed var(--border); border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0,199,60,.08), rgba(181,167,255,.10));
+      padding: 18px; color: var(--sub); font-size: 13px; line-height: 1.6;
+    }
+    .kit-card {
+      border: 1px solid rgba(0,199,60,.22);
+      background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(240,253,244,.92));
+      border-radius: 16px; padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: grid; gap: 12px;
+    }
+    [data-dark] .kit-card {
+      background: linear-gradient(135deg, rgba(255,255,255,.06), rgba(0,199,60,.08));
+      border-color: rgba(255,255,255,.12);
+    }
+    .kit-card-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+    .kit-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      width: fit-content; border-radius: 999px;
+      background: rgba(0,199,60,.12); color: #10794A;
+      padding: 6px 9px; font-size: 11px; font-weight: 900;
+    }
+    .kit-title { margin-top: 8px; color: var(--ink); font-size: 15px; font-weight: 900; line-height: 1.35; }
+    .kit-date { color: var(--ter); font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .kit-preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .kit-preview {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px; min-width: 0;
+    }
+    .kit-preview strong { display: block; color: var(--ink); font-size: 12px; margin-bottom: 6px; }
+    .kit-preview p {
+      color: var(--sub); font-size: 12px; line-height: 1.55;
+      display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .kit-detail {
+      background: rgba(181,167,255,.10); border: 1px solid rgba(181,167,255,.22);
+      border-radius: 12px; padding: 12px; color: var(--sub); font-size: 12px; line-height: 1.6;
+    }
+    .kit-detail strong { color: var(--ink); }
+    .kit-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .kit-actions button {
+      border: 1px solid var(--border); background: var(--white); color: var(--ink);
+      border-radius: 9px; padding: 8px 10px; font-size: 11px; font-weight: 800;
+      cursor: pointer; transition: all .2s;
+    }
+    .kit-actions button.primary { background: #111827; color: white; border-color: #111827; }
+    .kit-actions button:hover { border-color: var(--purple); color: var(--purple); }
+    .kit-actions button.primary:hover { color: white; transform: translateY(-1px); }
     .draft-filter-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 16px; }
     .draft-filter-chip {
       border: 1px solid var(--border); background: var(--bg); color: var(--sub);
@@ -1259,6 +1314,7 @@
       .stat-hero { grid-column: span 2; }
       .today-task-list { grid-template-columns: 1fr; }
       .schedule-layout { grid-template-columns: 1fr; }
+      .kit-vault { grid-template-columns: 1fr; }
       .draft-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .chart-grid { grid-template-columns: 1fr; }
       .analytics-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1276,6 +1332,10 @@
       .page-header { flex-direction: column; align-items: stretch; gap: 12px; }
       .page-header > div:last-child { display: flex; gap: 8px; }
       .page-header .btn { flex: 1; justify-content: center; }
+      .draft-board-head { flex-direction: column; }
+      .draft-board-actions { width: 100%; justify-content: stretch; }
+      .draft-board-actions .btn { flex: 1; justify-content: center; }
+      .kit-preview-grid { grid-template-columns: 1fr; }
       .bento { grid-template-columns: 1fr; }
       .stat-hero { grid-column: auto; min-height: 180px; padding: 22px; }
       .stat-value { font-size: 42px; }

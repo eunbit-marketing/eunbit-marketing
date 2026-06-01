@@ -15,6 +15,7 @@
       analyticsRange: '7d',
       currentTheme: 'bloom',
       weeklyDrafts: [],
+      marketingKits: [],
       draftFilter: 'all',
       plan: 'free',
       usage: {
@@ -289,7 +290,7 @@
       
       if (tab === 'home') renderTodayTasks();
       if (tab === 'analytics') setTimeout(initCharts, 100);
-      if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderDraftQueue(); updateMobilePreview(); }
+      if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderMarketingKits(); renderDraftQueue(); updateMobilePreview(); }
       if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags(state.category || '공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
@@ -613,6 +614,7 @@
       
       renderCalendar();
       renderScheduledPosts();
+      renderMarketingKits();
       renderDraftQueue();
       renderTodayTasks();
       updateMobilePreview();
@@ -790,6 +792,7 @@
       closeModal();
       switchTab('schedule');
       renderDraftQueue();
+      renderMarketingKits();
       renderTodayTasks();
       toast(`저장함에 첫 문안 ${saved.length}개를 넣었어요`);
     }
@@ -934,6 +937,7 @@
       saveState(); // [hotfix] 예약 영속화 — 새로고침해도 유지
       document.getElementById('schedule-caption').value = '';
       renderScheduledPosts();
+      renderMarketingKits();
       renderDraftQueue();
       renderCalendar();
       toast('📅 예약 계획을 저장했어요. 실제 자동 발행은 계정 연동 이후 제공됩니다.');
@@ -955,6 +959,7 @@
 
     function ensureDraftQueue() {
       if (!Array.isArray(state.weeklyDrafts)) state.weeklyDrafts = [];
+      if (!Array.isArray(state.marketingKits)) state.marketingKits = [];
     }
 
     function saveMarketingDraft({ channel, text, source = 'AI 도구', status = 'draft', silent = false }) {
@@ -962,7 +967,7 @@
       if (!tryUseFreeQuota('savedDrafts')) return null;
       ensureDraftQueue();
       const draft = {
-        id: Date.now(),
+        id: Date.now() + Math.floor(Math.random() * 1000),
         channel,
         text: text.trim(),
         source,
@@ -975,6 +980,122 @@
       renderTodayTasks();
       if (!silent) toast('🗂️ 이번 주 문안 저장함에 넣었어요');
       return draft;
+    }
+
+    function saveMarketingKitBundle(kit, draftIds = []) {
+      if (!kit) return null;
+      ensureDraftQueue();
+      const bundle = normalizeMarketingKit(kit);
+      const item = {
+        id: Date.now() + 7,
+        title: bundle.title,
+        createdAt: new Date().toISOString(),
+        instagram: bundle.instagram,
+        naver: bundle.naver,
+        visualDirection: bundle.visualDirection,
+        checklist: bundle.checklist,
+        draftIds,
+        status: 'ready',
+      };
+      state.marketingKits.unshift(item);
+      state.marketingKits = state.marketingKits.slice(0, 12);
+      saveState();
+      renderMarketingKits();
+      renderTodayTasks();
+      return item;
+    }
+
+    function getMarketingKitBundleText(kit) {
+      if (!kit) return '';
+      const tags = (kit.instagram?.hashtags || []).join(' ');
+      const checks = (kit.checklist || []).map(item => `- ${item}`).join('\n');
+      return `[딸깍 마케팅 키트]\n${kit.title || '마케팅 키트'}\n\n[인스타그램]\n${kit.instagram?.caption || ''}\n\n${tags}\n\n[네이버 플레이스]\n${kit.naver?.copyText || ''}\n\n[사진/배너 방향]\n${kit.visualDirection || ''}\n\n[올리기 전 확인]\n${checks}`;
+    }
+
+    function findMarketingKit(id) {
+      ensureDraftQueue();
+      return state.marketingKits.find(kit => kit.id === id);
+    }
+
+    function renderMarketingKits() {
+      const c = document.getElementById('marketing-kit-vault');
+      if (!c) return;
+      ensureDraftQueue();
+      if (!state.marketingKits.length) {
+        c.innerHTML = `
+          <div class="kit-vault-empty">
+            <strong>아직 저장된 딸깍 키트가 없어요.</strong><br>
+            AI 비서에서 딸깍 마케팅 키트를 만들고 “둘 다 저장”을 누르면 인스타그램과 네이버 문안이 한 묶음으로 여기에 모입니다.
+          </div>`;
+        return;
+      }
+      c.innerHTML = state.marketingKits.slice(0, 4).map(kit => {
+        const created = new Date(kit.createdAt || Date.now());
+        const dateLabel = `${created.getMonth() + 1}/${created.getDate()}`;
+        const checks = (kit.checklist || []).slice(0, 2).map(item => `• ${escapeHtml(item)}`).join('<br>');
+        return `
+          <article class="kit-card">
+            <div class="kit-card-head">
+              <div>
+                <span class="kit-badge">⚡ 딸깍 키트</span>
+                <div class="kit-title">${escapeHtml(kit.title || '마케팅 키트')}</div>
+              </div>
+              <span class="kit-date">${dateLabel}</span>
+            </div>
+            <div class="kit-preview-grid">
+              <div class="kit-preview">
+                <strong>인스타그램</strong>
+                <p>${escapeHtml(kit.instagram?.caption || '')}</p>
+              </div>
+              <div class="kit-preview">
+                <strong>네이버 플레이스</strong>
+                <p>${escapeHtml(kit.naver?.copyText || '')}</p>
+              </div>
+            </div>
+            <div class="kit-detail">
+              <strong>사진/배너 방향</strong><br>${escapeHtml(kit.visualDirection || '매장 분위기가 잘 보이는 사진을 사용하세요.')}
+              ${checks ? `<br><br><strong>체크</strong><br>${checks}` : ''}
+            </div>
+            <div class="kit-actions">
+              <button class="primary" onclick="copyMarketingKitBundle(${kit.id})">전체 복사</button>
+              <button onclick="useMarketingKitInstagram(${kit.id})">인스타 계획</button>
+              <button onclick="useMarketingKitNaver(${kit.id})">네이버 복사</button>
+              <button onclick="deleteMarketingKitBundle(${kit.id})">삭제</button>
+            </div>
+          </article>`;
+      }).join('');
+    }
+
+    function copyMarketingKitBundle(id) {
+      const kit = findMarketingKit(id);
+      if (!kit) return;
+      navigator.clipboard.writeText(getMarketingKitBundleText(kit)).then(() => toast('📋 딸깍 키트 전체를 복사했어요'));
+    }
+
+    function useMarketingKitInstagram(id) {
+      const kit = findMarketingKit(id);
+      if (!kit) return;
+      const text = `${kit.instagram?.caption || ''}\n\n${(kit.instagram?.hashtags || []).join(' ')}`.trim();
+      const scheduleCaption = document.getElementById('schedule-caption');
+      if (scheduleCaption) scheduleCaption.value = text;
+      updateMobilePreview();
+      switchTab('schedule');
+      toast('📅 인스타 문안을 예약 계획에 넣었어요');
+    }
+
+    function useMarketingKitNaver(id) {
+      const kit = findMarketingKit(id);
+      if (!kit) return;
+      navigator.clipboard.writeText(kit.naver?.copyText || '').then(() => toast('📋 네이버 플레이스 문안을 복사했어요'));
+    }
+
+    function deleteMarketingKitBundle(id) {
+      ensureDraftQueue();
+      state.marketingKits = state.marketingKits.filter(kit => kit.id !== id);
+      saveState();
+      renderMarketingKits();
+      renderTodayTasks();
+      toast('딸깍 키트를 삭제했어요');
     }
 
     function getDraftStatusLabel(status) {
@@ -1083,6 +1204,7 @@
       draft.status = status;
       saveState();
       renderDraftQueue();
+      renderMarketingKits();
       renderTodayTasks();
       if (showToast) toast(`상태를 ${getDraftStatusLabel(status)}으로 바꿨어요`);
     }
@@ -1093,6 +1215,7 @@
       if (state.activeDraftId === id) state.activeDraftId = null;
       saveState();
       renderDraftQueue();
+      renderMarketingKits();
       renderTodayTasks();
       toast('문안을 삭제했어요');
     }
@@ -1110,6 +1233,7 @@
       state.weeklyDrafts = [...samples.map((d, i) => ({ id: Date.now() + i, status: 'draft', createdAt: new Date().toISOString(), ...d })), ...state.weeklyDrafts];
       saveState();
       renderDraftQueue();
+      renderMarketingKits();
       renderTodayTasks();
       toast('✨ 예시 문안을 저장함에 채웠어요');
     }
@@ -1120,16 +1244,17 @@
       if (!list) return;
       ensureDraftQueue();
       const drafts = state.weeklyDrafts || [];
+      const kitCount = state.marketingKits?.length || 0;
       const draftCount = drafts.filter(d => (d.status || 'draft') === 'draft').length;
       const copiedCount = drafts.filter(d => d.status === 'copied').length;
       const scheduledCount = state.scheduledPosts?.length || 0;
       const tasks = [
         {
           kicker: '1순위',
-          title: draftCount ? `저장된 초안 ${draftCount}개 확인` : '오늘 쓸 문안 만들기',
-          desc: draftCount ? '초안을 복사하거나 예약 계획에 넣어 이번 주 흐름을 이어가세요.' : 'AI 어시스턴트에서 인스타/네이버 문안을 하나 만들어보세요.',
-          action: draftCount ? '저장함 보기' : 'AI로 만들기',
-          tab: draftCount ? 'schedule' : 'ai',
+          title: kitCount ? `딸깍 키트 ${kitCount}개 실행` : (draftCount ? `저장된 초안 ${draftCount}개 확인` : '오늘 쓸 문안 만들기'),
+          desc: kitCount ? '인스타와 네이버 문안을 묶음으로 열어 복사하거나 예약 계획에 넣어보세요.' : (draftCount ? '초안을 복사하거나 예약 계획에 넣어 이번 주 흐름을 이어가세요.' : 'AI 어시스턴트에서 인스타/네이버 문안을 하나 만들어보세요.'),
+          action: (draftCount || kitCount) ? '저장함 보기' : 'AI로 만들기',
+          tab: (draftCount || kitCount) ? 'schedule' : 'ai',
         },
         {
           kicker: '게시 준비',
@@ -1153,7 +1278,7 @@
           <div class="today-task-desc">${task.desc}</div>
           <button onclick="switchTab('${task.tab}')">${task.action}</button>
         </article>`).join('');
-      if (count) count.textContent = `${draftCount + copiedCount + scheduledCount}개 대기`;
+      if (count) count.textContent = `${draftCount + copiedCount + scheduledCount + kitCount}개 대기`;
     }
     
     // ===== ANALYTICS =====
@@ -1705,8 +1830,7 @@
 
     function getMarketingKitCopyText() {
       if (!aiMarketingKit) return '';
-      const tags = aiMarketingKit.instagram.hashtags.join(' ');
-      return `[인스타그램]\n${aiMarketingKit.instagram.caption}\n\n${tags}\n\n[네이버 플레이스]\n${aiMarketingKit.naver.copyText}`;
+      return getMarketingKitBundleText(aiMarketingKit);
     }
 
     function aiCopyMarketingKit() {
@@ -1720,7 +1844,9 @@
       const instagramText = `${aiMarketingKit.instagram.caption}\n\n${aiMarketingKit.instagram.hashtags.join(' ')}`;
       const savedInstagram = saveMarketingDraft({ channel: '인스타그램', text: instagramText, source: '딸깍 마케팅 키트', silent: true });
       const savedNaver = saveMarketingDraft({ channel: '네이버 플레이스', text: aiMarketingKit.naver.copyText, source: '딸깍 마케팅 키트', silent: true });
-      if (savedInstagram || savedNaver) toast('🗂️ 인스타·네이버 초안을 저장함에 넣었어요');
+      const draftIds = [savedInstagram?.id, savedNaver?.id].filter(Boolean);
+      const bundle = saveMarketingKitBundle(aiMarketingKit, draftIds);
+      if (savedInstagram || savedNaver || bundle) toast('🗂️ 딸깍 키트를 저장함에 묶어서 넣었어요');
     }
 
     function aiUseKitInstagram() {

@@ -233,6 +233,23 @@ Why it matters:
 - This keeps Bloom honest while preserving the core promise: copy-ready marketing help for owners who do not know what to write today.
 - It prepares the app for pilot outreach before deeper account integrations.
 
+### v0.5.7 Marketing Kit Vault
+
+Goal: Make the one-click kit reusable after generation.
+
+Implemented:
+- Added a saved marketing kit bundle model alongside individual weekly drafts.
+- Added a "마케팅 키트 보관함" section above the weekly draft list.
+- "둘 다 저장" now keeps the Instagram and Naver outputs together as one kit.
+- Each kit shows Instagram preview, Naver preview, visual direction, and checklist context.
+- Added bundle actions for full copy, Instagram schedule planning, Naver copy, and delete.
+- Today's task cards now recognize saved kit bundles as a first-priority action.
+
+Why it matters:
+- Saebom's "딸깍 패키지" direction only works if outputs stay connected after generation.
+- Pilot owners can return to one campaign bundle instead of hunting for separate drafts.
+- This prepares Bloom for the v0.6 simplified "딸깍 / 저장함 / 내 매장" navigation.
+
 ## Tooling Notes
 
 - GitHub remains the source for version control and PR review.

@@ -518,8 +518,12 @@
               <h2 class="section-title">🗂️ 이번 주 문안 저장함</h2>
               <div class="draft-board-sub">AI가 만든 인스타·네이버 문안을 저장하고, 복사/예약/게시완료 상태를 관리해요.</div>
             </div>
-            <button class="btn btn-secondary" onclick="seedWeeklyDrafts()">✨ 예시 문안 채우기</button>
+            <div class="draft-board-actions">
+              <button class="btn btn-secondary" onclick="switchTab('ai')">⚡ 딸깍 키트 만들기</button>
+              <button class="btn btn-secondary" onclick="seedWeeklyDrafts()">✨ 예시 문안 채우기</button>
+            </div>
           </div>
+          <div class="kit-vault" id="marketing-kit-vault" aria-label="마케팅 키트 보관함"></div>
           <div class="draft-filter-row" id="draft-filter-row" aria-label="문안 저장함 필터">
             <button class="draft-filter-chip active" onclick="setDraftFilter('all', this)">전체</button>
             <button class="draft-filter-chip" onclick="setDraftFilter('instagram', this)">인스타</button>
