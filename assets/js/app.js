@@ -1599,7 +1599,17 @@
       try {
         const res = await fetch('/api/caption', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ tone, keyword })
+          body: JSON.stringify({
+            tone,
+            keyword,
+            storeName: state.settings.storeName,
+            category: state.settings.category || state.category,
+            region: state.settings.region,
+            mainOffer: state.settings.mainOffer,
+            targetCustomer: state.settings.targetCustomer,
+            brandTone: state.settings.brandTone,
+            description: state.settings.description,
+          })
         });
         if (!res.ok) throw new Error('API 오류');
         const data = await res.json();
@@ -1716,24 +1726,47 @@
       saveMarketingDraft({ channel: '주간 계획', text: aiIdeasResult, source: '콘텐츠 아이디어' });
     }
 
-    function aiGenerateNaverPlace() {
+    async function aiGenerateNaverPlace() {
       const topic = document.getElementById('ai-naver-topic').value.trim();
       const type = document.getElementById('ai-naver-type').value;
       if (!topic) { toast('✏️ 네이버 플레이스에 올릴 내용을 입력해주세요'); return; }
       if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-naver-btn', true, 'N 문안 만들기');
       const store = state.settings.storeName || '우리 매장';
-      const templates = {
-        '소식': `📢 ${store} 소식\n\n${topic}\n\n처음 방문하시는 분도 편하게 오실 수 있도록 준비해둘게요. 궁금한 점은 네이버 톡톡 또는 DM으로 문의해주세요.\n\n#네이버플레이스 #소상공인 #오늘의소식`,
-        '쿠폰': `🎟️ ${store} 방문 쿠폰 안내\n\n${topic}\n\n네이버 플레이스에서 쿠폰을 확인하고 방문 시 보여주세요. 작은 혜택이지만 감사한 마음을 담았습니다.`,
-        '리뷰답글': `소중한 리뷰 정말 감사합니다.\n\n${topic}\n\n방문해주신 시간이 좋은 기억으로 남았다니 저희도 큰 힘이 됩니다. 다음에도 더 따뜻하게 맞이하겠습니다.`,
-        '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`
-      };
-      aiNaverResult = templates[type] || templates['소식'];
-      document.getElementById('ai-naver-text').textContent = aiNaverResult;
-      document.getElementById('ai-naver-result').classList.add('show');
-      setAIBtnLoading('ai-naver-btn', false, 'N 문안 만들기');
-      toast('✅ 네이버 플레이스 문안 생성 완료!');
+      try {
+        const res = await fetch('/api/naver-place', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic,
+            type,
+            storeName: state.settings.storeName,
+            category: state.settings.category || state.category,
+            region: state.settings.region,
+            mainOffer: state.settings.mainOffer,
+            targetCustomer: state.settings.targetCustomer,
+            brandTone: state.settings.brandTone,
+            description: state.settings.description,
+          })
+        });
+        if (!res.ok) throw new Error('API 오류');
+        const data = await res.json();
+        aiNaverResult = data.text || '';
+        toast('✅ 네이버 플레이스 AI 문안 생성 완료!');
+      } catch {
+        const templates = {
+          '소식': `📢 ${store} 소식\n\n${topic}\n\n처음 방문하시는 분도 편하게 오실 수 있도록 준비해둘게요. 궁금한 점은 네이버 톡톡 또는 DM으로 문의해주세요.\n\n#네이버플레이스 #소상공인 #오늘의소식`,
+          '쿠폰': `🎟️ ${store} 방문 쿠폰 안내\n\n${topic}\n\n네이버 플레이스에서 쿠폰을 확인하고 방문 시 보여주세요. 작은 혜택이지만 감사한 마음을 담았습니다.`,
+          '리뷰답글': `소중한 리뷰 정말 감사합니다.\n\n${topic}\n\n방문해주신 시간이 좋은 기억으로 남았다니 저희도 큰 힘이 됩니다. 다음에도 더 따뜻하게 맞이하겠습니다.`,
+          '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`
+        };
+        aiNaverResult = templates[type] || templates['소식'];
+        toast('✅ 네이버 플레이스 문안 생성 완료! (오프라인 모드)');
+      } finally {
+        document.getElementById('ai-naver-text').textContent = aiNaverResult;
+        document.getElementById('ai-naver-result').classList.add('show');
+        setAIBtnLoading('ai-naver-btn', false, 'N 문안 만들기');
+      }
     }
 
     function aiCopyNaverPlace() {

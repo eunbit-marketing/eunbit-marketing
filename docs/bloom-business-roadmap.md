@@ -162,6 +162,21 @@ Decision:
 
 - Before adding more product depth, Bloom needs a clear page that explains the pilot offer to real store owners. v0.5.2 makes the production link easier to send and discuss in 1:1 pilot outreach.
 
+### v0.5.3 AI Prompt Foundation and Naver Place API
+
+Implemented:
+
+- Added shared prompt backdata for category-specific customer pains, trust signals, recommended words, and avoid rules.
+- Rebuilt the Instagram caption API so generation uses store context instead of tone alone.
+- Added a real `/api/naver-place` endpoint for Naver Place writing.
+- Connected the frontend Naver Place tool to the new API while preserving offline fallback templates.
+- Added Naver Place profile introduction generation as a new output type.
+- Standardized AI model selection through `ANTHROPIC_MODEL` with `claude-sonnet-4-20250514` as the default.
+
+Decision:
+
+- Before the full v0.6 "딸깍" UI rewrite, Bloom needs stronger AI writing foundations. Naver Place should be treated as a first-class channel, not a fallback template inside the browser.
+
 ### v1.0 Pilot Launch
 
 Goal: Launch to 3-5 real stores and learn from actual usage.

@@ -1,3 +1,5 @@
+import { DEFAULT_MODEL } from './_prompt-data.js';
+
 export default async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -104,7 +106,7 @@ export default async (req, res) => {
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-1-20250805',
+        model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: 200,
         messages: messages
       })
