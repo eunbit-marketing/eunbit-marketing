@@ -312,11 +312,14 @@
       item.addEventListener('click', () => applyStudioIdea(item.dataset.studioIdea));
     });
 
+    document.getElementById('studio-topic')?.addEventListener('input', () => updateStudioAutoType());
+
     document.querySelectorAll('.studio-moods [data-mood]').forEach(item => {
       item.addEventListener('click', () => selectStudioMood(item.dataset.mood, item));
     });
 
     document.getElementById('studio-generate-btn')?.addEventListener('click', () => generateStudioKit());
+    updateStudioAutoType();
 
     document.querySelectorAll('[data-storage-view]').forEach(item => {
       item.addEventListener('click', () => setStorageView(item.dataset.storageView, item));
@@ -1946,7 +1949,28 @@
       if (!input) return;
       input.value = text;
       input.focus();
+      updateStudioAutoType();
       toast('주제를 넣었어요. 분위기만 고르면 바로 만들 수 있어요.');
+    }
+
+    function inferStudioNaverType(topic) {
+      const text = String(topic || '').toLowerCase();
+      if (/리뷰|후기|감사|답글|평점/.test(text)) return { label: '리뷰 답글형', hint: '고객 후기나 감사 답글 중심으로 정리해요' };
+      if (/쿠폰|할인|혜택|이벤트|첫 방문|첫방문|증정/.test(text)) return { label: '쿠폰 안내형', hint: '혜택 조건과 사용 방법을 빠뜨리지 않게 잡아요' };
+      if (/주간|이번 주|이번주|계획|일정|콘텐츠/.test(text)) return { label: '주간계획형', hint: '인스타와 네이버를 함께 쓰는 일정으로 묶어요' };
+      if (/소개|프로필|매장|브랜드|처음/.test(text)) return { label: '프로필 소개형', hint: '처음 보는 고객이 이해하기 쉽게 소개해요' };
+      return { label: '네이버 소식형', hint: '방문 전 필요한 정보와 문의 방법을 중심으로 써요' };
+    }
+
+    function updateStudioAutoType() {
+      const topic = document.getElementById('studio-topic')?.value || '';
+      const target = document.getElementById('studio-auto-type');
+      if (!target) return;
+      const inferred = inferStudioNaverType(topic);
+      target.innerHTML = `
+        <span>Bloom 자동 판단</span>
+        <strong>${escapeHtml(inferred.label)}</strong>
+        <small>${escapeHtml(inferred.hint)}</small>`;
     }
 
     function selectStudioMood(mood, el) {
