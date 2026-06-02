@@ -1098,7 +1098,14 @@
             ${banners.length ? `
               <div class="kit-banner-row">
                 ${banners.slice(0, 3).map((banner, idx) => `
-                  ${renderBannerPreview(banner, idx, `copyMarketingKitBanner(${kit.id}, ${idx})`, true)}
+                  ${renderBannerPreview(
+                    banner,
+                    idx,
+                    `copyMarketingKitBanner(${kit.id}, ${idx})`,
+                    true,
+                    `copyMarketingKitBannerPart(${kit.id}, ${idx}, 'headline')`,
+                    `copyMarketingKitBannerPart(${kit.id}, ${idx}, 'cta')`
+                  )}
                 `).join('')}
               </div>` : ''}
             <div class="kit-actions">
@@ -1123,6 +1130,13 @@
       if (!banner) return;
       const text = `${banner.headline}\n${banner.subline}\n${banner.cta}`;
       navigator.clipboard.writeText(text).then(() => toast('🖼️ 배너 문구를 복사했어요'));
+    }
+
+    function copyMarketingKitBannerPart(id, index, part) {
+      const kit = findMarketingKit(id);
+      const banner = kit?.bannerTemplates?.[index];
+      if (!banner) return;
+      copyBannerTemplatePart(banner, part);
     }
 
     function useMarketingKitInstagram(id) {
@@ -2065,19 +2079,31 @@
       ];
     }
 
-    function renderBannerPreview(banner, idx, onClick, compact = false) {
+    function renderBannerPreview(banner, idx, copyAll, compact = false, copyHeadline = '', copyCta = '') {
       const style = escapeHtml(banner.style || 'soft');
       const name = escapeHtml(banner.name || `템플릿 ${idx + 1}`);
       const headline = escapeHtml(banner.headline || '');
       const subline = escapeHtml(banner.subline || '');
       const cta = escapeHtml(banner.cta || '');
       return `
-        <button class="banner-preview ${style}${compact ? ' compact' : ''}" onclick="${onClick}">
+        <article class="banner-preview ${style}${compact ? ' compact' : ''}">
           <span class="banner-preview-type">${name}</span>
           <strong>${headline}</strong>
           <em>${subline}</em>
           <small>${cta}</small>
-        </button>`;
+          <div class="banner-preview-actions" aria-label="${name} 복사 옵션">
+            <button onclick="${copyAll}">전체</button>
+            ${copyHeadline ? `<button onclick="${copyHeadline}">제목</button>` : ''}
+            ${copyCta ? `<button onclick="${copyCta}">CTA</button>` : ''}
+          </div>
+        </article>`;
+    }
+
+    function copyBannerTemplatePart(banner, part) {
+      const partLabels = { headline: '제목', subline: '보조문구', cta: 'CTA' };
+      const value = (banner?.[part] || '').trim();
+      if (!value) return;
+      navigator.clipboard.writeText(value).then(() => toast(`🖼️ 배너 ${partLabels[part] || '문구'}를 복사했어요`));
     }
 
     function buildFallbackMarketingKit(topic) {
@@ -2139,7 +2165,14 @@
               <p>카드뉴스 첫 장이나 네이버 소식 이미지에 바로 얹을 수 있는 문구예요. 카드를 누르면 복사됩니다.</p>
               <div class="banner-template-grid">
                 ${data.bannerTemplates.map((banner, idx) => `
-                  ${renderBannerPreview(banner, idx, `copyCurrentMarketingKitBanner(${idx})`)}
+                  ${renderBannerPreview(
+                    banner,
+                    idx,
+                    `copyCurrentMarketingKitBanner(${idx})`,
+                    false,
+                    `copyCurrentMarketingKitBannerPart(${idx}, 'headline')`,
+                    `copyCurrentMarketingKitBannerPart(${idx}, 'cta')`
+                  )}
                 `).join('')}
               </div>
             </div>
@@ -2167,6 +2200,12 @@
       if (!banner) return;
       navigator.clipboard.writeText(`${banner.headline}\n${banner.subline}\n${banner.cta}`)
         .then(() => toast('🖼️ 배너 문구를 복사했어요'));
+    }
+
+    function copyCurrentMarketingKitBannerPart(index, part) {
+      const banner = aiMarketingKit?.bannerTemplates?.[index];
+      if (!banner) return;
+      copyBannerTemplatePart(banner, part);
     }
 
     function aiSaveMarketingKitDrafts() {
