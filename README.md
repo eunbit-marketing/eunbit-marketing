@@ -24,7 +24,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.3 | `36c84ab` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `ai-naver-period`, `naver-detail-grid`, and `getNaverPlaceDetails`. |
 | v0.6.4 | `192d2c9` | Confirmed on live site, 2026-06-02 KST | Production JS/CSS include `copyCurrentMarketingKitBannerPart`, `copyMarketingKitBannerPart`, and `banner-preview-actions`. |
 | v0.6.5 | `ba2908d` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `studio-detail-grid`, `studio-period`, `getStudioDetails`, and `getMarketingKitDetails`. |
-| v0.6.6 | `7a5e2bc` | Pending production check | Clarify that studio detail inputs are optional and Naver Place tool is for advanced refinement. |
+| v0.6.6 | `7a5e2bc` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `선택 입력이에요`, `전용 도구예요`, and `studio-detail-note`. |
 
 ## Product Direction
 
