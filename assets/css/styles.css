@@ -969,6 +969,18 @@
     }
     .studio-quick-row button:hover,
     .studio-moods button:hover { background: rgba(255,255,255,.20); }
+    .studio-detail-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px; margin-top: 12px;
+    }
+    .studio-detail-input {
+      width: 100%; min-height: 42px; border: 1px solid rgba(255,255,255,.22);
+      border-radius: 12px; padding: 10px 11px; background: rgba(255,255,255,.14);
+      color: white; font-family: inherit; font-size: 12px; outline: none;
+    }
+    .studio-detail-input::placeholder { color: rgba(255,255,255,.72); }
+    .studio-detail-input:focus { box-shadow: 0 0 0 4px rgba(255,255,255,.16); }
+    .studio-detail-input.full { grid-column: 1 / -1; }
     .studio-side { display: grid; gap: 10px; align-content: start; }
     .studio-panel,
     .studio-readiness {
@@ -1632,6 +1644,7 @@
       .draft-board-actions .btn { flex: 1; justify-content: center; }
       .kit-preview-grid,
       .kit-banner-row,
+      .studio-detail-grid,
       .naver-detail-grid,
       .banner-template-grid { grid-template-columns: 1fr; }
       .one-click-studio { padding: 18px; border-radius: 18px; }

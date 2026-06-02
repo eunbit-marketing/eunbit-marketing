@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.4 banner copy actions candidate
-- Latest feature commit: `192d2c9` (`Add banner copy action buttons`)
+- Production baseline: v0.6.5 studio detail inputs candidate
+- Latest feature commit: pending v0.6.5 deployment
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -23,6 +23,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.2 | `620ca32` | Confirmed on live site, 2026-06-02 KST | Banner preview card rendering is present in the production JS. |
 | v0.6.3 | `36c84ab` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `ai-naver-period`, `naver-detail-grid`, and `getNaverPlaceDetails`. |
 | v0.6.4 | `192d2c9` | Confirmed on live site, 2026-06-02 KST | Production JS/CSS include `copyCurrentMarketingKitBannerPart`, `copyMarketingKitBannerPart`, and `banner-preview-actions`. |
+| v0.6.5 | Pending | Pending production check | One-click studio detail inputs feed marketing-kit prompts and fallback output. |
 
 ## Product Direction
 
@@ -78,4 +79,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.2: Turn saved banner copy into visual preview cards so pilot users can understand how the first image/card-news slide could look before copying text.
 - v0.6.3: Add Naver Place detail inputs for period, benefit, contact method, and tone so local-store drafts become more concrete before pilot outreach.
 - v0.6.4: Clarify banner copy behavior with separate full, headline, and CTA copy buttons in generated kits and saved kit cards.
+- v0.6.5: Extend period, benefit, and contact detail inputs into the One-click Studio so the main creation flow produces more concrete Naver/coupon kit output.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

@@ -1971,17 +1971,39 @@
       const input = document.getElementById('studio-topic');
       const topic = input?.value.trim() || '';
       if (!topic) { toast('오늘 홍보할 내용을 먼저 적어주세요'); return; }
+      const details = getStudioDetails();
       const kitTopic = document.getElementById('ai-kit-topic');
       const kitTone = document.getElementById('ai-kit-tone');
       if (kitTopic) kitTopic.value = topic;
       if (kitTone) kitTone.value = state.studioMood || state.settings.brandTone || '따뜻한';
+      syncNaverDetailInputs(details);
       await aiGenerateMarketingKit();
       document.getElementById('ai-kit-result')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function getStudioDetails() {
+      return {
+        period: document.getElementById('studio-period')?.value.trim() || '',
+        benefit: document.getElementById('studio-benefit')?.value.trim() || '',
+        contact: document.getElementById('studio-contact')?.value.trim() || '',
+      };
+    }
+
+    function syncNaverDetailInputs(details) {
+      const period = document.getElementById('ai-naver-period');
+      const benefit = document.getElementById('ai-naver-benefit');
+      const contact = document.getElementById('ai-naver-contact');
+      const tone = document.getElementById('ai-naver-tone');
+      if (period && details.period) period.value = details.period;
+      if (benefit && details.benefit) benefit.value = details.benefit;
+      if (contact && details.contact) contact.value = details.contact;
+      if (tone) tone.value = state.studioMood || '';
     }
 
     async function aiGenerateMarketingKit() {
       const topic = document.getElementById('ai-kit-topic').value.trim();
       const tone = document.getElementById('ai-kit-tone').value;
+      const details = getMarketingKitDetails();
       if (!topic) { toast('✏️ 키트로 만들 소식을 입력해주세요'); return; }
       if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-kit-btn', true, '⚡ 키트 만들기');
@@ -1999,6 +2021,7 @@
             targetCustomer: state.settings.targetCustomer,
             brandTone: state.settings.brandTone,
             description: state.settings.description,
+            details,
           })
         });
         if (!res.ok) throw new Error('API 오류');
@@ -2006,13 +2029,22 @@
         aiMarketingKit = normalizeMarketingKit(data.kit, topic);
         toast('✅ 마케팅 키트 생성 완료!');
       } catch {
-        aiMarketingKit = buildFallbackMarketingKit(topic);
+        aiMarketingKit = buildFallbackMarketingKit(topic, details);
         toast('✅ 마케팅 키트 생성 완료! (오프라인 모드)');
       } finally {
         document.getElementById('ai-kit-text').innerHTML = renderMarketingKit(aiMarketingKit);
         document.getElementById('ai-kit-result').classList.add('show');
         setAIBtnLoading('ai-kit-btn', false, '⚡ 키트 만들기');
       }
+    }
+
+    function getMarketingKitDetails() {
+      const studio = getStudioDetails();
+      return {
+        period: studio.period || document.getElementById('ai-naver-period')?.value.trim() || '',
+        benefit: studio.benefit || document.getElementById('ai-naver-benefit')?.value.trim() || '',
+        contact: studio.contact || document.getElementById('ai-naver-contact')?.value.trim() || '',
+      };
     }
 
     function normalizeMarketingKit(kit, topic) {
@@ -2106,22 +2138,26 @@
       navigator.clipboard.writeText(value).then(() => toast(`🖼️ 배너 ${partLabels[part] || '문구'}를 복사했어요`));
     }
 
-    function buildFallbackMarketingKit(topic) {
+    function buildFallbackMarketingKit(topic, details = {}) {
       const store = state.settings.storeName || '우리 매장';
+      const period = details.period ? `\n기간: ${details.period}` : '';
+      const benefit = details.benefit ? `\n혜택: ${details.benefit}` : '';
+      const contact = details.contact || '네이버 플레이스에서 편하게 문의해주세요';
+      const detailBlock = `${period}${benefit}`.trim();
       return normalizeMarketingKit({
         title: `${store} 딸깍 마케팅 키트`,
         instagram: {
-          caption: `${topic}\n\n${store}에서 오늘 준비한 소식이에요. 처음 보시는 분도 편하게 문의하실 수 있도록 자세히 안내해둘게요.\n\n궁금한 점은 댓글이나 DM으로 남겨주세요.`,
+          caption: `${topic}\n\n${store}에서 오늘 준비한 소식이에요. 처음 보시는 분도 편하게 문의하실 수 있도록 자세히 안내해둘게요.${details.benefit ? `\n\n${details.benefit}도 함께 확인해보세요.` : ''}\n\n궁금한 점은 댓글이나 DM으로 남겨주세요.`,
           hashtags: ['#소상공인', '#동네가게', '#오늘의소식', '#네이버플레이스', '#인스타마케팅'],
         },
         naver: {
           title: `${store} 소식`,
-          body: `${topic}\n\n처음 방문하시는 분도 쉽게 이해하실 수 있도록 준비했습니다.`,
-          cta: '예약과 문의는 네이버 플레이스에서 편하게 남겨주세요.',
+          body: `${topic}${detailBlock ? `\n\n${detailBlock}` : ''}\n\n처음 방문하시는 분도 쉽게 이해하실 수 있도록 준비했습니다.`,
+          cta: `예약과 문의는 ${contact}.`,
         },
         coupon: {
-          title: '첫 방문 혜택 안내',
-          body: '방문 전 네이버 플레이스에서 문의하시면 현재 가능한 혜택을 편하게 안내드릴게요.',
+          title: details.benefit || '첫 방문 혜택 안내',
+          body: `${details.period ? `${details.period}까지 ` : ''}방문 전 ${contact} 혜택 조건을 확인해 주세요.`,
         },
         reviewReply: '소중한 리뷰 정말 감사합니다. 남겨주신 말씀 덕분에 더 정성껏 준비할 힘을 얻었습니다.',
         visualDirection: '대표 상품이나 매장 입구가 선명하게 보이는 밝은 사진을 사용하세요.',

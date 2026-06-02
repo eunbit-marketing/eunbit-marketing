@@ -20,6 +20,7 @@ export default async (req, res) => {
       targetCustomer,
       brandTone,
       description,
+      details = {},
     } = req.body || {};
 
     if (!topic.trim()) return res.status(400).json({ error: 'topic required' });
@@ -30,13 +31,14 @@ export default async (req, res) => {
     const context = buildStoreContext({
       storeName, category, region, mainOffer, targetCustomer, brandTone, description, tone,
     });
+    const writingDetails = normalizeKitDetails(details);
 
     const { response, data, model } = await callAnthropicMessages(apiKey, {
       model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
       max_tokens: 2800,
       temperature: 0.72,
-      system: buildKitSystem(context),
-      messages: [{ role: 'user', content: buildKitPrompt({ context, topic, tone }) }],
+      system: buildKitSystem(context, writingDetails),
+      messages: [{ role: 'user', content: buildKitPrompt({ context, topic, tone, writingDetails }) }],
     });
 
     if (!response.ok) {
@@ -52,7 +54,16 @@ export default async (req, res) => {
   }
 };
 
-function buildKitSystem(context) {
+function normalizeKitDetails(details = {}) {
+  const clean = (value) => String(value || '').trim();
+  return {
+    period: clean(details.period),
+    benefit: clean(details.benefit),
+    contact: clean(details.contact),
+  };
+}
+
+function buildKitSystem(context, writingDetails) {
   const { categoryData } = context;
   return `당신은 Bloom의 소상공인 원클릭 마케팅 키트 작성자입니다.
 
@@ -69,6 +80,9 @@ function buildKitSystem(context) {
 - 신뢰 포인트: ${categoryData.trustSignals.join(' / ')}
 - 권장 단어: ${categoryData.words.join(' / ')}
 - 피해야 할 표현: ${categoryData.avoid.join(' / ')}
+- 이번 키트 기간/일정: ${writingDetails.period || '미입력'}
+- 이번 키트 혜택/가격: ${writingDetails.benefit || '미입력'}
+- 문의/예약 방법: ${writingDetails.contact || '네이버 플레이스 문의/예약'}
 
 작성 원칙:
 1. 인스타그램은 감정과 장면을, 네이버 플레이스는 정보와 방문 결정을 돕는 문장으로 씁니다.
@@ -77,7 +91,7 @@ function buildKitSystem(context) {
 4. 응답은 JSON만 제공합니다. 마크다운 코드블록이나 설명 문장은 붙이지 않습니다.`;
 }
 
-function buildKitPrompt({ context, topic, tone }) {
+function buildKitPrompt({ context, topic, tone, writingDetails }) {
   return `아래 주제로 인스타그램과 네이버 플레이스를 함께 운영할 수 있는 마케팅 키트를 만들어주세요.
 
 주제:
@@ -85,6 +99,16 @@ ${topic}
 
 선호 톤:
 ${tone || context.brandTone}
+
+세부 조건:
+- 기간/일정: ${writingDetails.period || '명시된 기간 없음'}
+- 혜택/가격: ${writingDetails.benefit || '명시된 혜택 없음'}
+- 문의 방법: ${writingDetails.contact || '네이버 플레이스 문의/예약'}
+
+반영 규칙:
+- 기간/혜택이 입력되어 있으면 네이버 소식, 쿠폰 문안, 체크리스트에 빠뜨리지 않습니다.
+- 문의 방법이 입력되어 있으면 네이버 CTA와 쿠폰 안내에 자연스럽게 넣습니다.
+- 입력되지 않은 혜택은 새로 지어내지 말고 문의 유도로 처리합니다.
 
 반드시 아래 JSON 형식으로만 답하세요:
 {
