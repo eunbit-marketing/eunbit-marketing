@@ -20,6 +20,7 @@ export default async (req, res) => {
       targetCustomer,
       brandTone,
       description,
+      details = {},
     } = req.body || {};
 
     if (!topic.trim()) return res.status(400).json({ error: 'topic required' });
@@ -30,16 +31,17 @@ export default async (req, res) => {
     const context = buildStoreContext({
       storeName, category, region, mainOffer, targetCustomer, brandTone, description,
     });
+    const writingDetails = normalizeWritingDetails(details);
     const typeGuide = NAVER_PLACE_TYPES[type] || NAVER_PLACE_TYPES['소식'];
 
     const { response, data, model } = await callAnthropicMessages(apiKey, {
         model: process.env.ANTHROPIC_MODEL || DEFAULT_MODEL,
         max_tokens: type === '주간계획' ? 1300 : 950,
         temperature: 0.68,
-        system: buildNaverSystem(context),
+        system: buildNaverSystem(context, writingDetails),
         messages: [{
           role: 'user',
-          content: buildNaverPrompt({ context, type, typeGuide, topic }),
+          content: buildNaverPrompt({ context, type, typeGuide, topic, writingDetails }),
         }],
     });
 
@@ -60,7 +62,17 @@ export default async (req, res) => {
   }
 };
 
-function buildNaverSystem(context) {
+function normalizeWritingDetails(details = {}) {
+  const clean = (value) => String(value || '').trim();
+  return {
+    period: clean(details.period),
+    benefit: clean(details.benefit),
+    contact: clean(details.contact),
+    tone: clean(details.tone),
+  };
+}
+
+function buildNaverSystem(context, writingDetails) {
   const { categoryData } = context;
   return `당신은 Bloom의 네이버 플레이스 마케팅 작성 도우미입니다.
 
@@ -77,17 +89,21 @@ function buildNaverSystem(context) {
 - 신뢰 포인트: ${categoryData.trustSignals.join(' / ')}
 - 권장 단어: ${categoryData.words.join(' / ')}
 - 피해야 할 표현: ${categoryData.avoid.join(' / ')}
+- 이번 문안 기간/일정: ${writingDetails.period || '미입력'}
+- 이번 문안 혜택/가격: ${writingDetails.benefit || '미입력'}
+- 문의/예약 방법: ${writingDetails.contact || '네이버 플레이스 문의/예약'}
+- 요청 톤: ${writingDetails.tone || context.brandTone}
 
 네이버 플레이스 작성 원칙:
 1. 인스타그램보다 정보가 더 분명해야 합니다.
-2. 고객이 방문 전 궁금해할 정보(무엇, 언제, 어디, 예약/문의 방법)를 빠뜨리지 않습니다.
+2. 고객이 방문 전 궁금해할 정보(무엇, 언제, 어디, 기간/혜택, 예약/문의 방법)를 빠뜨리지 않습니다.
 3. 제목 또는 첫 줄은 20자 안팎으로 짧고 명확하게 씁니다.
 4. 과장, 효과 보장, 의료적 효능, 허위 할인 표현을 피합니다.
 5. 자동 발행을 암시하지 말고, 사장님이 직접 확인 후 복사해 쓰는 문장으로 작성합니다.
 6. 응답은 JSON만 제공합니다. 마크다운 코드블록, 별도 설명, 앞뒤 문장은 붙이지 않습니다.`;
 }
 
-function buildNaverPrompt({ context, type, typeGuide, topic }) {
+function buildNaverPrompt({ context, type, typeGuide, topic, writingDetails }) {
   return `네이버 플레이스 ${type} 문안을 작성해주세요.
 
 작성 목적:
@@ -95,6 +111,12 @@ ${typeGuide.goal}
 
 오늘 넣을 내용:
 ${topic}
+
+세부 조건:
+- 기간/일정: ${writingDetails.period || '명시된 기간 없음'}
+- 혜택/가격: ${writingDetails.benefit || '명시된 혜택 없음'}
+- 문의 방법: ${writingDetails.contact || '네이버 플레이스 문의/예약'}
+- 문체 톤: ${writingDetails.tone || context.brandTone}
 
 권장 구조:
 ${typeGuide.structure.map((item, index) => `${index + 1}. ${item}`).join('\n')}
@@ -105,6 +127,7 @@ ${typeGuide.length}
 추가 조건:
 - 매장명 "${context.storeName}"을 자연스럽게 포함합니다.
 - 지역 "${context.region || '지역'}" 정보가 도움이 되면 자연스럽게 포함합니다.
+- 기간/혜택/문의 방법이 입력되어 있으면 본문 또는 CTA에 빠뜨리지 말고 넣습니다.
 - 문의/예약/방문 안내를 마지막에 넣습니다.
 - 리뷰 답글이면 고객을 탓하거나 변명하지 말고, 감사와 개선 의지를 담습니다.
 - 주간계획이면 인스타그램과 네이버 플레이스를 함께 쓰는 일정으로 구성합니다.

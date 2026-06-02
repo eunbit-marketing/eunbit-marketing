@@ -1175,6 +1175,18 @@
                 <option value="주간계획">🗓️ 주간 마케팅 계획</option>
                 <option value="프로필">🏪 매장 프로필 소개</option>
               </select>
+              <div class="naver-detail-grid" aria-label="네이버 플레이스 세부 조건">
+                <input class="ai-tool-input" id="ai-naver-period" placeholder="기간/일정 예: 6월 10일까지">
+                <input class="ai-tool-input" id="ai-naver-benefit" placeholder="혜택/가격 예: 첫 방문 10% 쿠폰">
+                <input class="ai-tool-input" id="ai-naver-contact" placeholder="문의 방법 예: 네이버 톡톡, 전화 예약">
+                <select class="ai-tool-select" id="ai-naver-tone">
+                  <option value="">매장 톤 그대로</option>
+                  <option value="따뜻한">따뜻한</option>
+                  <option value="정보형">정보형</option>
+                  <option value="감성적">감성적</option>
+                  <option value="트렌디한">트렌디한</option>
+                </select>
+              </div>
               <button class="ai-tool-btn" id="ai-naver-btn" onclick="aiGenerateNaverPlace()">N 문안 만들기</button>
               <div class="ai-tool-result" id="ai-naver-result">
                 <div id="ai-naver-text"></div>

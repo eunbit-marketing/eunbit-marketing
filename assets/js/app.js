@@ -2331,6 +2331,7 @@
     async function aiGenerateNaverPlace() {
       const topic = document.getElementById('ai-naver-topic').value.trim();
       const type = document.getElementById('ai-naver-type').value;
+      const details = getNaverPlaceDetails();
       if (!topic) { toast('✏️ 네이버 플레이스에 올릴 내용을 입력해주세요'); return; }
       if (!tryUseFreeQuota('aiGenerations')) return;
       setAIBtnLoading('ai-naver-btn', true, 'N 문안 만들기');
@@ -2347,8 +2348,9 @@
             region: state.settings.region,
             mainOffer: state.settings.mainOffer,
             targetCustomer: state.settings.targetCustomer,
-            brandTone: state.settings.brandTone,
+            brandTone: details.tone || state.settings.brandTone,
             description: state.settings.description,
+            details,
           })
         });
         if (!res.ok) throw new Error('API 오류');
@@ -2357,14 +2359,7 @@
         aiNaverResult = aiNaverPackage.copyText;
         toast('✅ 네이버 플레이스 AI 문안 생성 완료!');
       } catch {
-        const templates = {
-          '소식': `📢 ${store} 소식\n\n${topic}\n\n처음 방문하시는 분도 편하게 오실 수 있도록 준비해둘게요. 궁금한 점은 네이버 톡톡 또는 DM으로 문의해주세요.\n\n#네이버플레이스 #소상공인 #오늘의소식`,
-          '쿠폰': `🎟️ ${store} 방문 쿠폰 안내\n\n${topic}\n\n네이버 플레이스에서 쿠폰을 확인하고 방문 시 보여주세요. 작은 혜택이지만 감사한 마음을 담았습니다.`,
-          '리뷰답글': `소중한 리뷰 정말 감사합니다.\n\n${topic}\n\n방문해주신 시간이 좋은 기억으로 남았다니 저희도 큰 힘이 됩니다. 다음에도 더 따뜻하게 맞이하겠습니다.`,
-          '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`,
-          '프로필': `🏪 ${store} 소개\n\n${topic}\n\n처음 방문하시는 분도 편하게 문의하실 수 있도록 네이버 플레이스에서 운영 시간과 예약 정보를 확인해주세요.`
-        };
-        aiNaverResult = templates[type] || templates['소식'];
+        aiNaverResult = buildFallbackNaverText({ store, topic, type, details });
         aiNaverPackage = normalizeNaverPackage(null, aiNaverResult, type, topic);
         toast('✅ 네이버 플레이스 문안 생성 완료! (오프라인 모드)');
       } finally {
@@ -2372,6 +2367,31 @@
         document.getElementById('ai-naver-result').classList.add('show');
         setAIBtnLoading('ai-naver-btn', false, 'N 문안 만들기');
       }
+    }
+
+    function getNaverPlaceDetails() {
+      return {
+        period: document.getElementById('ai-naver-period')?.value.trim() || '',
+        benefit: document.getElementById('ai-naver-benefit')?.value.trim() || '',
+        contact: document.getElementById('ai-naver-contact')?.value.trim() || '',
+        tone: document.getElementById('ai-naver-tone')?.value || '',
+      };
+    }
+
+    function buildFallbackNaverText({ store, topic, type, details }) {
+      const period = details.period ? `\n기간: ${details.period}` : '';
+      const benefit = details.benefit ? `\n혜택: ${details.benefit}` : '';
+      const contact = details.contact || '네이버 톡톡 또는 전화로 문의해주세요';
+      const detailLines = `${period}${benefit}`.trim();
+      const detailBlock = detailLines ? `\n\n${detailLines}` : '';
+      const templates = {
+        '소식': `📢 ${store} 소식\n\n${topic}${detailBlock}\n\n처음 방문하시는 분도 편하게 확인하실 수 있도록 준비해둘게요. 궁금한 점은 ${contact}. \n\n#네이버플레이스 #소상공인 #오늘의소식`,
+        '쿠폰': `🎟️ ${store} 방문 쿠폰 안내\n\n${topic}${detailBlock}\n\n방문 전 네이버 플레이스에서 혜택 조건을 확인하고 이용해주세요. 작은 혜택이지만 감사한 마음을 담았습니다. 문의는 ${contact}.`,
+        '리뷰답글': `소중한 리뷰 정말 감사합니다.\n\n${topic}\n\n방문해주신 시간이 좋은 기억으로 남았다니 저희도 큰 힘이 됩니다. 남겨주신 말씀은 더 꼼꼼히 준비하는 데 참고하겠습니다. 다음에도 편하게 찾아주세요.`,
+        '주간계획': `🗓️ 이번 주 마케팅 계획\n\n1. 월/화: 네이버 플레이스 소식 - ${topic}\n2. 수/목: 인스타그램 사진 게시물 + 해시태그\n3. 금: 고객 후기 또는 작업 과정 공유\n4. 주말: 쿠폰/예약 안내 재공지${detailBlock}\n\n목표는 어렵게 많이 하는 것이 아니라, 이번 주에 3번 꾸준히 보이는 거예요.`,
+        '프로필': `🏪 ${store} 소개\n\n${topic}${detailBlock}\n\n처음 방문하시는 분도 편하게 문의하실 수 있도록 네이버 플레이스에서 운영 시간과 예약 정보를 확인해주세요. 문의는 ${contact}.`
+      };
+      return templates[type] || templates['소식'];
     }
 
     function normalizeNaverPackage(pkg, fallbackText, type, topic) {

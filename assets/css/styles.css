@@ -1026,6 +1026,17 @@
     .ai-tool-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; resize: none; }
     .ai-tool-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(181,167,255,.15); }
     .ai-tool-select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; -webkit-appearance: none; cursor: pointer; }
+    .naver-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .naver-detail-grid .ai-tool-input,
+    .naver-detail-grid .ai-tool-select {
+      min-height: 42px;
+      padding: 10px 11px;
+      font-size: 12px;
+    }
     .ai-tool-btn {
       width: 100%; padding: 11px; border: none; border-radius: 12px;
       background: var(--grad-hero); color: white; font-size: 13px; font-weight: 700;
@@ -1608,6 +1619,7 @@
       .draft-board-actions .btn { flex: 1; justify-content: center; }
       .kit-preview-grid,
       .kit-banner-row,
+      .naver-detail-grid,
       .banner-template-grid { grid-template-columns: 1fr; }
       .one-click-studio { padding: 18px; border-radius: 18px; }
       .studio-main h2 { font-size: 28px; }
