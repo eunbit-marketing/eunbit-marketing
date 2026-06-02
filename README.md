@@ -22,7 +22,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.1 | `d68d2cc` | Confirmed on live site, 2026-06-02 KST | One-click studio hooks are present in the production JS/HTML. |
 | v0.6.2 | `620ca32` | Confirmed on live site, 2026-06-02 KST | Banner preview card rendering is present in the production JS. |
 | v0.6.3 | `36c84ab` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `ai-naver-period`, `naver-detail-grid`, and `getNaverPlaceDetails`. |
-| v0.6.4 | `192d2c9` | Pending production check | Banner cards expose separate full/headline/CTA copy actions. |
+| v0.6.4 | `192d2c9` | Confirmed on live site, 2026-06-02 KST | Production JS/CSS include `copyCurrentMarketingKitBannerPart`, `copyMarketingKitBannerPart`, and `banner-preview-actions`. |
 
 ## Product Direction
 
