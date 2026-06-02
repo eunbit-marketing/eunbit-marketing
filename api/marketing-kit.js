@@ -99,7 +99,14 @@ ${tone || context.brandTone}
     "cta": "문의/예약/방문 안내",
     "copyText": "네이버 플레이스에 그대로 복사할 전체 문안"
   },
+  "coupon": {
+    "title": "쿠폰 제목",
+    "body": "쿠폰이나 첫 방문 혜택에 바로 쓸 문안. 혜택이 불명확하면 과장하지 말고 문의 유도"
+  },
+  "reviewReply": "긍정 리뷰에 답글로 쓸 수 있는 짧은 감사 문안",
   "visualDirection": "사진이나 배너를 고를 때 참고할 방향 1문장",
+  "bgmSuggestion": "릴스나 숏폼에 어울리는 BGM/무드 제안 1문장. 특정 곡명보다 분위기 중심",
+  "bestTime": "추천 게시 시간 1문장",
   "checklist": ["게시 전 확인 1", "게시 전 확인 2", "게시 전 확인 3"]
 }`;
 }
@@ -118,7 +125,14 @@ function parseMarketingKit(rawText, { context, topic }) {
       cta: '문의와 예약은 네이버 플레이스에서 편하게 남겨주세요.',
       copyText: text || topic,
     },
+    coupon: {
+      title: '첫 방문 혜택 안내',
+      body: '혜택 조건이 정해져 있다면 기간과 사용 방법을 확인한 뒤 안내하세요.',
+    },
+    reviewReply: '소중한 리뷰 감사합니다. 남겨주신 말씀 덕분에 더 따뜻하게 준비할 힘을 얻었습니다.',
     visualDirection: '매장 분위기와 대표 상품이 한눈에 보이는 사진을 사용하세요.',
+    bgmSuggestion: '차분하고 밝은 어쿠스틱 또는 따뜻한 브이로그 무드의 BGM이 잘 어울립니다.',
+    bestTime: '평일 점심 전후 또는 저녁 7~9시에 먼저 올려보세요.',
     checklist: ['운영 시간과 날짜를 확인하세요', '가격/혜택 문구가 실제와 맞는지 확인하세요', '문의 채널이 맞는지 확인하세요'],
   }, { context, topic });
 }
@@ -140,6 +154,7 @@ function tryParseJson(text) {
 function normalizeKit(input, { context, topic }) {
   const instagram = input.instagram || {};
   const naver = input.naver || {};
+  const coupon = input.coupon || {};
   const hashtags = Array.isArray(instagram.hashtags)
     ? instagram.hashtags.map(tag => String(tag || '').trim()).filter(Boolean).slice(0, 12)
     : [];
@@ -160,7 +175,14 @@ function normalizeKit(input, { context, topic }) {
       cta: naverCta,
       copyText: naverCopyText,
     },
+    coupon: {
+      title: clean(coupon.title) || '첫 방문 혜택 안내',
+      body: clean(coupon.body) || '혜택 조건이 정해져 있다면 기간과 사용 방법을 확인한 뒤 안내하세요.',
+    },
+    reviewReply: clean(input.reviewReply) || '소중한 리뷰 감사합니다. 남겨주신 말씀 덕분에 더 따뜻하게 준비할 힘을 얻었습니다.',
     visualDirection: clean(input.visualDirection) || '매장 분위기와 대표 상품이 한눈에 보이는 사진을 사용하세요.',
+    bgmSuggestion: clean(input.bgmSuggestion) || '차분하고 밝은 어쿠스틱 또는 따뜻한 브이로그 무드의 BGM이 잘 어울립니다.',
+    bestTime: clean(input.bestTime) || '평일 점심 전후 또는 저녁 7~9시에 먼저 올려보세요.',
     checklist: Array.isArray(input.checklist)
       ? input.checklist.map(clean).filter(Boolean).slice(0, 4)
       : ['운영 시간과 날짜를 확인하세요', '가격/혜택 문구가 실제와 맞는지 확인하세요', '문의 채널이 맞는지 확인하세요'],
