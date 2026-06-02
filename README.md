@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.6 studio guidance candidate
-- Latest feature commit: pending v0.6.6 deployment
+- Latest feature commit: `7a5e2bc` (`Clarify studio detail guidance`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -24,7 +24,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.3 | `36c84ab` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `ai-naver-period`, `naver-detail-grid`, and `getNaverPlaceDetails`. |
 | v0.6.4 | `192d2c9` | Confirmed on live site, 2026-06-02 KST | Production JS/CSS include `copyCurrentMarketingKitBannerPart`, `copyMarketingKitBannerPart`, and `banner-preview-actions`. |
 | v0.6.5 | `ba2908d` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `studio-detail-grid`, `studio-period`, `getStudioDetails`, and `getMarketingKitDetails`. |
-| v0.6.6 | Pending | Pending production check | Clarify that studio detail inputs are optional and Naver Place tool is for advanced refinement. |
+| v0.6.6 | `7a5e2bc` | Pending production check | Clarify that studio detail inputs are optional and Naver Place tool is for advanced refinement. |
 
 ## Product Direction
 
