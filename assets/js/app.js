@@ -1098,10 +1098,7 @@
             ${banners.length ? `
               <div class="kit-banner-row">
                 ${banners.slice(0, 3).map((banner, idx) => `
-                  <button class="kit-banner-chip ${escapeHtml(banner.style || '')}" onclick="copyMarketingKitBanner(${kit.id}, ${idx})">
-                    <strong>${escapeHtml(banner.headline || '')}</strong>
-                    <span>${escapeHtml(banner.cta || '')}</span>
-                  </button>
+                  ${renderBannerPreview(banner, idx, `copyMarketingKitBanner(${kit.id}, ${idx})`, true)}
                 `).join('')}
               </div>` : ''}
             <div class="kit-actions">
@@ -2068,6 +2065,21 @@
       ];
     }
 
+    function renderBannerPreview(banner, idx, onClick, compact = false) {
+      const style = escapeHtml(banner.style || 'soft');
+      const name = escapeHtml(banner.name || `템플릿 ${idx + 1}`);
+      const headline = escapeHtml(banner.headline || '');
+      const subline = escapeHtml(banner.subline || '');
+      const cta = escapeHtml(banner.cta || '');
+      return `
+        <button class="banner-preview ${style}${compact ? ' compact' : ''}" onclick="${onClick}">
+          <span class="banner-preview-type">${name}</span>
+          <strong>${headline}</strong>
+          <em>${subline}</em>
+          <small>${cta}</small>
+        </button>`;
+    }
+
     function buildFallbackMarketingKit(topic) {
       const store = state.settings.storeName || '우리 매장';
       return normalizeMarketingKit({
@@ -2123,15 +2135,11 @@
             <div class="marketing-kit-visual"><strong>사진/배너 방향</strong><br>${escapeHtml(data.visualDirection)}</div>
             <div class="marketing-kit-visual"><strong>BGM/무드</strong><br>${escapeHtml(data.bgmSuggestion)}<br><br><strong>추천 게시 시간</strong><br>${escapeHtml(data.bestTime)}</div>
             <div class="marketing-kit-banners">
-              <strong>복사용 배너 문구</strong>
+              <strong>배너 미리보기</strong>
+              <p>카드뉴스 첫 장이나 네이버 소식 이미지에 바로 얹을 수 있는 문구예요. 카드를 누르면 복사됩니다.</p>
               <div class="banner-template-grid">
                 ${data.bannerTemplates.map((banner, idx) => `
-                  <button class="banner-template ${escapeHtml(banner.style || '')}" onclick="copyCurrentMarketingKitBanner(${idx})">
-                    <span>${escapeHtml(banner.name || `템플릿 ${idx + 1}`)}</span>
-                    <strong>${escapeHtml(banner.headline || '')}</strong>
-                    <em>${escapeHtml(banner.subline || '')}</em>
-                    <small>${escapeHtml(banner.cta || '')}</small>
-                  </button>
+                  ${renderBannerPreview(banner, idx, `copyCurrentMarketingKitBanner(${idx})`)}
                 `).join('')}
               </div>
             </div>

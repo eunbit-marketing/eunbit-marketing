@@ -6,11 +6,11 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.1 one-click studio and expanded marketing-kit candidate
+- Production baseline: v0.6.2 banner preview card candidate
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
-- Figma baseline: v0.6.1 notes should track the one-click studio, expanded kit outputs, and vault tabs
+- Figma baseline: v0.6.2 notes should track one-click studio plus banner preview cards
 - Source of truth for implementation: local code, GitHub branch, and Vercel preview
 
 ## Product Direction
@@ -64,4 +64,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.5: Prepare paid MVP packaging around 9,900 KRW/month (started: Free usage counters, Pro comparison, pilot pricing modal, 3-minute onboarding result flow, pilot proposal page, AI-backed Naver Place writing, one-click Instagram+Naver kit, clearer pilot copy-ready language, saved kit bundles, pilot feedback capture, and banner text templates)
 - v0.6: Simplify the pilot-facing product surface into four core destinations: Home, One-click creation, Vault, and My Store. Keep specialist tools available as support paths while reducing first-time-user confusion.
 - v0.6.1: Promote One-click creation into a large studio surface and expand kits beyond Instagram/Naver into coupons, review replies, banner copy, BGM/mood, posting time, and storage tabs.
+- v0.6.2: Turn saved banner copy into visual preview cards so pilot users can understand how the first image/card-news slide could look before copying text.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations
