@@ -21,7 +21,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.0 | `5ef65d7` | Confirmed on live site, 2026-06-02 KST | Four-tab pilot IA is present in the production HTML. |
 | v0.6.1 | `d68d2cc` | Confirmed on live site, 2026-06-02 KST | One-click studio hooks are present in the production JS/HTML. |
 | v0.6.2 | `620ca32` | Confirmed on live site, 2026-06-02 KST | Banner preview card rendering is present in the production JS. |
-| v0.6.3 | `36c84ab` | Pending production check | Naver Place detail inputs for period, benefit, contact, and tone. |
+| v0.6.3 | `36c84ab` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `ai-naver-period`, `naver-detail-grid`, and `getNaverPlaceDetails`. |
 
 ## Product Direction
 
