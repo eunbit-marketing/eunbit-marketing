@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.6 studio guidance candidate
-- Latest feature commit: `7a5e2bc` (`Clarify studio detail guidance`)
+- Production baseline: v0.6.7 studio path guidance candidate
+- Latest feature commit: pending v0.6.7 deployment
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -25,6 +25,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.4 | `192d2c9` | Confirmed on live site, 2026-06-02 KST | Production JS/CSS include `copyCurrentMarketingKitBannerPart`, `copyMarketingKitBannerPart`, and `banner-preview-actions`. |
 | v0.6.5 | `ba2908d` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `studio-detail-grid`, `studio-period`, `getStudioDetails`, and `getMarketingKitDetails`. |
 | v0.6.6 | `7a5e2bc` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `선택 입력이에요`, `전용 도구예요`, and `studio-detail-note`. |
+| v0.6.7 | Pending | Pending production check | Clarify that One-click Studio auto-selects Naver content type and uses mood buttons for tone. |
 
 ## Product Direction
 
@@ -82,4 +83,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.4: Clarify banner copy behavior with separate full, headline, and CTA copy buttons in generated kits and saved kit cards.
 - v0.6.5: Extend period, benefit, and contact detail inputs into the One-click Studio so the main creation flow produces more concrete Naver/coupon kit output.
 - v0.6.6: Add guidance that One-click Studio details are optional and position the Naver Place writer as the advanced refinement path after one-click generation.
+- v0.6.7: Clarify One-click Studio field scope: mood buttons handle tone, Bloom auto-selects Naver content type, and the Naver writer remains the advanced refinement path.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations
