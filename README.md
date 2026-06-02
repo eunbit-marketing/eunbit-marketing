@@ -7,11 +7,20 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.2 banner preview card candidate
+- Latest production commit: `620ca32` (`Add banner preview cards`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
 - Figma baseline: v0.6.2 notes should track one-click studio plus banner preview cards
 - Source of truth for implementation: local code, GitHub branch, and Vercel preview
+
+## Deployment Audit
+
+| Version | Commit | Production check | Notes |
+| --- | --- | --- | --- |
+| v0.6.0 | `5ef65d7` | Confirmed on live site, 2026-06-02 KST | Four-tab pilot IA is present in the production HTML. |
+| v0.6.1 | `d68d2cc` | Confirmed on live site, 2026-06-02 KST | One-click studio hooks are present in the production JS/HTML. |
+| v0.6.2 | `620ca32` | Confirmed on live site, 2026-06-02 KST | Banner preview card rendering is present in the production JS. |
 
 ## Product Direction
 
