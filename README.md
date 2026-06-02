@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.8 studio auto-type preview candidate
-- Latest feature commit: pending v0.6.8 deployment
+- Latest feature commit: `f57db9b` (`Show studio Naver auto type`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -26,7 +26,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.5 | `ba2908d` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `studio-detail-grid`, `studio-period`, `getStudioDetails`, and `getMarketingKitDetails`. |
 | v0.6.6 | `7a5e2bc` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `선택 입력이에요`, `전용 도구예요`, and `studio-detail-note`. |
 | v0.6.7 | `4db2613` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `네이버 소식 유형은 Bloom이 자동으로 맞춥니다`, `아래 네이버 전용 도구`, and `studio-path-note`. |
-| v0.6.8 | Pending | Pending production check | One-click Studio shows Bloom's inferred Naver content type while the owner types. |
+| v0.6.8 | `f57db9b` | Pending production check | One-click Studio shows Bloom's inferred Naver content type while the owner types. |
 
 ## Product Direction
 
