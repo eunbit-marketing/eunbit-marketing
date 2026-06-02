@@ -25,7 +25,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.4 | `192d2c9` | Confirmed on live site, 2026-06-02 KST | Production JS/CSS include `copyCurrentMarketingKitBannerPart`, `copyMarketingKitBannerPart`, and `banner-preview-actions`. |
 | v0.6.5 | `ba2908d` | Confirmed on live site, 2026-06-02 KST | Production HTML/JS include `studio-detail-grid`, `studio-period`, `getStudioDetails`, and `getMarketingKitDetails`. |
 | v0.6.6 | `7a5e2bc` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `선택 입력이에요`, `전용 도구예요`, and `studio-detail-note`. |
-| v0.6.7 | `4db2613` | Pending production check | Clarify that One-click Studio auto-selects Naver content type and uses mood buttons for tone. |
+| v0.6.7 | `4db2613` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `네이버 소식 유형은 Bloom이 자동으로 맞춥니다`, `아래 네이버 전용 도구`, and `studio-path-note`. |
 
 ## Product Direction
 
