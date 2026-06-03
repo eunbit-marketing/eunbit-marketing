@@ -978,6 +978,15 @@
     }
     .studio-scenario-head span { color: rgba(255,255,255,.72); font-size: 10px; font-weight: 900; }
     .studio-scenario-head strong { color: white; font-size: 13px; font-weight: 900; }
+    .studio-scenario-mode {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px;
+    }
+    .studio-scenario-mode button {
+      min-height: 34px; border: 1px solid rgba(255,255,255,.18); border-radius: 10px;
+      background: rgba(255,255,255,.10); color: rgba(255,255,255,.82);
+      font: inherit; font-size: 11px; font-weight: 900; cursor: pointer;
+    }
+    .studio-scenario-mode button.active { background: white; color: #111827; border-color: white; }
     .studio-scenarios { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .studio-scenarios button {
       border: 1px solid rgba(255,255,255,.20); border-radius: 12px;
@@ -986,6 +995,11 @@
       min-height: 42px;
     }
     .studio-scenarios button:hover { background: rgba(255,255,255,.22); }
+    .studio-scenario-status {
+      margin-top: 9px; min-height: 34px; border-radius: 12px; padding: 9px 10px;
+      background: rgba(255,255,255,.09); color: rgba(255,255,255,.78);
+      font-size: 11px; line-height: 1.4; font-weight: 800; word-break: keep-all;
+    }
     .studio-detail-grid {
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 8px; margin-top: 12px;

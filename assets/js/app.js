@@ -316,6 +316,10 @@
       item.addEventListener('click', () => applyStudioScenario(item.dataset.studioScenario));
     });
 
+    document.querySelectorAll('[data-studio-scenario-mode]').forEach(item => {
+      item.addEventListener('click', () => setStudioScenarioMode(item.dataset.studioScenarioMode, item));
+    });
+
     document.getElementById('studio-topic')?.addEventListener('input', () => updateStudioAutoType());
     document.getElementById('studio-naver-type')?.addEventListener('change', () => updateStudioAutoType());
 
@@ -1959,42 +1963,108 @@
     }
 
     const STUDIO_PILOT_SCENARIOS = {
-      classIntro: {
-        topic: '의정부 은빛캘리 6월 캘리그래피 원데이 클래스 모집',
-        period: '6월 매주 토요일, 선착순 6명',
-        benefit: '첫 수업 재료비 포함 안내',
-        contact: '네이버 톡톡 또는 전화 예약',
-        mood: '따뜻한',
-        naverType: '소식',
-      },
-      firstCoupon: {
-        topic: '은빛캘리 첫 방문 고객 캘리그래피 체험 쿠폰 안내',
-        period: '이번 주 금요일까지',
-        benefit: '첫 방문 10% 쿠폰',
-        contact: '네이버 플레이스 쿠폰 확인 후 예약',
-        mood: '정보형',
-        naverType: '쿠폰',
-      },
-      reviewTrust: {
-        topic: '수강생 후기와 작업 과정을 활용한 은빛캘리 신뢰 콘텐츠',
-        period: '이번 주 게시용',
-        benefit: '실제 수강 후기 중심',
-        contact: '네이버 톡톡 문의',
-        mood: '감성적',
-        naverType: '리뷰답글',
-      },
-      weeklyPlan: {
-        topic: '은빛캘리 이번 주 인스타그램과 네이버 플레이스 운영 계획',
-        period: '이번 주 월요일부터 일요일까지',
-        benefit: '클래스 모집, 후기 공유, 쿠폰 재공지',
-        contact: '네이버 플레이스 예약',
-        mood: '트렌디한',
-        naverType: '주간계획',
+      eunbit: {
+        classIntro: {
+          topic: '의정부 은빛캘리 6월 캘리그래피 원데이 클래스 모집',
+          period: '6월 매주 토요일, 선착순 6명',
+          benefit: '첫 수업 재료비 포함 안내',
+          contact: '네이버 톡톡 또는 전화 예약',
+          mood: '따뜻한',
+          naverType: '소식',
+        },
+        firstCoupon: {
+          topic: '은빛캘리 첫 방문 고객 캘리그래피 체험 쿠폰 안내',
+          period: '이번 주 금요일까지',
+          benefit: '첫 방문 10% 쿠폰',
+          contact: '네이버 플레이스 쿠폰 확인 후 예약',
+          mood: '정보형',
+          naverType: '쿠폰',
+        },
+        reviewTrust: {
+          topic: '수강생 후기와 작업 과정을 활용한 은빛캘리 신뢰 콘텐츠',
+          period: '이번 주 게시용',
+          benefit: '실제 수강 후기 중심',
+          contact: '네이버 톡톡 문의',
+          mood: '감성적',
+          naverType: '리뷰답글',
+        },
+        weeklyPlan: {
+          topic: '은빛캘리 이번 주 인스타그램과 네이버 플레이스 운영 계획',
+          period: '이번 주 월요일부터 일요일까지',
+          benefit: '클래스 모집, 후기 공유, 쿠폰 재공지',
+          contact: '네이버 플레이스 예약',
+          mood: '트렌디한',
+          naverType: '주간계획',
+        },
       },
     };
 
+    function getStudioScenarioMode() {
+      return document.querySelector('.studio-scenario-mode button.active')?.dataset.studioScenarioMode || 'eunbit';
+    }
+
+    function setStudioScenarioMode(mode, el) {
+      document.querySelectorAll('[data-studio-scenario-mode]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.studioScenarioMode === mode);
+      });
+      if (el) el.classList.add('active');
+      const status = document.getElementById('studio-scenario-status');
+      if (status) {
+        status.textContent = mode === 'generic'
+          ? '다른 업종 기준이에요. 내 매장 정보의 매장명, 대표 상품, 지역을 사용해 필드를 채워요.'
+          : '은빛캘리 기준 예시예요. 다른 업종은 위에서 전환하면 내 매장 정보에 맞춰 채워요.';
+      }
+    }
+
+    function buildGenericStudioScenario(key) {
+      const store = state.settings.storeName || '우리 매장';
+      const offer = state.settings.mainOffer || '대표 서비스';
+      const region = state.settings.region || '우리 동네';
+      return {
+        classIntro: {
+          topic: `${region} ${store} ${offer} 예약/체험 안내`,
+          period: '이번 달 운영 일정에 맞춰',
+          benefit: `${offer} 핵심 장점 안내`,
+          contact: '네이버 플레이스 문의 또는 예약',
+          mood: '따뜻한',
+          naverType: '소식',
+        },
+        firstCoupon: {
+          topic: `${store} 첫 방문 고객 혜택 안내`,
+          period: '이번 주까지',
+          benefit: '첫 방문 혜택 또는 상담 혜택',
+          contact: '네이버 플레이스 쿠폰 확인 후 문의',
+          mood: '정보형',
+          naverType: '쿠폰',
+        },
+        reviewTrust: {
+          topic: `${store} 고객 후기와 이용 과정을 활용한 신뢰 콘텐츠`,
+          period: '이번 주 게시용',
+          benefit: '실제 고객 후기 중심',
+          contact: '네이버 톡톡 또는 전화 문의',
+          mood: '감성적',
+          naverType: '리뷰답글',
+        },
+        weeklyPlan: {
+          topic: `${store} 이번 주 인스타그램과 네이버 플레이스 운영 계획`,
+          period: '이번 주 월요일부터 일요일까지',
+          benefit: `${offer} 소개, 후기 공유, 혜택 재공지`,
+          contact: '네이버 플레이스 문의/예약',
+          mood: '트렌디한',
+          naverType: '주간계획',
+        },
+      }[key];
+    }
+
+    function getStudioScenario(key) {
+      const mode = getStudioScenarioMode();
+      return mode === 'generic'
+        ? buildGenericStudioScenario(key)
+        : STUDIO_PILOT_SCENARIOS.eunbit[key];
+    }
+
     function applyStudioScenario(key) {
-      const scenario = STUDIO_PILOT_SCENARIOS[key];
+      const scenario = getStudioScenario(key);
       if (!scenario) return;
       const topic = document.getElementById('studio-topic');
       const period = document.getElementById('studio-period');
@@ -2009,8 +2079,12 @@
       const moodButton = document.querySelector(`.studio-moods [data-mood="${scenario.mood}"]`);
       selectStudioMood(scenario.mood, moodButton);
       updateStudioAutoType();
+      const status = document.getElementById('studio-scenario-status');
+      if (status) {
+        status.textContent = `${getStudioScenarioMode() === 'generic' ? '다른 업종' : '은빛캘리'} 시나리오 적용 완료: 주제, 기간, 혜택, 문의, 분위기, 네이버 유형을 채웠어요.`;
+      }
       topic?.focus();
-      toast('은빛캘리 파일럿 시나리오를 불러왔어요. 바로 생성해서 흐름을 확인해보세요.');
+      toast(`${getStudioScenarioMode() === 'generic' ? '다른 업종' : '은빛캘리'} 시나리오를 불러왔어요. 바로 생성해서 흐름을 확인해보세요.`);
     }
 
     function inferStudioNaverType(topic) {
