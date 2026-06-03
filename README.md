@@ -32,7 +32,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.11 | `328b266` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-panel`, `data-studio-scenario`, `studio-scenarios`, `STUDIO_PILOT_SCENARIOS`, and `applyStudioScenario`. |
 | v0.6.12 | `e9194c7` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-mode`, `studio-scenario-status`, `buildGenericStudioScenario`, and `getStudioScenarioMode`. |
 | v0.6.13 | `d1df431` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS include `기본은 은빛캘리 샘플`, `우리 매장/대표 서비스/우리 동네`, `getGenericScenarioBasics`, and `fallbackNote`. |
-| v0.6.14 | `00fe4df` | Pending production check | Proposal page adds an Eunbit pilot handoff card with copy-ready first-message and demo checklist. |
+| v0.6.14 | `00fe4df` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `pilot-send-card`, `은빛캘리 첫 안내문`, `pilot-send-grid`, `copyEunbitPilotMessage`, and `window.copyEunbitPilotMessage`. |
 
 ## Product Direction
 
