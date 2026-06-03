@@ -1014,6 +1014,12 @@
     .studio-auto-type span { color: rgba(255,255,255,.72); font-size: 10px; font-weight: 900; }
     .studio-auto-type strong { margin: 0; color: white; font-size: 15px; }
     .studio-auto-type small { color: rgba(255,255,255,.76); font-size: 11px; line-height: 1.35; }
+    .studio-type-select {
+      width: 100%; min-height: 34px; margin-top: 4px; border: 1px solid rgba(255,255,255,.22);
+      border-radius: 10px; background: rgba(255,255,255,.14); color: white;
+      font: inherit; font-size: 12px; font-weight: 800; padding: 7px 9px; outline: none;
+    }
+    .studio-type-select option { color: #111827; }
     .studio-readiness span { display: block; color: rgba(255,255,255,.78); font-size: 12px; line-height: 1.5; margin-bottom: 10px; }
     .studio-generate-btn {
       border: none; border-radius: 16px; min-height: 54px; padding: 14px 18px;

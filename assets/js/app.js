@@ -313,6 +313,7 @@
     });
 
     document.getElementById('studio-topic')?.addEventListener('input', () => updateStudioAutoType());
+    document.getElementById('studio-naver-type')?.addEventListener('change', () => updateStudioAutoType());
 
     document.querySelectorAll('.studio-moods [data-mood]').forEach(item => {
       item.addEventListener('click', () => selectStudioMood(item.dataset.mood, item));
@@ -1955,22 +1956,34 @@
 
     function inferStudioNaverType(topic) {
       const text = String(topic || '').toLowerCase();
-      if (/리뷰|후기|감사|답글|평점/.test(text)) return { label: '리뷰 답글형', hint: '고객 후기나 감사 답글 중심으로 정리해요' };
-      if (/쿠폰|할인|혜택|이벤트|첫 방문|첫방문|증정/.test(text)) return { label: '쿠폰 안내형', hint: '혜택 조건과 사용 방법을 빠뜨리지 않게 잡아요' };
-      if (/주간|이번 주|이번주|계획|일정|콘텐츠/.test(text)) return { label: '주간계획형', hint: '인스타와 네이버를 함께 쓰는 일정으로 묶어요' };
-      if (/소개|프로필|매장|브랜드|처음/.test(text)) return { label: '프로필 소개형', hint: '처음 보는 고객이 이해하기 쉽게 소개해요' };
-      return { label: '네이버 소식형', hint: '방문 전 필요한 정보와 문의 방법을 중심으로 써요' };
+      if (/리뷰|후기|감사|답글|평점/.test(text)) return getStudioNaverTypeMeta('리뷰답글');
+      if (/쿠폰|할인|혜택|이벤트|첫 방문|첫방문|증정/.test(text)) return getStudioNaverTypeMeta('쿠폰');
+      if (/주간|이번 주|이번주|계획|일정|콘텐츠/.test(text)) return getStudioNaverTypeMeta('주간계획');
+      if (/소개|프로필|매장|브랜드|처음/.test(text)) return getStudioNaverTypeMeta('프로필');
+      return getStudioNaverTypeMeta('소식');
+    }
+
+    function getStudioNaverTypeMeta(type) {
+      return {
+        '소식': { type: '소식', label: '네이버 소식형', hint: '방문 전 필요한 정보와 문의 방법을 중심으로 써요' },
+        '쿠폰': { type: '쿠폰', label: '쿠폰 안내형', hint: '혜택 조건과 사용 방법을 빠뜨리지 않게 잡아요' },
+        '리뷰답글': { type: '리뷰답글', label: '리뷰 답글형', hint: '고객 후기나 감사 답글 중심으로 정리해요' },
+        '주간계획': { type: '주간계획', label: '주간계획형', hint: '인스타와 네이버를 함께 쓰는 일정으로 묶어요' },
+        '프로필': { type: '프로필', label: '프로필 소개형', hint: '처음 보는 고객이 이해하기 쉽게 소개해요' },
+      }[type] || { type: '소식', label: '네이버 소식형', hint: '방문 전 필요한 정보와 문의 방법을 중심으로 써요' };
     }
 
     function updateStudioAutoType() {
       const topic = document.getElementById('studio-topic')?.value || '';
       const target = document.getElementById('studio-auto-type');
       if (!target) return;
-      const inferred = inferStudioNaverType(topic);
-      target.innerHTML = `
-        <span>Bloom 자동 판단</span>
-        <strong>${escapeHtml(inferred.label)}</strong>
-        <small>${escapeHtml(inferred.hint)}</small>`;
+      const select = document.getElementById('studio-naver-type');
+      const selected = select?.value || 'auto';
+      const inferred = selected === 'auto' ? inferStudioNaverType(topic) : getStudioNaverTypeMeta(selected);
+      const label = selected === 'auto' ? 'Bloom 자동 판단' : '직접 선택';
+      target.querySelector('span').textContent = label;
+      target.querySelector('strong').textContent = inferred.label;
+      target.querySelector('small').textContent = inferred.hint;
     }
 
     function selectStudioMood(mood, el) {
@@ -2006,10 +2019,13 @@
     }
 
     function getStudioDetails() {
+      const selectedType = document.getElementById('studio-naver-type')?.value || 'auto';
+      const inferredType = inferStudioNaverType(document.getElementById('studio-topic')?.value || '').type;
       return {
         period: document.getElementById('studio-period')?.value.trim() || '',
         benefit: document.getElementById('studio-benefit')?.value.trim() || '',
         contact: document.getElementById('studio-contact')?.value.trim() || '',
+        preferredNaverType: selectedType === 'auto' ? inferredType : selectedType,
       };
     }
 
@@ -2018,9 +2034,11 @@
       const benefit = document.getElementById('ai-naver-benefit');
       const contact = document.getElementById('ai-naver-contact');
       const tone = document.getElementById('ai-naver-tone');
+      const type = document.getElementById('ai-naver-type');
       if (period && details.period) period.value = details.period;
       if (benefit && details.benefit) benefit.value = details.benefit;
       if (contact && details.contact) contact.value = details.contact;
+      if (type && details.preferredNaverType) type.value = details.preferredNaverType;
       if (tone) tone.value = state.studioMood || '';
     }
 
@@ -2068,6 +2086,7 @@
         period: studio.period || document.getElementById('ai-naver-period')?.value.trim() || '',
         benefit: studio.benefit || document.getElementById('ai-naver-benefit')?.value.trim() || '',
         contact: studio.contact || document.getElementById('ai-naver-contact')?.value.trim() || '',
+        preferredNaverType: studio.preferredNaverType || document.getElementById('ai-naver-type')?.value || '소식',
       };
     }
 

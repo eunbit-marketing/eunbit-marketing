@@ -60,6 +60,7 @@ function normalizeKitDetails(details = {}) {
     period: clean(details.period),
     benefit: clean(details.benefit),
     contact: clean(details.contact),
+    preferredNaverType: clean(details.preferredNaverType),
   };
 }
 
@@ -83,6 +84,7 @@ function buildKitSystem(context, writingDetails) {
 - 이번 키트 기간/일정: ${writingDetails.period || '미입력'}
 - 이번 키트 혜택/가격: ${writingDetails.benefit || '미입력'}
 - 문의/예약 방법: ${writingDetails.contact || '네이버 플레이스 문의/예약'}
+- 선호 네이버 유형: ${writingDetails.preferredNaverType || '자동 판단'}
 
 작성 원칙:
 1. 인스타그램은 감정과 장면을, 네이버 플레이스는 정보와 방문 결정을 돕는 문장으로 씁니다.
@@ -104,11 +106,13 @@ ${tone || context.brandTone}
 - 기간/일정: ${writingDetails.period || '명시된 기간 없음'}
 - 혜택/가격: ${writingDetails.benefit || '명시된 혜택 없음'}
 - 문의 방법: ${writingDetails.contact || '네이버 플레이스 문의/예약'}
+- 선호 네이버 유형: ${writingDetails.preferredNaverType || '자동 판단'}
 
 반영 규칙:
 - 기간/혜택이 입력되어 있으면 네이버 소식, 쿠폰 문안, 체크리스트에 빠뜨리지 않습니다.
 - 문의 방법이 입력되어 있으면 네이버 CTA와 쿠폰 안내에 자연스럽게 넣습니다.
 - 입력되지 않은 혜택은 새로 지어내지 말고 문의 유도로 처리합니다.
+- 선호 네이버 유형이 있으면 네이버 소식/쿠폰/리뷰 답글/주간계획/프로필 목적에 맞춰 naver, coupon, reviewReply, checklist의 초점을 조정합니다.
 
 반드시 아래 JSON 형식으로만 답하세요:
 {
