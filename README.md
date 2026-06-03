@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.14 pilot handoff candidate
-- Latest feature commit: pending v0.6.14 deployment
+- Latest feature commit: `00fe4df` (`Add Eunbit pilot handoff card`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -32,7 +32,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.11 | `328b266` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-panel`, `data-studio-scenario`, `studio-scenarios`, `STUDIO_PILOT_SCENARIOS`, and `applyStudioScenario`. |
 | v0.6.12 | `e9194c7` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-mode`, `studio-scenario-status`, `buildGenericStudioScenario`, and `getStudioScenarioMode`. |
 | v0.6.13 | `d1df431` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS include `기본은 은빛캘리 샘플`, `우리 매장/대표 서비스/우리 동네`, `getGenericScenarioBasics`, and `fallbackNote`. |
-| v0.6.14 | Pending | Pending production check | Proposal page adds an Eunbit pilot handoff card with copy-ready first-message and demo checklist. |
+| v0.6.14 | `00fe4df` | Pending production check | Proposal page adds an Eunbit pilot handoff card with copy-ready first-message and demo checklist. |
 
 ## Product Direction
 
