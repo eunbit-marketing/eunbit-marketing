@@ -2010,16 +2010,35 @@
       if (el) el.classList.add('active');
       const status = document.getElementById('studio-scenario-status');
       if (status) {
+        const basics = getGenericScenarioBasics();
         status.textContent = mode === 'generic'
-          ? '다른 업종 기준이에요. 내 매장 정보의 매장명, 대표 상품, 지역을 사용해 필드를 채워요.'
-          : '은빛캘리 기준 예시예요. 다른 업종은 위에서 전환하면 내 매장 정보에 맞춰 채워요.';
+          ? `다른 업종 기준이에요. ${basics.fallbackNote} 매장명, 대표 상품, 지역을 사용해 필드를 채워요.`
+          : '기본은 은빛캘리 샘플이에요. 다른 업종은 내 매장 정보가 비어 있으면 우리 매장/대표 서비스/우리 동네로 안전하게 채워요.';
       }
     }
 
+    function getGenericScenarioBasics() {
+      const clean = (value) => String(value || '').trim();
+      const missing = [];
+      const store = clean(state.settings.storeName) || '우리 매장';
+      const offer = clean(state.settings.mainOffer) || '대표 서비스';
+      const region = clean(state.settings.region) || '우리 동네';
+      if (!clean(state.settings.storeName)) missing.push('매장명');
+      if (!clean(state.settings.mainOffer)) missing.push('대표 상품');
+      if (!clean(state.settings.region)) missing.push('지역');
+      return {
+        store,
+        offer,
+        region,
+        missing,
+        fallbackNote: missing.length
+          ? `${missing.join(', ')}이 비어 있어 기본값을 사용해요.`
+          : '내 매장 정보가 모두 들어 있어요.',
+      };
+    }
+
     function buildGenericStudioScenario(key) {
-      const store = state.settings.storeName || '우리 매장';
-      const offer = state.settings.mainOffer || '대표 서비스';
-      const region = state.settings.region || '우리 동네';
+      const { store, offer, region } = getGenericScenarioBasics();
       return {
         classIntro: {
           topic: `${region} ${store} ${offer} 예약/체험 안내`,
@@ -2081,7 +2100,9 @@
       updateStudioAutoType();
       const status = document.getElementById('studio-scenario-status');
       if (status) {
-        status.textContent = `${getStudioScenarioMode() === 'generic' ? '다른 업종' : '은빛캘리'} 시나리오 적용 완료: 주제, 기간, 혜택, 문의, 분위기, 네이버 유형을 채웠어요.`;
+        const mode = getStudioScenarioMode();
+        const fallbackNote = mode === 'generic' ? ` ${getGenericScenarioBasics().fallbackNote}` : '';
+        status.textContent = `${mode === 'generic' ? '다른 업종' : '은빛캘리'} 시나리오 적용 완료: 주제, 기간, 혜택, 문의, 분위기, 네이버 유형을 채웠어요.${fallbackNote}`;
       }
       topic?.focus();
       toast(`${getStudioScenarioMode() === 'generic' ? '다른 업종' : '은빛캘리'} 시나리오를 불러왔어요. 바로 생성해서 흐름을 확인해보세요.`);
