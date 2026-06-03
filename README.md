@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.12 scenario applicability candidate
-- Latest feature commit: pending v0.6.12 deployment
+- Latest feature commit: `e9194c7` (`Clarify studio scenario applicability`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -30,7 +30,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.9 | `5d98f54` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-naver-type`, `studio-type-select`, `preferredNaverType`, and `getStudioNaverTypeMeta`. |
 | v0.6.10 | `0e54524` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-mood-hint`, `studio-type-help`, `studio-auto-type em`, and `getStudioMoodMeta`. |
 | v0.6.11 | `328b266` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-panel`, `data-studio-scenario`, `studio-scenarios`, `STUDIO_PILOT_SCENARIOS`, and `applyStudioScenario`. |
-| v0.6.12 | Pending | Pending production check | One-click Studio clarifies scenario auto-fill status and separates Eunbit sample presets from generic store presets. |
+| v0.6.12 | `e9194c7` | Pending production check | One-click Studio clarifies scenario auto-fill status and separates Eunbit sample presets from generic store presets. |
 
 ## Product Direction
 
