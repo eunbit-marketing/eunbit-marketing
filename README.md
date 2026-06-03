@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.11 pilot scenario test candidate
-- Latest feature commit: pending v0.6.11 deployment
+- Latest feature commit: `328b266` (`Add studio pilot scenarios`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -29,7 +29,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.8 | `f57db9b` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS/CSS include `studio-auto-type`, `Bloom 자동 판단`, and `inferStudioNaverType`. |
 | v0.6.9 | `5d98f54` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-naver-type`, `studio-type-select`, `preferredNaverType`, and `getStudioNaverTypeMeta`. |
 | v0.6.10 | `0e54524` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-mood-hint`, `studio-type-help`, `studio-auto-type em`, and `getStudioMoodMeta`. |
-| v0.6.11 | Pending | Pending production check | One-click Studio adds Eunbit Calligraphy pilot scenario presets for integrated mood/type testing. |
+| v0.6.11 | `328b266` | Pending production check | One-click Studio adds Eunbit Calligraphy pilot scenario presets for integrated mood/type testing. |
 
 ## Product Direction
 
