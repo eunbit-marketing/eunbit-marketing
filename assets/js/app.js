@@ -519,6 +519,12 @@
       const text = `Bloom 파일럿 테스트 안내\n\n인스타그램과 네이버 플레이스에 올릴 문안을 한 번에 만들어주는 소상공인 AI 마케팅 비서입니다.\n현재는 자동 발행 전 단계라, AI가 만든 문안을 복사해서 바로 쓰는 방식으로 테스트하고 있어요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal`;
       navigator.clipboard.writeText(text).then(() => toast('📋 파일럿 소개 문구를 복사했어요'));
     }
+
+    function copyEunbitPilotMessage() {
+      const text = `은빛캘리 파일럿 테스트 안내\n\n안녕하세요. 지금 Bloom 파일럿 버전을 은빛캘리 기준으로 먼저 테스트할 수 있게 준비해두었습니다.\n\n아래 링크를 열고 [딸깍 만들기]에서 [은빛캘리 샘플]의 [원데이 클래스 모집]을 눌러보시면, 주제/기간/혜택/문의/분위기/네이버 유형이 자동으로 채워집니다.\n\n그다음 [딸깍 키트 생성]을 눌러 인스타그램 캡션, 네이버 플레이스 소식, 쿠폰 문안, 리뷰 답글이 실제로 쓸 만한지 봐주세요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal\n\n확인해주시면 좋은 것\n1. 문안이 은빛캘리 말투와 맞는지\n2. 네이버 플레이스에 복사해서 쓰기 편한지\n3. 월 9,900원이라면 계속 쓸 만한지`;
+      navigator.clipboard.writeText(text).then(() => toast('📋 은빛캘리 첫 안내문을 복사했어요'));
+    }
+    window.copyEunbitPilotMessage = copyEunbitPilotMessage;
     function useCaption() {
       const text = document.getElementById('ai-output').textContent;
       document.getElementById('caption-final').value = text;

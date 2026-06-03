@@ -1522,6 +1522,31 @@
       z-index: 1;
     }
     .proposal-actions { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; position: relative; z-index: 1; }
+    .pilot-send-card {
+      margin-top: 18px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-md);
+      padding: 22px;
+    }
+    .pilot-send-card p { color: var(--sub); font-size: 13px; line-height: 1.65; margin-top: 8px; }
+    .pilot-send-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px; margin-top: 16px;
+    }
+    .pilot-send-grid div {
+      border: 1px solid var(--border); border-radius: var(--r-md);
+      background: var(--bg); padding: 14px;
+    }
+    .pilot-send-grid span {
+      display: inline-grid; place-items: center; width: 24px; height: 24px;
+      border-radius: 999px; background: var(--ink); color: white;
+      font-size: 11px; font-weight: 900; margin-bottom: 9px;
+    }
+    .pilot-send-grid strong { display: block; color: var(--ink); font-size: 13px; font-weight: 900; }
+    .pilot-send-grid p { font-size: 12px; margin-top: 6px; }
+    .pilot-send-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
     .proposal-section, .proposal-flow {
       margin-top: 18px;
       background: var(--white);
@@ -1745,6 +1770,7 @@
       .proposal-feature-grid,
       .proposal-pricing,
       .proposal-step-grid,
+      .pilot-send-grid,
       .pilot-cta-grid,
       .feedback-grid { grid-template-columns: 1fr; }
       .proposal-section,
