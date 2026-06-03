@@ -1973,6 +1973,20 @@
       }[type] || { type: '소식', label: '네이버 소식형', hint: '방문 전 필요한 정보와 문의 방법을 중심으로 써요' };
     }
 
+    function getStudioMoodMeta(mood) {
+      return {
+        '따뜻한': '처음 보는 고객에게 편안하고 친근하게 다가가요.',
+        '정보형': '가격, 기간, 예약 방법처럼 결정에 필요한 정보를 먼저 정리해요.',
+        '감성적': '매장 분위기와 장면이 떠오르도록 부드럽게 풀어요.',
+        '트렌디한': '짧고 경쾌한 표현으로 인스타와 숏폼에 어울리게 잡아요.',
+      }[mood] || '처음 보는 고객에게 편안하고 친근하게 다가가요.';
+    }
+
+    function updateStudioMoodHint(mood) {
+      const hint = document.getElementById('studio-mood-hint');
+      if (hint) hint.textContent = getStudioMoodMeta(mood);
+    }
+
     function updateStudioAutoType() {
       const topic = document.getElementById('studio-topic')?.value || '';
       const target = document.getElementById('studio-auto-type');
@@ -1984,6 +1998,12 @@
       target.querySelector('span').textContent = label;
       target.querySelector('strong').textContent = inferred.label;
       target.querySelector('small').textContent = inferred.hint;
+      const help = document.getElementById('studio-type-help');
+      if (help) {
+        help.textContent = selected === 'auto'
+          ? '자동은 주제 단어를 다시 읽어 가장 가까운 네이버 유형으로 맞춰요.'
+          : '직접 선택한 유형이 딸깍 키트와 네이버 전용 도구에 함께 반영돼요.';
+      }
     }
 
     function selectStudioMood(mood, el) {
@@ -1993,6 +2013,7 @@
       if (el) el.classList.add('active');
       const toneSelect = document.getElementById('ai-kit-tone');
       if (toneSelect) toneSelect.value = mood;
+      updateStudioMoodHint(mood);
     }
 
     function syncStudioMoodUI() {
@@ -2002,6 +2023,7 @@
       });
       const toneSelect = document.getElementById('ai-kit-tone');
       if (toneSelect) toneSelect.value = mood;
+      updateStudioMoodHint(mood);
     }
 
     async function generateStudioKit() {

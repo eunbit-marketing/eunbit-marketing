@@ -1001,6 +1001,12 @@
     .studio-readiness strong { display: block; font-size: 13px; font-weight: 900; margin-bottom: 10px; }
     .studio-moods { display: flex; flex-wrap: wrap; gap: 7px; }
     .studio-moods button.active { background: white; color: #111827; border-color: white; }
+    .studio-mood-hint {
+      margin-top: 9px; min-height: 34px; border: 1px solid rgba(255,255,255,.16);
+      border-radius: 12px; background: rgba(255,255,255,.09); padding: 9px 10px;
+      color: rgba(255,255,255,.82); font-size: 12px; line-height: 1.35; font-weight: 700;
+      word-break: keep-all;
+    }
     .studio-output-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
     .studio-output-list span {
       border-radius: 10px; background: rgba(255,255,255,.12);
@@ -1020,6 +1026,9 @@
       font: inherit; font-size: 12px; font-weight: 800; padding: 7px 9px; outline: none;
     }
     .studio-type-select option { color: #111827; }
+    .studio-auto-type em {
+      color: rgba(255,255,255,.68); font-size: 10px; line-height: 1.35; font-style: normal; font-weight: 800;
+    }
     .studio-readiness span { display: block; color: rgba(255,255,255,.78); font-size: 12px; line-height: 1.5; margin-bottom: 10px; }
     .studio-generate-btn {
       border: none; border-radius: 16px; min-height: 54px; padding: 14px 18px;

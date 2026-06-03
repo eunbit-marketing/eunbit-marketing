@@ -999,7 +999,7 @@
               <input class="studio-detail-input full" id="studio-contact" placeholder="문의 방법 예: 네이버 톡톡 또는 전화 예약">
             </div>
             <div class="studio-detail-note">선택 입력이에요. 모르면 비워두고 바로 생성해도 됩니다.</div>
-            <div class="studio-path-note">분위기는 오른쪽 버튼으로 고르고, 네이버 소식 유형은 Bloom이 자동으로 맞춥니다. 더 세밀하게 바꾸고 싶으면 아래 네이버 전용 도구를 사용하세요.</div>
+            <div class="studio-path-note">분위기는 오른쪽 버튼으로 고르고, 네이버 유형은 Bloom 자동 판단 또는 직접 선택으로 정합니다. 자동으로 맞추기를 고르면 주제를 다시 읽어 유형을 맞춰요.</div>
           </div>
           <div class="studio-side">
             <div class="studio-panel">
@@ -1009,6 +1009,9 @@
                 <button data-mood="정보형">정보형</button>
                 <button data-mood="감성적">감성적</button>
                 <button data-mood="트렌디한">트렌디한</button>
+              </div>
+              <div class="studio-mood-hint" id="studio-mood-hint" aria-live="polite">
+                처음 보는 고객에게 편안하고 친근하게 다가가요.
               </div>
             </div>
             <div class="studio-panel">
@@ -1033,6 +1036,7 @@
                   <option value="주간계획">주간계획형</option>
                   <option value="프로필">프로필 소개형</option>
                 </select>
+                <em id="studio-type-help">자동은 주제 단어를 다시 읽어 가장 가까운 네이버 유형으로 맞춰요.</em>
               </div>
             </div>
             <div class="studio-readiness" id="studio-readiness">

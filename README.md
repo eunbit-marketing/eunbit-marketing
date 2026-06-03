@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.9 studio Naver type override candidate
-- Latest feature commit: `5d98f54` (`Add studio Naver type override`)
+- Production baseline: v0.6.10 studio mood clarity candidate
+- Latest feature commit: pending v0.6.10 deployment
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -28,6 +28,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.7 | `4db2613` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS include `네이버 소식 유형은 Bloom이 자동으로 맞춥니다`, `아래 네이버 전용 도구`, and `studio-path-note`. |
 | v0.6.8 | `f57db9b` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS/CSS include `studio-auto-type`, `Bloom 자동 판단`, and `inferStudioNaverType`. |
 | v0.6.9 | `5d98f54` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-naver-type`, `studio-type-select`, `preferredNaverType`, and `getStudioNaverTypeMeta`. |
+| v0.6.10 | Pending | Pending production check | One-click Studio clarifies the four mood buttons and explains auto vs direct Naver type behavior. |
 
 ## Product Direction
 
@@ -88,4 +89,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.7: Clarify One-click Studio field scope: mood buttons handle tone, Bloom auto-selects Naver content type, and the Naver writer remains the advanced refinement path.
 - v0.6.8: Show Bloom's inferred Naver content type in One-click Studio so owners can see what the automatic path is doing before generation.
 - v0.6.9: Let owners override Bloom's inferred Naver content type from One-click Studio and sync the choice into Naver refinement/API prompts.
+- v0.6.10: Clarify what the four One-click Studio mood buttons do and make the Naver auto/direct selection behavior explicit.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations
