@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.13 scenario fallback clarity candidate
-- Latest feature commit: pending v0.6.13 deployment
+- Latest feature commit: `d1df431` (`Clarify scenario fallback defaults`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -31,7 +31,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.10 | `0e54524` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-mood-hint`, `studio-type-help`, `studio-auto-type em`, and `getStudioMoodMeta`. |
 | v0.6.11 | `328b266` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-panel`, `data-studio-scenario`, `studio-scenarios`, `STUDIO_PILOT_SCENARIOS`, and `applyStudioScenario`. |
 | v0.6.12 | `e9194c7` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-mode`, `studio-scenario-status`, `buildGenericStudioScenario`, and `getStudioScenarioMode`. |
-| v0.6.13 | Pending | Pending production check | One-click Studio explains the default Eunbit sample mode and shows generic-mode fallback fields when store settings are empty. |
+| v0.6.13 | `d1df431` | Pending production check | One-click Studio explains the default Eunbit sample mode and shows generic-mode fallback fields when store settings are empty. |
 
 ## Product Direction
 
