@@ -29,7 +29,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.8 | `f57db9b` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS/CSS include `studio-auto-type`, `Bloom 자동 판단`, and `inferStudioNaverType`. |
 | v0.6.9 | `5d98f54` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-naver-type`, `studio-type-select`, `preferredNaverType`, and `getStudioNaverTypeMeta`. |
 | v0.6.10 | `0e54524` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-mood-hint`, `studio-type-help`, `studio-auto-type em`, and `getStudioMoodMeta`. |
-| v0.6.11 | `328b266` | Pending production check | One-click Studio adds Eunbit Calligraphy pilot scenario presets for integrated mood/type testing. |
+| v0.6.11 | `328b266` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `studio-scenario-panel`, `data-studio-scenario`, `studio-scenarios`, `STUDIO_PILOT_SCENARIOS`, and `applyStudioScenario`. |
 
 ## Product Direction
 
