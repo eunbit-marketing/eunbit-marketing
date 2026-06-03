@@ -312,6 +312,10 @@
       item.addEventListener('click', () => applyStudioIdea(item.dataset.studioIdea));
     });
 
+    document.querySelectorAll('[data-studio-scenario]').forEach(item => {
+      item.addEventListener('click', () => applyStudioScenario(item.dataset.studioScenario));
+    });
+
     document.getElementById('studio-topic')?.addEventListener('input', () => updateStudioAutoType());
     document.getElementById('studio-naver-type')?.addEventListener('change', () => updateStudioAutoType());
 
@@ -1952,6 +1956,61 @@
       input.focus();
       updateStudioAutoType();
       toast('주제를 넣었어요. 분위기만 고르면 바로 만들 수 있어요.');
+    }
+
+    const STUDIO_PILOT_SCENARIOS = {
+      classIntro: {
+        topic: '의정부 은빛캘리 6월 캘리그래피 원데이 클래스 모집',
+        period: '6월 매주 토요일, 선착순 6명',
+        benefit: '첫 수업 재료비 포함 안내',
+        contact: '네이버 톡톡 또는 전화 예약',
+        mood: '따뜻한',
+        naverType: '소식',
+      },
+      firstCoupon: {
+        topic: '은빛캘리 첫 방문 고객 캘리그래피 체험 쿠폰 안내',
+        period: '이번 주 금요일까지',
+        benefit: '첫 방문 10% 쿠폰',
+        contact: '네이버 플레이스 쿠폰 확인 후 예약',
+        mood: '정보형',
+        naverType: '쿠폰',
+      },
+      reviewTrust: {
+        topic: '수강생 후기와 작업 과정을 활용한 은빛캘리 신뢰 콘텐츠',
+        period: '이번 주 게시용',
+        benefit: '실제 수강 후기 중심',
+        contact: '네이버 톡톡 문의',
+        mood: '감성적',
+        naverType: '리뷰답글',
+      },
+      weeklyPlan: {
+        topic: '은빛캘리 이번 주 인스타그램과 네이버 플레이스 운영 계획',
+        period: '이번 주 월요일부터 일요일까지',
+        benefit: '클래스 모집, 후기 공유, 쿠폰 재공지',
+        contact: '네이버 플레이스 예약',
+        mood: '트렌디한',
+        naverType: '주간계획',
+      },
+    };
+
+    function applyStudioScenario(key) {
+      const scenario = STUDIO_PILOT_SCENARIOS[key];
+      if (!scenario) return;
+      const topic = document.getElementById('studio-topic');
+      const period = document.getElementById('studio-period');
+      const benefit = document.getElementById('studio-benefit');
+      const contact = document.getElementById('studio-contact');
+      const type = document.getElementById('studio-naver-type');
+      if (topic) topic.value = scenario.topic;
+      if (period) period.value = scenario.period;
+      if (benefit) benefit.value = scenario.benefit;
+      if (contact) contact.value = scenario.contact;
+      if (type) type.value = scenario.naverType;
+      const moodButton = document.querySelector(`.studio-moods [data-mood="${scenario.mood}"]`);
+      selectStudioMood(scenario.mood, moodButton);
+      updateStudioAutoType();
+      topic?.focus();
+      toast('은빛캘리 파일럿 시나리오를 불러왔어요. 바로 생성해서 흐름을 확인해보세요.');
     }
 
     function inferStudioNaverType(topic) {
