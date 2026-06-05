@@ -1295,6 +1295,24 @@
     .pilot-feedback-item strong { color: var(--ink); font-size: 12px; }
     .pilot-feedback-item p { color: var(--sub); font-size: 11px; line-height: 1.45; }
     .pilot-feedback-empty { color: var(--sub); font-size: 12px; line-height: 1.55; }
+    .pilot-feedback-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .pilot-feedback-actions .btn {
+      flex: 1 1 120px;
+      justify-content: center;
+      min-height: 36px;
+      font-size: 11px;
+    }
+    .btn-danger-soft {
+      background: rgba(252,165,165,.16);
+      border: 1px solid rgba(197,48,48,.28);
+      color: #C53030;
+    }
+    .btn-danger-soft:hover { background: rgba(252,165,165,.24); }
     .plan-usage-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
     .plan-usage-card {
       background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 14px;
@@ -1775,7 +1793,8 @@
       .feedback-grid { grid-template-columns: 1fr; }
       .proposal-section,
       .proposal-flow { padding: 18px; }
-      .feedback-actions { flex-direction: column; }
+      .feedback-actions,
+      .pilot-feedback-actions { flex-direction: column; }
       .ai-mode-tabs { gap: 6px; }
       .ai-hero-title { font-size: 18px; }
       .ai-hero-icon { width: 40px; height: 40px; font-size: 18px; }

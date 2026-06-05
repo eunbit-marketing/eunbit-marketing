@@ -1687,6 +1687,87 @@
       toast('💬 파일럿 피드백을 저장했어요. 다음 개선에 반영할게요.');
     }
 
+    function formatPilotFeedbackDate(value) {
+      if (!value) return '날짜 없음';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '날짜 없음';
+      return date.toLocaleString('ko-KR', {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+
+    function buildPilotFeedbackReport() {
+      ensurePilotFeedback();
+      const items = state.pilotFeedback || [];
+      if (!items.length) {
+        return 'Bloom 파일럿 피드백 기록\n\n아직 저장된 파일럿 피드백이 없습니다.';
+      }
+
+      const lines = [
+        'Bloom 파일럿 피드백 기록',
+        `생성일: ${new Date().toLocaleString('ko-KR')}`,
+        `총 ${items.length}건`,
+        '',
+      ];
+
+      items.forEach((item, index) => {
+        lines.push(
+          `${index + 1}. ${item.store || '이름 없음'} · ${item.category || '업종 미입력'}`,
+          `- 필요 기능: ${item.need || '미입력'}`,
+          `- 가격 반응: ${item.price || '미입력'}`,
+          `- 메모: ${item.note || '없음'}`,
+          `- 기록: ${formatPilotFeedbackDate(item.createdAt)}`,
+          ''
+        );
+      });
+
+      return lines.join('\n');
+    }
+
+    function copyPilotFeedbackReport() {
+      const report = buildPilotFeedbackReport();
+      navigator.clipboard.writeText(report)
+        .then(() => toast('📋 파일럿 피드백 리포트를 복사했어요'))
+        .catch(() => toast('복사 권한을 확인해주세요'));
+    }
+
+    function downloadPilotFeedbackJson() {
+      ensurePilotFeedback();
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        product: 'Bloom',
+        version: 'v0.6.15',
+        count: state.pilotFeedback.length,
+        feedback: state.pilotFeedback,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `bloom-pilot-feedback-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast('⬇️ 파일럿 피드백 JSON을 내려받았어요');
+    }
+
+    function clearPilotFeedback() {
+      ensurePilotFeedback();
+      if (!state.pilotFeedback.length) {
+        toast('지울 파일럿 피드백이 아직 없어요');
+        return;
+      }
+      if (!confirm('저장된 파일럿 피드백을 모두 지울까요? 내보내기 후 정리할 때만 사용해주세요.')) return;
+      state.pilotFeedback = [];
+      saveState();
+      renderPilotFeedbackPanel();
+      toast('파일럿 피드백 기록을 비웠어요');
+    }
+
     function renderPilotFeedbackPanel() {
       const panel = document.getElementById('pilot-feedback-panel');
       if (!panel) return;
@@ -1698,7 +1779,11 @@
             <strong>파일럿 피드백 기록</strong>
             <span>0개</span>
           </div>
-          <div class="pilot-feedback-empty">아직 저장된 피드백이 없어요. 파일럿 상담이나 데모 중 받은 의견을 여기에 빠르게 남겨둘 수 있습니다.</div>`;
+          <div class="pilot-feedback-empty">아직 저장된 피드백이 없어요. 파일럿 상담이나 데모 중 받은 의견을 여기에 빠르게 남겨둘 수 있습니다.</div>
+          <div class="pilot-feedback-actions">
+            <button class="btn btn-secondary" onclick="copyPilotFeedbackReport()">리포트 복사</button>
+            <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
+          </div>`;
         return;
       }
       panel.innerHTML = `
@@ -1715,8 +1800,17 @@
               ${item.note ? `<p>${escapeHtml(item.note)}</p>` : ''}
             </article>
           `).join('')}
+        </div>
+        <div class="pilot-feedback-actions">
+          <button class="btn btn-secondary" onclick="copyPilotFeedbackReport()">리포트 복사</button>
+          <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
+          <button class="btn btn-danger-soft" onclick="clearPilotFeedback()">기록 비우기</button>
         </div>`;
     }
+
+    window.copyPilotFeedbackReport = copyPilotFeedbackReport;
+    window.downloadPilotFeedbackJson = downloadPilotFeedbackJson;
+    window.clearPilotFeedback = clearPilotFeedback;
     
     // ===== POST/STORY CLICKS =====
     function openStoryDetail(label) {
