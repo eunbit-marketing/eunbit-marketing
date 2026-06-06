@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.19 channel-level kit rating candidate
-- Latest feature commit: pending (`Add channel-level kit ratings`)
+- Latest feature commit: `78fabdc` (`Add channel-level kit ratings`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -37,7 +37,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.16 | `23245d2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `pilot-launch-card`, `꼭 확인할 질문 3개`, `pilot-launch-status-badge`, `renderPilotLaunchTracker`, `markEunbitPilotSent`, and Markdown feedback report headings. |
 | v0.6.17 | `5fd8ff2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `휴대폰 공유창 열기`, the explicit send-status note, `pilot-share-note`, `shareEunbitPilotMessage`, `navigator.share`, and cancellation handling. |
 | v0.6.18 | `f47b713` | Confirmed on live site, 2026-06-06 KST | Direct pilot URL opens the AI tab and prefills the Eunbit `classIntro` scenario without automatically spending an AI generation request. |
-| v0.6.19 | pending | Local verification in progress, 2026-06-07 KST | Direct pilot demos skip onboarding; each generated Instagram, Naver, coupon, and review result can be rated as ready, edit, or retry and included in the pilot report. |
+| v0.6.19 | `78fabdc` | Local verification passed, production confirmation pending, 2026-06-07 KST | Direct pilot demos skip onboarding; each generated Instagram, Naver, coupon, and review result can be rated as ready, edit, or retry and included in the pilot report. |
 
 ## Product Direction
 
