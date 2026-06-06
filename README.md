@@ -34,7 +34,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.13 | `d1df431` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS include `기본은 은빛캘리 샘플`, `우리 매장/대표 서비스/우리 동네`, `getGenericScenarioBasics`, and `fallbackNote`. |
 | v0.6.14 | `00fe4df` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `pilot-send-card`, `은빛캘리 첫 안내문`, `pilot-send-grid`, `copyEunbitPilotMessage`, and `window.copyEunbitPilotMessage`. |
 | v0.6.15 | `df0e50e` | Confirmed on live site, 2026-06-05 KST | Production HTML/CSS/JS include `pilot-feedback-actions`, `btn-danger-soft`, `copyPilotFeedbackReport`, `downloadPilotFeedbackJson`, `clearPilotFeedback`, and `v0.6.15`. |
-| v0.6.16 | `23245d2` | Local static/server/browser verification complete, 2026-06-06 KST | Adds an Eunbit pilot launch tracker with sent/testing/feedback states, follow-up date, explicit feedback questions, and Markdown-formatted feedback reports. |
+| v0.6.16 | `23245d2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `pilot-launch-card`, `꼭 확인할 질문 3개`, `pilot-launch-status-badge`, `renderPilotLaunchTracker`, `markEunbitPilotSent`, and Markdown feedback report headings. |
 
 ## Product Direction
 
