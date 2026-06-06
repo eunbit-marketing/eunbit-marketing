@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.17 native pilot sharing candidate
-- Latest feature commit: `5fd8ff2` (`Add native pilot sharing`)
+- Production baseline: v0.6.18 direct pilot demo link candidate
+- Latest feature commit: pending (`Add direct pilot demo link`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -36,6 +36,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.15 | `df0e50e` | Confirmed on live site, 2026-06-05 KST | Production HTML/CSS/JS include `pilot-feedback-actions`, `btn-danger-soft`, `copyPilotFeedbackReport`, `downloadPilotFeedbackJson`, `clearPilotFeedback`, and `v0.6.15`. |
 | v0.6.16 | `23245d2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `pilot-launch-card`, `꼭 확인할 질문 3개`, `pilot-launch-status-badge`, `renderPilotLaunchTracker`, `markEunbitPilotSent`, and Markdown feedback report headings. |
 | v0.6.17 | `5fd8ff2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `휴대폰 공유창 열기`, the explicit send-status note, `pilot-share-note`, `shareEunbitPilotMessage`, `navigator.share`, and cancellation handling. |
+| v0.6.18 | pending | Local verification in progress, 2026-06-06 KST | Direct pilot URL opens the AI tab and prefills the Eunbit `classIntro` scenario without automatically spending an AI generation request. |
 
 ## Product Direction
 
@@ -104,4 +105,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.15: Add copy/export/clear controls for saved pilot feedback so first-customer reactions can become operating evidence for the next build.
 - v0.6.16: Track the first pilot launch, follow-up date, and three validation questions while exporting feedback as Notion-ready Markdown.
 - v0.6.17: Open the phone's native share sheet for the Eunbit pilot invitation while keeping the actual sent status as an explicit manual confirmation.
+- v0.6.18: Give the first pilot customer a direct demo URL that opens the one-click studio with the Eunbit class-introduction scenario already prepared.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

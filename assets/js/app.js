@@ -522,13 +522,21 @@
         .catch(() => toast(url));
     }
 
+    const EUNBIT_DIRECT_DEMO_URL = 'https://eunbit-marketing.vercel.app/?pilot=eunbit&scenario=classIntro#ai';
+
+    function copyEunbitDirectDemoLink() {
+      navigator.clipboard.writeText(EUNBIT_DIRECT_DEMO_URL)
+        .then(() => toast('✨ 은빛캘리 바로 체험 링크를 복사했어요'))
+        .catch(() => toast(EUNBIT_DIRECT_DEMO_URL));
+    }
+
     function copyPilotInviteText() {
       const text = `Bloom 파일럿 테스트 안내\n\n인스타그램과 네이버 플레이스에 올릴 문안을 한 번에 만들어주는 소상공인 AI 마케팅 비서입니다.\n현재는 자동 발행 전 단계라, AI가 만든 문안을 복사해서 바로 쓰는 방식으로 테스트하고 있어요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal`;
       navigator.clipboard.writeText(text).then(() => toast('📋 파일럿 소개 문구를 복사했어요'));
     }
 
     function getEunbitPilotMessage() {
-      return `은빛캘리 파일럿 테스트 안내\n\n안녕하세요. 지금 Bloom 파일럿 버전을 은빛캘리 기준으로 먼저 테스트할 수 있게 준비해두었습니다.\n\n아래 링크를 열고 [딸깍 만들기]에서 [은빛캘리 샘플]의 [원데이 클래스 모집]을 눌러보시면, 주제/기간/혜택/문의/분위기/네이버 유형이 자동으로 채워집니다.\n\n그다음 [딸깍 키트 생성]을 눌러 인스타그램 캡션, 네이버 플레이스 소식, 쿠폰 문안, 리뷰 답글이 실제로 쓸 만한지 봐주세요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal\n\n확인해주시면 좋은 것\n1. 문안이 은빛캘리 말투와 맞는지\n2. 네이버 플레이스에 복사해서 쓰기 편한지\n3. 월 9,900원이라면 계속 쓸 만한지`;
+      return `은빛캘리 파일럿 테스트 안내\n\n안녕하세요. 지금 Bloom 파일럿 버전을 은빛캘리 기준으로 먼저 테스트할 수 있게 준비해두었습니다.\n\n아래 바로 체험 링크를 열면 [딸깍 만들기]의 [은빛캘리 샘플]과 [원데이 클래스 모집] 내용이 자동으로 준비됩니다.\n\n그다음 [딸깍 키트 생성]을 눌러 인스타그램 캡션, 네이버 플레이스 소식, 쿠폰 문안, 리뷰 답글이 실제로 쓸 만한지 봐주세요.\n\n바로 체험 링크: ${EUNBIT_DIRECT_DEMO_URL}\n전체 설명 보기: https://eunbit-marketing.vercel.app/#proposal\n\n확인해주시면 좋은 것\n1. 문안이 은빛캘리 말투와 맞는지\n2. 네이버 플레이스에 복사해서 쓰기 편한지\n3. 월 9,900원이라면 계속 쓸 만한지`;
     }
 
     function copyEunbitPilotMessage() {
@@ -538,7 +546,7 @@
 
     async function shareEunbitPilotMessage() {
       const text = getEunbitPilotMessage();
-      const url = 'https://eunbit-marketing.vercel.app/#proposal';
+      const url = EUNBIT_DIRECT_DEMO_URL;
       if (navigator.share) {
         try {
           await navigator.share({
@@ -564,6 +572,7 @@
     }
 
     window.copyEunbitPilotMessage = copyEunbitPilotMessage;
+    window.copyEunbitDirectDemoLink = copyEunbitDirectDemoLink;
     window.shareEunbitPilotMessage = shareEunbitPilotMessage;
 
     const PILOT_LAUNCH_STATUS = {
@@ -711,6 +720,18 @@
       const validTabs = new Set(SEARCH_TABS.map(tab => tab.tab));
       const initialTab = validTabs.has(hashTab) ? hashTab : state.currentTab;
       if (validTabs.has(initialTab)) switchTab(initialTab);
+
+      const directDemoParams = new URLSearchParams(window.location.search);
+      const directDemoScenario = directDemoParams.get('scenario');
+      if (directDemoParams.get('pilot') === 'eunbit' && STUDIO_PILOT_SCENARIOS.eunbit[directDemoScenario]) {
+        const eunbitModeButton = document.querySelector('[data-studio-scenario-mode="eunbit"]');
+        setStudioScenarioMode('eunbit', eunbitModeButton);
+        switchTab('ai');
+        applyStudioScenario(directDemoScenario);
+        const status = document.getElementById('studio-scenario-status');
+        if (status) status.textContent = '은빛캘리 바로 체험 준비 완료. 내용을 확인한 뒤 딸깍 키트 생성을 눌러보세요.';
+        toast('✨ 은빛캘리 바로 체험을 준비했어요. 딸깍 키트 생성을 눌러보세요.');
+      }
       
       // 검색 이벤트 리스너
       const searchInput = document.getElementById('search-input');
