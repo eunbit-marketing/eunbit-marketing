@@ -36,7 +36,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.15 | `df0e50e` | Confirmed on live site, 2026-06-05 KST | Production HTML/CSS/JS include `pilot-feedback-actions`, `btn-danger-soft`, `copyPilotFeedbackReport`, `downloadPilotFeedbackJson`, `clearPilotFeedback`, and `v0.6.15`. |
 | v0.6.16 | `23245d2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `pilot-launch-card`, `꼭 확인할 질문 3개`, `pilot-launch-status-badge`, `renderPilotLaunchTracker`, `markEunbitPilotSent`, and Markdown feedback report headings. |
 | v0.6.17 | `5fd8ff2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `휴대폰 공유창 열기`, the explicit send-status note, `pilot-share-note`, `shareEunbitPilotMessage`, `navigator.share`, and cancellation handling. |
-| v0.6.18 | `f47b713` | Local verification passed, production confirmation pending, 2026-06-06 KST | Direct pilot URL opens the AI tab and prefills the Eunbit `classIntro` scenario without automatically spending an AI generation request. |
+| v0.6.18 | `f47b713` | Confirmed on live site, 2026-06-06 KST | Direct pilot URL opens the AI tab and prefills the Eunbit `classIntro` scenario without automatically spending an AI generation request. |
 
 ## Product Direction
 
