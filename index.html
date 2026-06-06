@@ -874,10 +874,12 @@
             <div><span>3</span><strong>복사 가능 여부</strong><p>인스타/네이버 문안이 실제로 쓸 만한지 피드백을 받습니다.</p></div>
           </div>
           <div class="pilot-send-actions">
-            <button class="btn btn-primary" onclick="copyEunbitPilotMessage()">은빛캘리 첫 안내문 복사</button>
+            <button class="btn btn-primary" onclick="shareEunbitPilotMessage()">휴대폰 공유창 열기</button>
+            <button class="btn btn-secondary" onclick="copyEunbitPilotMessage()">첫 안내문 복사</button>
             <button class="btn btn-secondary" onclick="copyPilotLink()">라이브 링크 복사</button>
             <button class="btn btn-secondary" onclick="switchTab('ai')">딸깍 샘플 열기</button>
           </div>
+          <div class="pilot-share-note">공유창을 열어 카카오톡 등을 선택한 뒤 직접 전송해주세요. 공유창을 열었다고 발송 완료로 기록되지는 않습니다.</div>
         </div>
 
         <div class="pilot-launch-card">
@@ -911,6 +913,7 @@
             <div><span>3</span><p>월 9,900원이라면 계속 사용할 의향이 있나요?</p></div>
           </div>
           <div class="pilot-launch-actions">
+            <button class="btn btn-secondary" onclick="shareEunbitPilotMessage()">발송용 공유창 열기</button>
             <button class="btn btn-primary" onclick="markEunbitPilotSent()">방금 링크 보냈어요</button>
             <button class="btn btn-secondary" onclick="copyPilotFollowUpMessage()">후속 질문 복사</button>
             <button class="btn btn-secondary" onclick="showPilotFeedbackModal()">받은 답변 기록</button>

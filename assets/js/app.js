@@ -527,11 +527,44 @@
       navigator.clipboard.writeText(text).then(() => toast('📋 파일럿 소개 문구를 복사했어요'));
     }
 
+    function getEunbitPilotMessage() {
+      return `은빛캘리 파일럿 테스트 안내\n\n안녕하세요. 지금 Bloom 파일럿 버전을 은빛캘리 기준으로 먼저 테스트할 수 있게 준비해두었습니다.\n\n아래 링크를 열고 [딸깍 만들기]에서 [은빛캘리 샘플]의 [원데이 클래스 모집]을 눌러보시면, 주제/기간/혜택/문의/분위기/네이버 유형이 자동으로 채워집니다.\n\n그다음 [딸깍 키트 생성]을 눌러 인스타그램 캡션, 네이버 플레이스 소식, 쿠폰 문안, 리뷰 답글이 실제로 쓸 만한지 봐주세요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal\n\n확인해주시면 좋은 것\n1. 문안이 은빛캘리 말투와 맞는지\n2. 네이버 플레이스에 복사해서 쓰기 편한지\n3. 월 9,900원이라면 계속 쓸 만한지`;
+    }
+
     function copyEunbitPilotMessage() {
-      const text = `은빛캘리 파일럿 테스트 안내\n\n안녕하세요. 지금 Bloom 파일럿 버전을 은빛캘리 기준으로 먼저 테스트할 수 있게 준비해두었습니다.\n\n아래 링크를 열고 [딸깍 만들기]에서 [은빛캘리 샘플]의 [원데이 클래스 모집]을 눌러보시면, 주제/기간/혜택/문의/분위기/네이버 유형이 자동으로 채워집니다.\n\n그다음 [딸깍 키트 생성]을 눌러 인스타그램 캡션, 네이버 플레이스 소식, 쿠폰 문안, 리뷰 답글이 실제로 쓸 만한지 봐주세요.\n\n체험 링크: https://eunbit-marketing.vercel.app/#proposal\n\n확인해주시면 좋은 것\n1. 문안이 은빛캘리 말투와 맞는지\n2. 네이버 플레이스에 복사해서 쓰기 편한지\n3. 월 9,900원이라면 계속 쓸 만한지`;
+      const text = getEunbitPilotMessage();
       navigator.clipboard.writeText(text).then(() => toast('📋 은빛캘리 첫 안내문을 복사했어요'));
     }
+
+    async function shareEunbitPilotMessage() {
+      const text = getEunbitPilotMessage();
+      const url = 'https://eunbit-marketing.vercel.app/#proposal';
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: '은빛캘리 Bloom 파일럿 테스트',
+            text,
+            url,
+          });
+          toast('공유창을 닫았어요. 실제로 보냈다면 아래에서 발송 완료를 기록해주세요.');
+          return;
+        } catch (error) {
+          if (error?.name === 'AbortError') {
+            toast('공유를 취소했어요. 발송 상태는 변경하지 않았습니다.');
+            return;
+          }
+        }
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('이 기기에서는 공유창을 열 수 없어 안내문을 복사했어요.');
+      } catch {
+        toast('공유를 열 수 없어요. 라이브 링크 복사를 이용해주세요.');
+      }
+    }
+
     window.copyEunbitPilotMessage = copyEunbitPilotMessage;
+    window.shareEunbitPilotMessage = shareEunbitPilotMessage;
 
     const PILOT_LAUNCH_STATUS = {
       ready: { label: '발송 전', note: '첫 안내문을 복사해 은빛캘리에 보내면 시작돼요.' },

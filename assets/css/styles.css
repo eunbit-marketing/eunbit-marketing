@@ -1565,6 +1565,9 @@
     .pilot-send-grid strong { display: block; color: var(--ink); font-size: 13px; font-weight: 900; }
     .pilot-send-grid p { font-size: 12px; margin-top: 6px; }
     .pilot-send-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 16px; }
+    .pilot-share-note {
+      margin-top: 10px; color: var(--sub); font-size: 11px; line-height: 1.55;
+    }
     .pilot-launch-card {
       margin-top: 18px;
       background: var(--white);
