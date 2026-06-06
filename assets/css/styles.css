@@ -1191,6 +1191,21 @@
       padding: 5px 7px; border-radius: 999px; background: var(--bg);
       border: 1px solid var(--border); color: var(--sub); font-size: 11px; font-weight: 700;
     }
+    .kit-rating {
+      display: grid; gap: 7px; margin-top: auto; padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+    .kit-rating > span { color: var(--sub); font-size: 11px; font-weight: 700; }
+    .kit-rating-actions { display: flex; flex-wrap: wrap; gap: 5px; }
+    .kit-rating-actions button {
+      min-height: 30px; border: 1px solid var(--border); border-radius: 7px;
+      background: var(--bg); color: var(--sub); padding: 5px 8px;
+      font-family: inherit; font-size: 10px; font-weight: 800; cursor: pointer;
+    }
+    .kit-rating-actions button:hover,
+    .kit-rating-actions button.active {
+      border-color: rgba(0,199,60,.45); background: rgba(0,199,60,.10); color: #10794A;
+    }
     .marketing-kit-footer { grid-column: 1 / -1; display: grid; gap: 8px; }
     .marketing-kit-visual,
     .marketing-kit-banners,

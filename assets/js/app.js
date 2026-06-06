@@ -17,6 +17,7 @@
       weeklyDrafts: [],
       marketingKits: [],
       pilotFeedback: [],
+      kitRatings: [],
       pilotLaunch: {
         status: 'ready',
         sentAt: '',
@@ -723,7 +724,8 @@
 
       const directDemoParams = new URLSearchParams(window.location.search);
       const directDemoScenario = directDemoParams.get('scenario');
-      if (directDemoParams.get('pilot') === 'eunbit' && STUDIO_PILOT_SCENARIOS.eunbit[directDemoScenario]) {
+      const isDirectPilotDemo = directDemoParams.get('pilot') === 'eunbit' && STUDIO_PILOT_SCENARIOS.eunbit[directDemoScenario];
+      if (isDirectPilotDemo) {
         const eunbitModeButton = document.querySelector('[data-studio-scenario-mode="eunbit"]');
         setStudioScenarioMode('eunbit', eunbitModeButton);
         switchTab('ai');
@@ -802,7 +804,7 @@
       renderUsageWidgets();
       renderPilotFeedbackPanel();
       renderPilotLaunchTracker();
-      if (!state.onboardingComplete && state.currentTab !== 'proposal') setTimeout(showOnboarding, 500);
+      if (!state.onboardingComplete && state.currentTab !== 'proposal' && !isDirectPilotDemo) setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
 
@@ -1838,7 +1840,8 @@
     function buildPilotFeedbackReport() {
       ensurePilotFeedback();
       const items = state.pilotFeedback || [];
-      if (!items.length) {
+      const ratings = Array.isArray(state.kitRatings) ? state.kitRatings : [];
+      if (!items.length && !ratings.length) {
         return '# Bloom 파일럿 피드백 기록\n\n아직 저장된 파일럿 피드백이 없습니다.';
       }
 
@@ -1847,6 +1850,7 @@
         '',
         `- 생성일: ${new Date().toLocaleString('ko-KR')}`,
         `- 총 응답: ${items.length}건`,
+        `- 결과별 빠른 평가: ${ratings.length}건`,
         `- 파일럿 상태: ${PILOT_LAUNCH_STATUS[state.pilotLaunch?.status]?.label || '발송 전'}`,
         `- 후속 연락: ${formatPilotLaunchDate(state.pilotLaunch?.followUpDate)}`,
         '',
@@ -1863,6 +1867,26 @@
           ''
         );
       });
+
+      if (ratings.length) {
+        const ratingLabels = { ready: '바로 사용', edit: '조금 수정', retry: '다시 생성' };
+        const counts = ratings.reduce((result, item) => {
+          result[item.rating] = (result[item.rating] || 0) + 1;
+          return result;
+        }, {});
+        lines.push(
+          '## 결과별 빠른 평가',
+          '',
+          `- **바로 사용:** ${counts.ready || 0}건`,
+          `- **조금 수정:** ${counts.edit || 0}건`,
+          `- **다시 생성:** ${counts.retry || 0}건`,
+          ''
+        );
+        ratings.slice(0, 20).forEach((item, index) => {
+          lines.push(`- ${index + 1}. **${item.channel}** · ${ratingLabels[item.rating] || item.rating} · ${item.topic || '주제 미입력'} · ${formatPilotFeedbackDate(item.createdAt)}`);
+        });
+        lines.push('');
+      }
 
       lines.push(
         '## 다음 개선 판단',
@@ -1889,9 +1913,10 @@
       const payload = {
         exportedAt: new Date().toISOString(),
         product: 'Bloom',
-        version: 'v0.6.15',
+        version: 'v0.6.19',
         count: state.pilotFeedback.length,
         feedback: state.pilotFeedback,
+        kitRatings: Array.isArray(state.kitRatings) ? state.kitRatings : [],
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -2649,18 +2674,22 @@
             <div class="marketing-kit-tags">
               ${data.instagram.hashtags.map(tag => `<span>${escapeHtml(tag)}</span>`).join('')}
             </div>
+            ${renderKitRatingControls('인스타그램')}
           </div>
           <div class="marketing-kit-card">
             <strong>네이버 플레이스 소식</strong>
             <div class="marketing-kit-copy">${escapeHtml(data.naver.copyText)}</div>
+            ${renderKitRatingControls('네이버 플레이스')}
           </div>
           <div class="marketing-kit-card">
             <strong>쿠폰 문안</strong>
             <div class="marketing-kit-copy">${escapeHtml(data.coupon.title)}<br>${escapeHtml(data.coupon.body)}</div>
+            ${renderKitRatingControls('쿠폰 문안')}
           </div>
           <div class="marketing-kit-card">
             <strong>리뷰 답글</strong>
             <div class="marketing-kit-copy">${escapeHtml(data.reviewReply)}</div>
+            ${renderKitRatingControls('리뷰 답글')}
           </div>
           <div class="marketing-kit-footer">
             <div class="marketing-kit-visual"><strong>사진/배너 방향</strong><br>${escapeHtml(data.visualDirection)}</div>
@@ -2688,6 +2717,43 @@
           </div>
         </div>`;
     }
+
+    function renderKitRatingControls(channel) {
+      const safeChannel = escapeHtml(channel);
+      return `
+        <div class="kit-rating" data-kit-rating-channel="${safeChannel}">
+          <span>이 결과, 실제로 쓸 수 있나요?</span>
+          <div class="kit-rating-actions">
+            <button onclick="rateCurrentMarketingKit('${safeChannel}', 'ready', this)">바로 사용</button>
+            <button onclick="rateCurrentMarketingKit('${safeChannel}', 'edit', this)">조금 수정</button>
+            <button onclick="rateCurrentMarketingKit('${safeChannel}', 'retry', this)">다시 생성</button>
+          </div>
+        </div>`;
+    }
+
+    function rateCurrentMarketingKit(channel, rating, button) {
+      if (!aiMarketingKit) return;
+      const allowedRatings = new Set(['ready', 'edit', 'retry']);
+      if (!allowedRatings.has(rating)) return;
+      if (!Array.isArray(state.kitRatings)) state.kitRatings = [];
+      const topic = document.getElementById('ai-kit-topic')?.value.trim() || aiMarketingKit.title || '';
+      state.kitRatings = state.kitRatings.filter(item => item.channel !== channel || item.topic !== topic);
+      state.kitRatings.unshift({
+        id: Date.now(),
+        channel,
+        rating,
+        topic,
+        createdAt: new Date().toISOString(),
+      });
+      state.kitRatings = state.kitRatings.slice(0, 100);
+      saveState();
+      const group = button?.closest('.kit-rating-actions');
+      group?.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
+      const labels = { ready: '바로 사용', edit: '조금 수정', retry: '다시 생성' };
+      toast(`💬 ${channel} 결과를 '${labels[rating]}'으로 기록했어요`);
+    }
+
+    window.rateCurrentMarketingKit = rateCurrentMarketingKit;
 
     function getMarketingKitCopyText() {
       if (!aiMarketingKit) return '';
