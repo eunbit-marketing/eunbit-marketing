@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.17 native pilot sharing candidate
-- Latest feature commit: pending (`Add native pilot sharing`)
+- Latest feature commit: `5fd8ff2` (`Add native pilot sharing`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -35,7 +35,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.14 | `00fe4df` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `pilot-send-card`, `은빛캘리 첫 안내문`, `pilot-send-grid`, `copyEunbitPilotMessage`, and `window.copyEunbitPilotMessage`. |
 | v0.6.15 | `df0e50e` | Confirmed on live site, 2026-06-05 KST | Production HTML/CSS/JS include `pilot-feedback-actions`, `btn-danger-soft`, `copyPilotFeedbackReport`, `downloadPilotFeedbackJson`, `clearPilotFeedback`, and `v0.6.15`. |
 | v0.6.16 | `23245d2` | Confirmed on live site, 2026-06-06 KST | Production HTML/CSS/JS include `pilot-launch-card`, `꼭 확인할 질문 3개`, `pilot-launch-status-badge`, `renderPilotLaunchTracker`, `markEunbitPilotSent`, and Markdown feedback report headings. |
-| v0.6.17 | pending | Local verification first, then production check after deploy | Adds a mobile native share action for the Eunbit pilot invitation, with clipboard fallback and honest separation between opening the share sheet and recording a completed send. |
+| v0.6.17 | `5fd8ff2` | Local static/server/browser verification complete, 2026-06-06 KST | Adds a mobile native share action for the Eunbit pilot invitation, with clipboard fallback and honest separation between opening the share sheet and recording a completed send. |
 
 ## Product Direction
 
