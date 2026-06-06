@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.15 pilot feedback export candidate
-- Latest feature commit: `df0e50e` (`Add pilot feedback export controls`)
+- Production baseline: v0.6.16 pilot launch tracker candidate
+- Latest feature commit: pending (`Add pilot launch tracker`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -34,6 +34,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.13 | `d1df431` | Confirmed on live site, 2026-06-03 KST | Production HTML/JS include `기본은 은빛캘리 샘플`, `우리 매장/대표 서비스/우리 동네`, `getGenericScenarioBasics`, and `fallbackNote`. |
 | v0.6.14 | `00fe4df` | Confirmed on live site, 2026-06-03 KST | Production HTML/CSS/JS include `pilot-send-card`, `은빛캘리 첫 안내문`, `pilot-send-grid`, `copyEunbitPilotMessage`, and `window.copyEunbitPilotMessage`. |
 | v0.6.15 | `df0e50e` | Confirmed on live site, 2026-06-05 KST | Production HTML/CSS/JS include `pilot-feedback-actions`, `btn-danger-soft`, `copyPilotFeedbackReport`, `downloadPilotFeedbackJson`, `clearPilotFeedback`, and `v0.6.15`. |
+| v0.6.16 | pending | Local verification first, then production check after deploy | Adds an Eunbit pilot launch tracker with sent/testing/feedback states, follow-up date, explicit feedback questions, and Markdown-formatted feedback reports. |
 
 ## Product Direction
 
@@ -100,4 +101,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.13: Clarify that Eunbit sample is the default scenario mode and show safe fallback values when generic store settings are missing.
 - v0.6.14: Add an Eunbit pilot handoff card so the first customer link can be sent with a copy-ready guide and demo checklist.
 - v0.6.15: Add copy/export/clear controls for saved pilot feedback so first-customer reactions can become operating evidence for the next build.
+- v0.6.16: Track the first pilot launch, follow-up date, and three validation questions while exporting feedback as Notion-ready Markdown.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

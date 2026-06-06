@@ -880,6 +880,44 @@
           </div>
         </div>
 
+        <div class="pilot-launch-card">
+          <div class="pilot-launch-head">
+            <div>
+              <div class="breadcrumb">첫 파일럿 운영</div>
+              <h2 class="section-title">은빛캘리 발송 상태를 여기서 관리해요</h2>
+              <p>링크를 보낸 뒤 후속 연락 날짜와 확인할 질문 3개를 놓치지 않도록 기록합니다.</p>
+            </div>
+            <div id="pilot-launch-status-badge" class="pilot-launch-status-badge">발송 전</div>
+          </div>
+          <div class="pilot-launch-grid">
+            <label class="pilot-launch-field">
+              <span>진행 상태</span>
+              <select id="pilot-launch-status" onchange="updatePilotLaunchStatus(this.value)">
+                <option value="ready">발송 전</option>
+                <option value="sent">링크 발송 완료</option>
+                <option value="testing">사장님 체험 중</option>
+                <option value="feedback">피드백 받음</option>
+              </select>
+            </label>
+            <label class="pilot-launch-field">
+              <span>후속 연락 날짜</span>
+              <input id="pilot-follow-up-date" type="date" onchange="updatePilotFollowUpDate(this.value)">
+            </label>
+          </div>
+          <div class="pilot-question-list">
+            <strong>꼭 확인할 질문 3개</strong>
+            <div><span>1</span><p>만들어진 문안이 은빛캘리 말투와 실제 홍보 내용에 맞나요?</p></div>
+            <div><span>2</span><p>네이버 플레이스와 인스타그램에 복사해서 쓰기 편했나요?</p></div>
+            <div><span>3</span><p>월 9,900원이라면 계속 사용할 의향이 있나요?</p></div>
+          </div>
+          <div class="pilot-launch-actions">
+            <button class="btn btn-primary" onclick="markEunbitPilotSent()">방금 링크 보냈어요</button>
+            <button class="btn btn-secondary" onclick="copyPilotFollowUpMessage()">후속 질문 복사</button>
+            <button class="btn btn-secondary" onclick="showPilotFeedbackModal()">받은 답변 기록</button>
+          </div>
+          <div id="pilot-launch-summary" class="pilot-launch-summary"></div>
+        </div>
+
         <div class="proposal-section">
           <div class="proposal-section-head">
             <div>

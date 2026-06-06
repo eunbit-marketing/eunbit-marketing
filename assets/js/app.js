@@ -17,6 +17,11 @@
       weeklyDrafts: [],
       marketingKits: [],
       pilotFeedback: [],
+      pilotLaunch: {
+        status: 'ready',
+        sentAt: '',
+        followUpDate: '',
+      },
       draftFilter: 'all',
       storageView: 'all',
       studioMood: '따뜻한',
@@ -46,6 +51,7 @@
           ...saved,
           settings: { ...defaultState.settings, ...(saved.settings || {}) },
           usage: { ...defaultState.usage, ...(saved.usage || {}) },
+          pilotLaunch: { ...defaultState.pilotLaunch, ...(saved.pilotLaunch || {}) },
         };
       } catch { return { ...defaultState }; }
     }
@@ -298,6 +304,7 @@
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderMarketingKits(); renderDraftQueue(); updateMobilePreview(); }
       if (tab === 'settings') renderPilotFeedbackPanel();
+      if (tab === 'proposal') renderPilotLaunchTracker();
       if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags(state.category || '공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
@@ -525,6 +532,80 @@
       navigator.clipboard.writeText(text).then(() => toast('📋 은빛캘리 첫 안내문을 복사했어요'));
     }
     window.copyEunbitPilotMessage = copyEunbitPilotMessage;
+
+    const PILOT_LAUNCH_STATUS = {
+      ready: { label: '발송 전', note: '첫 안내문을 복사해 은빛캘리에 보내면 시작돼요.' },
+      sent: { label: '링크 발송 완료', note: '사장님이 링크를 열었는지 가볍게 확인할 차례예요.' },
+      testing: { label: '사장님 체험 중', note: '딸깍 만들기와 복사 흐름을 충분히 써보도록 기다려주세요.' },
+      feedback: { label: '피드백 받음', note: '받은 답변을 파일럿 피드백 기록에 남겨 다음 개선으로 옮겨요.' },
+    };
+
+    function getDefaultPilotFollowUpDate() {
+      const date = new Date();
+      date.setDate(date.getDate() + 3);
+      return date.toISOString().slice(0, 10);
+    }
+
+    function formatPilotLaunchDate(value) {
+      if (!value) return '미정';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '미정';
+      return date.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+    }
+
+    function renderPilotLaunchTracker() {
+      const statusSelect = document.getElementById('pilot-launch-status');
+      const followUpInput = document.getElementById('pilot-follow-up-date');
+      const badge = document.getElementById('pilot-launch-status-badge');
+      const summary = document.getElementById('pilot-launch-summary');
+      if (!statusSelect || !followUpInput || !badge || !summary) return;
+
+      const launch = state.pilotLaunch || defaultState.pilotLaunch;
+      const meta = PILOT_LAUNCH_STATUS[launch.status] || PILOT_LAUNCH_STATUS.ready;
+      statusSelect.value = launch.status || 'ready';
+      followUpInput.value = launch.followUpDate || '';
+      badge.textContent = meta.label;
+      badge.dataset.status = launch.status || 'ready';
+      const sentText = launch.sentAt ? `발송 기록 ${formatPilotLaunchDate(launch.sentAt)}` : '아직 발송 기록 없음';
+      const followUpText = launch.followUpDate ? `후속 연락 ${formatPilotLaunchDate(launch.followUpDate)}` : '후속 연락 날짜 미정';
+      summary.innerHTML = `<strong>${sentText} · ${followUpText}</strong><span>${meta.note}</span>`;
+    }
+
+    function updatePilotLaunchStatus(value) {
+      state.pilotLaunch.status = PILOT_LAUNCH_STATUS[value] ? value : 'ready';
+      if (state.pilotLaunch.status === 'sent' && !state.pilotLaunch.sentAt) state.pilotLaunch.sentAt = new Date().toISOString();
+      saveState();
+      renderPilotLaunchTracker();
+      toast(`파일럿 상태를 '${PILOT_LAUNCH_STATUS[state.pilotLaunch.status].label}'로 저장했어요`);
+    }
+
+    function updatePilotFollowUpDate(value) {
+      state.pilotLaunch.followUpDate = value || '';
+      saveState();
+      renderPilotLaunchTracker();
+      toast(value ? '후속 연락 날짜를 저장했어요' : '후속 연락 날짜를 비웠어요');
+    }
+
+    function markEunbitPilotSent() {
+      state.pilotLaunch.status = 'sent';
+      state.pilotLaunch.sentAt = new Date().toISOString();
+      if (!state.pilotLaunch.followUpDate) state.pilotLaunch.followUpDate = getDefaultPilotFollowUpDate();
+      saveState();
+      renderPilotLaunchTracker();
+      toast('은빛캘리 링크 발송 완료로 기록했어요. 3일 뒤 후속 연락도 잡았습니다.');
+    }
+
+    function copyPilotFollowUpMessage() {
+      const text = `은빛캘리 Bloom 파일럿 확인 질문\n\n써보신 뒤 편하게 아래 3가지만 알려주세요.\n\n1. 만들어진 문안이 은빛캘리 말투와 실제 홍보 내용에 맞았나요?\n2. 네이버 플레이스와 인스타그램에 복사해서 쓰기 편했나요?\n3. 월 9,900원이라면 계속 사용할 의향이 있나요?\n\n좋았던 점이나 불편했던 점도 한 줄만 남겨주시면 다음 개선에 바로 반영하겠습니다.`;
+      navigator.clipboard.writeText(text)
+        .then(() => toast('📋 파일럿 후속 질문을 복사했어요'))
+        .catch(() => toast('복사 권한을 확인해주세요'));
+    }
+
+    window.updatePilotLaunchStatus = updatePilotLaunchStatus;
+    window.updatePilotFollowUpDate = updatePilotFollowUpDate;
+    window.markEunbitPilotSent = markEunbitPilotSent;
+    window.copyPilotFollowUpMessage = copyPilotFollowUpMessage;
     function useCaption() {
       const text = document.getElementById('ai-output').textContent;
       document.getElementById('caption-final').value = text;
@@ -666,6 +747,7 @@
       updateMobilePreview();
       renderUsageWidgets();
       renderPilotFeedbackPanel();
+      renderPilotLaunchTracker();
       if (!state.onboardingComplete && state.currentTab !== 'proposal') setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
@@ -1703,26 +1785,40 @@
       ensurePilotFeedback();
       const items = state.pilotFeedback || [];
       if (!items.length) {
-        return 'Bloom 파일럿 피드백 기록\n\n아직 저장된 파일럿 피드백이 없습니다.';
+        return '# Bloom 파일럿 피드백 기록\n\n아직 저장된 파일럿 피드백이 없습니다.';
       }
 
       const lines = [
-        'Bloom 파일럿 피드백 기록',
-        `생성일: ${new Date().toLocaleString('ko-KR')}`,
-        `총 ${items.length}건`,
+        '# Bloom 파일럿 피드백 기록',
+        '',
+        `- 생성일: ${new Date().toLocaleString('ko-KR')}`,
+        `- 총 응답: ${items.length}건`,
+        `- 파일럿 상태: ${PILOT_LAUNCH_STATUS[state.pilotLaunch?.status]?.label || '발송 전'}`,
+        `- 후속 연락: ${formatPilotLaunchDate(state.pilotLaunch?.followUpDate)}`,
         '',
       ];
 
       items.forEach((item, index) => {
         lines.push(
-          `${index + 1}. ${item.store || '이름 없음'} · ${item.category || '업종 미입력'}`,
-          `- 필요 기능: ${item.need || '미입력'}`,
-          `- 가격 반응: ${item.price || '미입력'}`,
-          `- 메모: ${item.note || '없음'}`,
-          `- 기록: ${formatPilotFeedbackDate(item.createdAt)}`,
+          `## ${index + 1}. ${item.store || '이름 없음'} · ${item.category || '업종 미입력'}`,
+          '',
+          `- **필요 기능:** ${item.need || '미입력'}`,
+          `- **가격 반응:** ${item.price || '미입력'}`,
+          `- **메모:** ${item.note || '없음'}`,
+          `- **기록:** ${formatPilotFeedbackDate(item.createdAt)}`,
           ''
         );
       });
+
+      lines.push(
+        '## 다음 개선 판단',
+        '',
+        '- 반복해서 언급된 필요 기능:',
+        '- 복사/사용 과정의 불편:',
+        '- 월 9,900원 지불 의사:',
+        '- 다음 버전에서 먼저 고칠 것:',
+        ''
+      );
 
       return lines.join('\n');
     }
