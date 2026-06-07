@@ -1883,7 +1883,8 @@
           ''
         );
         ratings.slice(0, 20).forEach((item, index) => {
-          lines.push(`- ${index + 1}. **${item.channel}** · ${ratingLabels[item.rating] || item.rating} · ${item.topic || '주제 미입력'} · ${formatPilotFeedbackDate(item.createdAt)}`);
+          const reasonText = item.reason ? ` · 이유: ${item.reason}` : '';
+          lines.push(`- ${index + 1}. **${item.channel}** · ${ratingLabels[item.rating] || item.rating}${reasonText} · ${item.topic || '주제 미입력'} · ${formatPilotFeedbackDate(item.createdAt)}`);
         });
         lines.push('');
       }
@@ -2212,6 +2213,7 @@
     let aiNaverResult = '';
     let aiNaverPackage = null;
     let aiMarketingKit = null;
+    let pendingKitRating = null;
     let aiTimeResult = '';
 
     function switchAIMode(mode, el) {
@@ -2735,6 +2737,33 @@
       if (!aiMarketingKit) return;
       const allowedRatings = new Set(['ready', 'edit', 'retry']);
       if (!allowedRatings.has(rating)) return;
+      if (rating !== 'ready') {
+        pendingKitRating = { channel, rating, button };
+        openModal('어떤 부분이 아쉬웠나요?', `
+          <p class="kit-rating-reason-copy">하나만 골라도 다음 생성 품질을 개선하는 근거가 됩니다. 평가는 기록만 하며 AI를 자동으로 다시 생성하지 않아요.</p>
+          <div class="kit-rating-reason-options">
+            <button onclick="completeKitRating('말투가 매장과 안 맞음')">말투가 안 맞아요</button>
+            <button onclick="completeKitRating('필요한 정보가 부족함')">정보가 부족해요</button>
+            <button onclick="completeKitRating('문안이 너무 길거나 짧음')">길이를 바꾸고 싶어요</button>
+            <button onclick="completeKitRating('가격·기간·혜택 등 사실 확인 필요')">사실을 고쳐야 해요</button>
+            <button onclick="completeKitRating('결과 방향이 기대와 다름')">방향이 달라요</button>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:12px;" onclick="completeKitRating('')">이유 없이 기록</button>
+        `);
+        return;
+      }
+      saveKitRating(channel, rating, button, '');
+    }
+
+    function completeKitRating(reason) {
+      if (!pendingKitRating) return;
+      const { channel, rating, button } = pendingKitRating;
+      pendingKitRating = null;
+      closeModal();
+      saveKitRating(channel, rating, button, reason);
+    }
+
+    function saveKitRating(channel, rating, button, reason = '') {
       if (!Array.isArray(state.kitRatings)) state.kitRatings = [];
       const topic = document.getElementById('ai-kit-topic')?.value.trim() || aiMarketingKit.title || '';
       state.kitRatings = state.kitRatings.filter(item => item.channel !== channel || item.topic !== topic);
@@ -2742,6 +2771,7 @@
         id: Date.now(),
         channel,
         rating,
+        reason,
         topic,
         createdAt: new Date().toISOString(),
       });
@@ -2754,6 +2784,7 @@
     }
 
     window.rateCurrentMarketingKit = rateCurrentMarketingKit;
+    window.completeKitRating = completeKitRating;
 
     function getMarketingKitCopyText() {
       if (!aiMarketingKit) return '';
