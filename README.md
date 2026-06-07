@@ -6,7 +6,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.23 rating source separation candidate
+- Production baseline: v0.6.23 rating source separation confirmed
 - Latest feature commit: `861e097` (`Separate pilot and internal ratings`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
@@ -41,7 +41,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.20 | `8e4122a` | Confirmed on live site, 2026-06-07 KST | Edit and retry ratings collect a quick reason so prompt improvements can target tone, missing information, length, factual corrections, or direction. |
 | v0.6.21 | `4a1bc19` | Confirmed on live site, 2026-06-07 KST | Proposal dashboard summarizes rating totals, channel risk, repeated reasons, and the next recommended improvement. |
 | v0.6.22 | `b8ca06f` | Confirmed on live site, 2026-06-07 KST | Recommendation cards disclose rule-based, zero-cost calculation and wait for at least three ratings before proposing an improvement priority. |
-| v0.6.23 | `861e097` | Deployment pending, 2026-06-07 KST | Separate direct-link pilot ratings from internal test ratings so only real pilot evidence can influence improvement recommendations. |
+| v0.6.23 | `861e097` | Confirmed on live site, 2026-06-07 KST | Separate direct-link pilot ratings from internal test ratings so only real pilot evidence can influence improvement recommendations. |
 
 ## Product Direction
 
