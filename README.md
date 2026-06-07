@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.21 pilot evidence dashboard confirmed
-- Latest feature commit: `4a1bc19` (`Add pilot evidence dashboard`)
+- Production baseline: v0.6.22 recommendation transparency candidate
+- Latest feature commit: pending (`Clarify pilot recommendation confidence`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -40,6 +40,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.19 | `78fabdc` | Confirmed on live site, 2026-06-07 KST | Direct pilot demos skip onboarding; each generated Instagram, Naver, coupon, and review result can be rated as ready, edit, or retry and included in the pilot report. |
 | v0.6.20 | `8e4122a` | Confirmed on live site, 2026-06-07 KST | Edit and retry ratings collect a quick reason so prompt improvements can target tone, missing information, length, factual corrections, or direction. |
 | v0.6.21 | `4a1bc19` | Confirmed on live site, 2026-06-07 KST | Proposal dashboard summarizes rating totals, channel risk, repeated reasons, and the next recommended improvement. |
+| v0.6.22 | pending | Local verification in progress, 2026-06-07 KST | Recommendation cards disclose rule-based, zero-cost calculation and wait for at least three ratings before proposing an improvement priority. |
 
 ## Product Direction
 
@@ -112,4 +113,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.19: Keep direct pilot demos free of onboarding interruptions, capture channel-level usefulness ratings, and include the evidence in pilot feedback exports.
 - v0.6.20: Ask why a generated result needs editing or retrying and carry that reason into the pilot evidence report.
 - v0.6.21: Turn saved pilot ratings into an operator-facing evidence dashboard and make ratings visible even before interview feedback exists.
+- v0.6.22: Make recommendation logic and cost explicit, and avoid treating one early rating as a confident product direction.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

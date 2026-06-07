@@ -1870,6 +1870,7 @@
       });
 
       if (ratings.length) {
+        const recommendation = getPilotRecommendation(getPilotRatingSummary());
         const ratingLabels = { ready: '바로 사용', edit: '조금 수정', retry: '다시 생성' };
         const counts = ratings.reduce((result, item) => {
           result[item.rating] = (result[item.rating] || 0) + 1;
@@ -1881,6 +1882,9 @@
           `- **바로 사용:** ${counts.ready || 0}건`,
           `- **조금 수정:** ${counts.edit || 0}건`,
           `- **다시 생성:** ${counts.retry || 0}건`,
+          `- **규칙 기반 추천 상태:** ${recommendation.label}`,
+          `- **추천 판단:** ${recommendation.message}`,
+          '- **추천 비용:** AI 호출 없음 · 추가 비용 없음',
           ''
         );
         ratings.slice(0, 20).forEach((item, index) => {
@@ -1915,7 +1919,7 @@
       const payload = {
         exportedAt: new Date().toISOString(),
         product: 'Bloom',
-        version: 'v0.6.21',
+        version: 'v0.6.22',
         count: state.pilotFeedback.length,
         feedback: state.pilotFeedback,
         kitRatings: Array.isArray(state.kitRatings) ? state.kitRatings : [],
@@ -1994,10 +1998,35 @@
       return { ratings, ratingCounts, channels, reasons };
     }
 
+    function getPilotRecommendation(summary) {
+      const minimumRatings = 3;
+      const { ratings, channels } = summary;
+      if (ratings.length < minimumRatings) {
+        return {
+          status: 'collecting',
+          label: '근거 수집 중',
+          message: `평가 ${minimumRatings - ratings.length}건이 더 필요해요. 최소 ${minimumRatings}건부터 개선 우선순위를 제안합니다.`,
+        };
+      }
+      const focus = channels.find(([, counts]) => counts.edit > 0 || counts.retry > 0);
+      return focus
+        ? {
+            status: 'actionable',
+            label: '개선 후보 발견',
+            message: `${focus[0]}부터 확인하세요. 수정 ${focus[1].edit}건 · 다시 생성 ${focus[1].retry}건이 기록됐습니다.`,
+          }
+        : {
+            status: 'stable',
+            label: '현재 방향 유지',
+            message: '현재 기록은 모두 바로 사용입니다. 평가가 더 쌓일 때까지 이 출력 방향을 유지하세요.',
+          };
+    }
+
     function renderPilotEvidenceDashboard() {
       const dashboard = document.getElementById('pilot-evidence-dashboard');
       if (!dashboard) return;
-      const { ratings, ratingCounts, channels, reasons } = getPilotRatingSummary();
+      const summary = getPilotRatingSummary();
+      const { ratings, ratingCounts, channels, reasons } = summary;
       if (!ratings.length) {
         dashboard.innerHTML = `
           <div class="pilot-evidence-head">
@@ -2011,10 +2040,7 @@
           </div>`;
         return;
       }
-      const focus = channels.find(([, counts]) => counts.edit > 0 || counts.retry > 0);
-      const focusMessage = focus
-        ? `${focus[0]}부터 확인하세요. 수정 ${focus[1].edit}건 · 다시 생성 ${focus[1].retry}건이 기록됐습니다.`
-        : '현재 기록은 모두 바로 사용입니다. 평가가 더 쌓일 때까지 이 출력 방향을 유지하세요.';
+      const recommendation = getPilotRecommendation(summary);
       dashboard.innerHTML = `
         <div class="pilot-evidence-head">
           <div><div class="breadcrumb">파일럿 근거</div><h2 class="section-title">평가가 다음 업데이트를 정해요</h2></div>
@@ -2039,7 +2065,11 @@
             </div>
           </section>
         </div>
-        <div class="pilot-evidence-next"><strong>다음 개선 추천</strong><span>${escapeHtml(focusMessage)}</span></div>
+        <div class="pilot-evidence-next" data-status="${recommendation.status}">
+          <div><strong>다음 개선 추천</strong><em>${recommendation.label}</em></div>
+          <span>${escapeHtml(recommendation.message)}</span>
+          <small>규칙 기반 계산 · AI 호출 없음 · 추가 비용 없음</small>
+        </div>
         <div class="pilot-feedback-actions">
           <button class="btn btn-primary" onclick="copyPilotFeedbackReport()">근거 리포트 복사</button>
           <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
