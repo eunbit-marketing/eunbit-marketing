@@ -6,7 +6,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.21 pilot evidence dashboard candidate
+- Production baseline: v0.6.21 pilot evidence dashboard confirmed
 - Latest feature commit: `4a1bc19` (`Add pilot evidence dashboard`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
@@ -39,7 +39,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.18 | `f47b713` | Confirmed on live site, 2026-06-06 KST | Direct pilot URL opens the AI tab and prefills the Eunbit `classIntro` scenario without automatically spending an AI generation request. |
 | v0.6.19 | `78fabdc` | Confirmed on live site, 2026-06-07 KST | Direct pilot demos skip onboarding; each generated Instagram, Naver, coupon, and review result can be rated as ready, edit, or retry and included in the pilot report. |
 | v0.6.20 | `8e4122a` | Confirmed on live site, 2026-06-07 KST | Edit and retry ratings collect a quick reason so prompt improvements can target tone, missing information, length, factual corrections, or direction. |
-| v0.6.21 | `4a1bc19` | Local browser verified, production confirmation pending, 2026-06-07 KST | Proposal dashboard summarizes rating totals, channel risk, repeated reasons, and the next recommended improvement. |
+| v0.6.21 | `4a1bc19` | Confirmed on live site, 2026-06-07 KST | Proposal dashboard summarizes rating totals, channel risk, repeated reasons, and the next recommended improvement. |
 
 ## Product Direction
 
