@@ -6,8 +6,8 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 
 ## Current Status
 
-- Production baseline: v0.6.22 recommendation transparency confirmed
-- Latest feature commit: `b8ca06f` (`Clarify pilot recommendation confidence`)
+- Production baseline: v0.6.23 rating source separation candidate
+- Latest feature commit: pending (`Separate pilot and internal ratings`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -41,6 +41,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.20 | `8e4122a` | Confirmed on live site, 2026-06-07 KST | Edit and retry ratings collect a quick reason so prompt improvements can target tone, missing information, length, factual corrections, or direction. |
 | v0.6.21 | `4a1bc19` | Confirmed on live site, 2026-06-07 KST | Proposal dashboard summarizes rating totals, channel risk, repeated reasons, and the next recommended improvement. |
 | v0.6.22 | `b8ca06f` | Confirmed on live site, 2026-06-07 KST | Recommendation cards disclose rule-based, zero-cost calculation and wait for at least three ratings before proposing an improvement priority. |
+| v0.6.23 | pending | Local candidate, 2026-06-07 KST | Separate direct-link pilot ratings from internal test ratings so only real pilot evidence can influence improvement recommendations. |
 
 ## Product Direction
 
@@ -114,4 +115,5 @@ or open `index.html` directly for static UI checks. API-backed features need a V
 - v0.6.20: Ask why a generated result needs editing or retrying and carry that reason into the pilot evidence report.
 - v0.6.21: Turn saved pilot ratings into an operator-facing evidence dashboard and make ratings visible even before interview feedback exists.
 - v0.6.22: Make recommendation logic and cost explicit, and avoid treating one early rating as a confident product direction.
+- v0.6.23: Protect pilot evidence integrity by separating internal test ratings from direct-link pilot ratings and using only pilot ratings for recommendations.
 - v1.0: Launch with 3-5 pilot stores before deep platform integrations

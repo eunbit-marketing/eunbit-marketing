@@ -1841,7 +1841,8 @@
     function buildPilotFeedbackReport() {
       ensurePilotFeedback();
       const items = state.pilotFeedback || [];
-      const ratings = Array.isArray(state.kitRatings) ? state.kitRatings : [];
+      const summary = getPilotRatingSummary();
+      const { ratings, pilotRatings, internalRatings } = summary;
       if (!items.length && !ratings.length) {
         return '# Bloom 파일럿 피드백 기록\n\n아직 저장된 파일럿 피드백이 없습니다.';
       }
@@ -1851,7 +1852,8 @@
         '',
         `- 생성일: ${new Date().toLocaleString('ko-KR')}`,
         `- 총 응답: ${items.length}건`,
-        `- 결과별 빠른 평가: ${ratings.length}건`,
+        `- 실제 파일럿 결과 평가: ${pilotRatings.length}건`,
+        `- 내부 테스트 결과 평가: ${internalRatings.length}건`,
         `- 파일럿 상태: ${PILOT_LAUNCH_STATUS[state.pilotLaunch?.status]?.label || '발송 전'}`,
         `- 후속 연락: ${formatPilotLaunchDate(state.pilotLaunch?.followUpDate)}`,
         '',
@@ -1870,9 +1872,10 @@
       });
 
       if (ratings.length) {
-        const recommendation = getPilotRecommendation(getPilotRatingSummary());
+        const recommendation = getPilotRecommendation(summary);
         const ratingLabels = { ready: '바로 사용', edit: '조금 수정', retry: '다시 생성' };
-        const counts = ratings.reduce((result, item) => {
+        const sourceLabels = { pilot: '실제 파일럿', internal: '내부 테스트' };
+        const counts = pilotRatings.reduce((result, item) => {
           result[item.rating] = (result[item.rating] || 0) + 1;
           return result;
         }, {});
@@ -1889,7 +1892,8 @@
         );
         ratings.slice(0, 20).forEach((item, index) => {
           const reasonText = item.reason ? ` · 이유: ${item.reason}` : '';
-          lines.push(`- ${index + 1}. **${item.channel}** · ${ratingLabels[item.rating] || item.rating}${reasonText} · ${item.topic || '주제 미입력'} · ${formatPilotFeedbackDate(item.createdAt)}`);
+          const source = item.source === 'pilot' ? 'pilot' : 'internal';
+          lines.push(`- ${index + 1}. **[${sourceLabels[source]}] ${item.channel}** · ${ratingLabels[item.rating] || item.rating}${reasonText} · ${item.topic || '주제 미입력'} · ${formatPilotFeedbackDate(item.createdAt)}`);
         });
         lines.push('');
       }
@@ -1919,10 +1923,13 @@
       const payload = {
         exportedAt: new Date().toISOString(),
         product: 'Bloom',
-        version: 'v0.6.22',
+        version: 'v0.6.23',
         count: state.pilotFeedback.length,
         feedback: state.pilotFeedback,
-        kitRatings: Array.isArray(state.kitRatings) ? state.kitRatings : [],
+        kitRatings: (Array.isArray(state.kitRatings) ? state.kitRatings : []).map(item => ({
+          ...item,
+          source: item.source === 'pilot' ? 'pilot' : 'internal',
+        })),
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -1979,10 +1986,12 @@
 
     function getPilotRatingSummary() {
       const ratings = Array.isArray(state.kitRatings) ? state.kitRatings : [];
+      const pilotRatings = ratings.filter(item => item.source === 'pilot');
+      const internalRatings = ratings.filter(item => item.source !== 'pilot');
       const ratingCounts = { ready: 0, edit: 0, retry: 0 };
       const channelCounts = {};
       const reasonCounts = {};
-      ratings.forEach(item => {
+      pilotRatings.forEach(item => {
         ratingCounts[item.rating] = (ratingCounts[item.rating] || 0) + 1;
         channelCounts[item.channel] ||= { ready: 0, edit: 0, retry: 0, total: 0 };
         channelCounts[item.channel][item.rating] = (channelCounts[item.channel][item.rating] || 0) + 1;
@@ -1995,17 +2004,17 @@
         return bRisk - aRisk || b[1].total - a[1].total;
       });
       const reasons = Object.entries(reasonCounts).sort((a, b) => b[1] - a[1]);
-      return { ratings, ratingCounts, channels, reasons };
+      return { ratings, pilotRatings, internalRatings, ratingCounts, channels, reasons };
     }
 
     function getPilotRecommendation(summary) {
       const minimumRatings = 3;
-      const { ratings, channels } = summary;
-      if (ratings.length < minimumRatings) {
+      const { pilotRatings, channels } = summary;
+      if (pilotRatings.length < minimumRatings) {
         return {
           status: 'collecting',
           label: '근거 수집 중',
-          message: `평가 ${minimumRatings - ratings.length}건이 더 필요해요. 최소 ${minimumRatings}건부터 개선 우선순위를 제안합니다.`,
+          message: `실제 파일럿 평가 ${minimumRatings - pilotRatings.length}건이 더 필요해요. 최소 ${minimumRatings}건부터 개선 우선순위를 제안합니다.`,
         };
       }
       const focus = channels.find(([, counts]) => counts.edit > 0 || counts.retry > 0);
@@ -2026,14 +2035,14 @@
       const dashboard = document.getElementById('pilot-evidence-dashboard');
       if (!dashboard) return;
       const summary = getPilotRatingSummary();
-      const { ratings, ratingCounts, channels, reasons } = summary;
-      if (!ratings.length) {
+      const { pilotRatings, internalRatings, ratingCounts, channels, reasons } = summary;
+      if (!pilotRatings.length) {
         dashboard.innerHTML = `
           <div class="pilot-evidence-head">
-            <div><div class="breadcrumb">파일럿 근거</div><h2 class="section-title">첫 평가를 기다리고 있어요</h2></div>
-            <span class="pilot-evidence-total">0건</span>
+            <div><div class="breadcrumb">파일럿 근거</div><h2 class="section-title">실제 파일럿 평가를 기다리고 있어요</h2></div>
+            <span class="pilot-evidence-total">파일럿 0건 · 내부 ${internalRatings.length}건</span>
           </div>
-          <p class="pilot-evidence-empty">은빛캘리 사장님이 결과 카드에서 평가를 남기면 채널별 상태와 반복 이유가 이곳에 자동으로 정리됩니다.</p>
+          <p class="pilot-evidence-empty">내부 테스트 평가는 기능 확인용으로만 보관하며 개선 추천 근거에 포함하지 않습니다. 은빛캘리 사장님이 전용 파일럿 링크에서 평가를 남기면 실제 근거가 이곳에 정리됩니다.</p>
           <div class="pilot-feedback-actions">
             <button class="btn btn-secondary" onclick="copyPilotFeedbackReport()">현재 리포트 복사</button>
             <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
@@ -2044,7 +2053,7 @@
       dashboard.innerHTML = `
         <div class="pilot-evidence-head">
           <div><div class="breadcrumb">파일럿 근거</div><h2 class="section-title">평가가 다음 업데이트를 정해요</h2></div>
-          <span class="pilot-evidence-total">${ratings.length}건</span>
+          <span class="pilot-evidence-total">파일럿 ${pilotRatings.length}건 · 내부 ${internalRatings.length}건</span>
         </div>
         <div class="pilot-evidence-metrics">
           <article data-rating="ready"><strong>${ratingCounts.ready}</strong><span>바로 사용</span></article>
@@ -2069,6 +2078,7 @@
           <div><strong>다음 개선 추천</strong><em>${recommendation.label}</em></div>
           <span>${escapeHtml(recommendation.message)}</span>
           <small>규칙 기반 계산 · AI 호출 없음 · 추가 비용 없음</small>
+          <small>개선 추천은 실제 파일럿 평가만 계산하며 내부 테스트 평가는 제외합니다.</small>
         </div>
         <div class="pilot-feedback-actions">
           <button class="btn btn-primary" onclick="copyPilotFeedbackReport()">근거 리포트 복사</button>
@@ -2858,13 +2868,19 @@
     function saveKitRating(channel, rating, button, reason = '') {
       if (!Array.isArray(state.kitRatings)) state.kitRatings = [];
       const topic = document.getElementById('ai-kit-topic')?.value.trim() || aiMarketingKit.title || '';
-      state.kitRatings = state.kitRatings.filter(item => item.channel !== channel || item.topic !== topic);
+      const source = isDirectPilotDemo ? 'pilot' : 'internal';
+      state.kitRatings = state.kitRatings.filter(item => (
+        item.channel !== channel
+        || item.topic !== topic
+        || (item.source === 'pilot' ? 'pilot' : 'internal') !== source
+      ));
       state.kitRatings.unshift({
         id: Date.now(),
         channel,
         rating,
         reason,
         topic,
+        source,
         createdAt: new Date().toISOString(),
       });
       state.kitRatings = state.kitRatings.slice(0, 100);
