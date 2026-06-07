@@ -305,7 +305,7 @@
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderMarketingKits(); renderDraftQueue(); updateMobilePreview(); }
       if (tab === 'settings') renderPilotFeedbackPanel();
-      if (tab === 'proposal') renderPilotLaunchTracker();
+      if (tab === 'proposal') { renderPilotLaunchTracker(); renderPilotEvidenceDashboard(); }
       if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags(state.category || '공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
@@ -804,6 +804,7 @@
       renderUsageWidgets();
       renderPilotFeedbackPanel();
       renderPilotLaunchTracker();
+      renderPilotEvidenceDashboard();
       if (!state.onboardingComplete && state.currentTab !== 'proposal' && !isDirectPilotDemo) setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
     });
@@ -1914,7 +1915,7 @@
       const payload = {
         exportedAt: new Date().toISOString(),
         product: 'Bloom',
-        version: 'v0.6.19',
+        version: 'v0.6.21',
         count: state.pilotFeedback.length,
         feedback: state.pilotFeedback,
         kitRatings: Array.isArray(state.kitRatings) ? state.kitRatings : [],
@@ -1949,25 +1950,13 @@
       if (!panel) return;
       ensurePilotFeedback();
       const items = state.pilotFeedback || [];
-      if (!items.length) {
-        panel.innerHTML = `
-          <div class="pilot-feedback-head">
-            <strong>파일럿 피드백 기록</strong>
-            <span>0개</span>
-          </div>
-          <div class="pilot-feedback-empty">아직 저장된 피드백이 없어요. 파일럿 상담이나 데모 중 받은 의견을 여기에 빠르게 남겨둘 수 있습니다.</div>
-          <div class="pilot-feedback-actions">
-            <button class="btn btn-secondary" onclick="copyPilotFeedbackReport()">리포트 복사</button>
-            <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
-          </div>`;
-        return;
-      }
+      const ratings = Array.isArray(state.kitRatings) ? state.kitRatings : [];
       panel.innerHTML = `
         <div class="pilot-feedback-head">
           <strong>파일럿 피드백 기록</strong>
-          <span>${items.length}개</span>
+          <span>답변 ${items.length}개 · 결과 평가 ${ratings.length}개</span>
         </div>
-        <div class="pilot-feedback-list">
+        ${items.length ? `<div class="pilot-feedback-list">
           ${items.slice(0, 3).map(item => `
             <article class="pilot-feedback-item">
               <strong>${escapeHtml(item.store)} · ${escapeHtml(item.category)}</strong>
@@ -1976,11 +1965,84 @@
               ${item.note ? `<p>${escapeHtml(item.note)}</p>` : ''}
             </article>
           `).join('')}
-        </div>
+        </div>` : '<div class="pilot-feedback-empty">아직 저장된 상담 답변은 없어요. 결과별 빠른 평가는 파일럿 제안서의 운영 대시보드에서 확인할 수 있습니다.</div>'}
         <div class="pilot-feedback-actions">
           <button class="btn btn-secondary" onclick="copyPilotFeedbackReport()">리포트 복사</button>
           <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
-          <button class="btn btn-danger-soft" onclick="clearPilotFeedback()">기록 비우기</button>
+          ${items.length ? '<button class="btn btn-danger-soft" onclick="clearPilotFeedback()">답변 기록 비우기</button>' : ''}
+        </div>`;
+    }
+
+    function getPilotRatingSummary() {
+      const ratings = Array.isArray(state.kitRatings) ? state.kitRatings : [];
+      const ratingCounts = { ready: 0, edit: 0, retry: 0 };
+      const channelCounts = {};
+      const reasonCounts = {};
+      ratings.forEach(item => {
+        ratingCounts[item.rating] = (ratingCounts[item.rating] || 0) + 1;
+        channelCounts[item.channel] ||= { ready: 0, edit: 0, retry: 0, total: 0 };
+        channelCounts[item.channel][item.rating] = (channelCounts[item.channel][item.rating] || 0) + 1;
+        channelCounts[item.channel].total += 1;
+        if (item.reason) reasonCounts[item.reason] = (reasonCounts[item.reason] || 0) + 1;
+      });
+      const channels = Object.entries(channelCounts).sort((a, b) => {
+        const aRisk = a[1].retry * 2 + a[1].edit;
+        const bRisk = b[1].retry * 2 + b[1].edit;
+        return bRisk - aRisk || b[1].total - a[1].total;
+      });
+      const reasons = Object.entries(reasonCounts).sort((a, b) => b[1] - a[1]);
+      return { ratings, ratingCounts, channels, reasons };
+    }
+
+    function renderPilotEvidenceDashboard() {
+      const dashboard = document.getElementById('pilot-evidence-dashboard');
+      if (!dashboard) return;
+      const { ratings, ratingCounts, channels, reasons } = getPilotRatingSummary();
+      if (!ratings.length) {
+        dashboard.innerHTML = `
+          <div class="pilot-evidence-head">
+            <div><div class="breadcrumb">파일럿 근거</div><h2 class="section-title">첫 평가를 기다리고 있어요</h2></div>
+            <span class="pilot-evidence-total">0건</span>
+          </div>
+          <p class="pilot-evidence-empty">은빛캘리 사장님이 결과 카드에서 평가를 남기면 채널별 상태와 반복 이유가 이곳에 자동으로 정리됩니다.</p>
+          <div class="pilot-feedback-actions">
+            <button class="btn btn-secondary" onclick="copyPilotFeedbackReport()">현재 리포트 복사</button>
+            <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
+          </div>`;
+        return;
+      }
+      const focus = channels.find(([, counts]) => counts.edit > 0 || counts.retry > 0);
+      const focusMessage = focus
+        ? `${focus[0]}부터 확인하세요. 수정 ${focus[1].edit}건 · 다시 생성 ${focus[1].retry}건이 기록됐습니다.`
+        : '현재 기록은 모두 바로 사용입니다. 평가가 더 쌓일 때까지 이 출력 방향을 유지하세요.';
+      dashboard.innerHTML = `
+        <div class="pilot-evidence-head">
+          <div><div class="breadcrumb">파일럿 근거</div><h2 class="section-title">평가가 다음 업데이트를 정해요</h2></div>
+          <span class="pilot-evidence-total">${ratings.length}건</span>
+        </div>
+        <div class="pilot-evidence-metrics">
+          <article data-rating="ready"><strong>${ratingCounts.ready}</strong><span>바로 사용</span></article>
+          <article data-rating="edit"><strong>${ratingCounts.edit}</strong><span>조금 수정</span></article>
+          <article data-rating="retry"><strong>${ratingCounts.retry}</strong><span>다시 생성</span></article>
+        </div>
+        <div class="pilot-evidence-grid">
+          <section>
+            <strong>채널별 상태</strong>
+            <div class="pilot-evidence-list">
+              ${channels.map(([channel, counts]) => `<div><span>${escapeHtml(channel)}</span><small>사용 ${counts.ready} · 수정 ${counts.edit} · 재생성 ${counts.retry}</small></div>`).join('')}
+            </div>
+          </section>
+          <section>
+            <strong>반복된 이유</strong>
+            <div class="pilot-evidence-list">
+              ${reasons.length ? reasons.slice(0, 5).map(([reason, count]) => `<div><span>${escapeHtml(reason)}</span><small>${count}건</small></div>`).join('') : '<p>아직 선택된 이유가 없어요.</p>'}
+            </div>
+          </section>
+        </div>
+        <div class="pilot-evidence-next"><strong>다음 개선 추천</strong><span>${escapeHtml(focusMessage)}</span></div>
+        <div class="pilot-feedback-actions">
+          <button class="btn btn-primary" onclick="copyPilotFeedbackReport()">근거 리포트 복사</button>
+          <button class="btn btn-secondary" onclick="downloadPilotFeedbackJson()">JSON 저장</button>
         </div>`;
     }
 
@@ -2777,6 +2839,8 @@
       });
       state.kitRatings = state.kitRatings.slice(0, 100);
       saveState();
+      renderPilotFeedbackPanel();
+      renderPilotEvidenceDashboard();
       const group = button?.closest('.kit-rating-actions');
       group?.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
       const labels = { ready: '바로 사용', edit: '조금 수정', retry: '다시 생성' };
