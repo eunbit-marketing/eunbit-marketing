@@ -7,7 +7,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 ## Current Status
 
 - Production baseline: v0.6.24 pilot action checklist candidate
-- Latest feature commit: pending (`Add pilot action checklist`)
+- Latest feature commit: `6d7c7c6` (`Add pilot action checklist`)
 - Preview baseline: aligned with `main` on branch `codex/bloom-business-roadmap`
 - Preview URL: https://eunbit-marketing-git-codex-bl-8111c1-eunbit-marketings-projects.vercel.app
 - PR status: PR #1 is still Draft, but the v0.4 code-review stabilization items are complete and ready for final release review
@@ -42,7 +42,7 @@ The current product began as an Instagram marketing dashboard for the pilot stor
 | v0.6.21 | `4a1bc19` | Confirmed on live site, 2026-06-07 KST | Proposal dashboard summarizes rating totals, channel risk, repeated reasons, and the next recommended improvement. |
 | v0.6.22 | `b8ca06f` | Confirmed on live site, 2026-06-07 KST | Recommendation cards disclose rule-based, zero-cost calculation and wait for at least three ratings before proposing an improvement priority. |
 | v0.6.23 | `861e097` | Confirmed on live site, 2026-06-07 KST | Separate direct-link pilot ratings from internal test ratings so only real pilot evidence can influence improvement recommendations. |
-| v0.6.24 | pending | Local candidate, 2026-06-08 KST | Add a pilot action checklist that turns the remaining work into send, confirm, and collect-three-ratings steps. |
+| v0.6.24 | `6d7c7c6` | Deployment pending, 2026-06-08 KST | Add a pilot action checklist that turns the remaining work into send, confirm, and collect-three-ratings steps. |
 
 ## Product Direction
 
