@@ -305,7 +305,7 @@
       if (tab === 'analytics') setTimeout(initCharts, 100);
       if (tab === 'schedule') { renderCalendar(); renderScheduledPosts(); renderMarketingKits(); renderDraftQueue(); updateMobilePreview(); }
       if (tab === 'settings') renderPilotFeedbackPanel();
-      if (tab === 'proposal') { renderPilotLaunchTracker(); renderPilotEvidenceDashboard(); }
+      if (tab === 'proposal') { renderPilotLaunchTracker(); renderPilotActionChecklist(); renderPilotEvidenceDashboard(); }
       if (tab === 'hashtag') { setTimeout(() => loadTrendingHashtags(state.category || '공예'), 100); renderMyHashtags(); }
       
       // 페이지 상단으로 스크롤
@@ -614,11 +614,67 @@
       summary.innerHTML = `<strong>${sentText} · ${followUpText}</strong><span>${meta.note}</span>`;
     }
 
+    function getPilotActionProgress() {
+      const summary = getPilotRatingSummary();
+      const launch = state.pilotLaunch || defaultState.pilotLaunch;
+      const sent = Boolean(launch.sentAt) || ['sent', 'testing', 'feedback'].includes(launch.status);
+      const testing = ['testing', 'feedback'].includes(launch.status) || summary.pilotRatings.length > 0;
+      const enoughRatings = summary.pilotRatings.length >= 3;
+      const completeCount = [sent, testing, enoughRatings].filter(Boolean).length;
+      return { summary, launch, sent, testing, enoughRatings, completeCount };
+    }
+
+    function renderPilotActionChecklist() {
+      const panel = document.getElementById('pilot-action-checklist');
+      if (!panel) return;
+      const progress = getPilotActionProgress();
+      const { summary, sent, testing, enoughRatings, completeCount } = progress;
+      const steps = [
+        {
+          title: '직접 체험 링크 보내기',
+          body: '카카오톡이나 문자로 은빛캘리 전용 링크를 보내고, 실제 전송 후 완료 버튼을 누릅니다.',
+          complete: sent,
+          status: sent ? '완료' : '오늘 할 일',
+        },
+        {
+          title: '사장님 체험 확인하기',
+          body: '딸깍 키트 생성까지 눌러봤는지 확인하고, 어렵다면 통화 없이도 따라 할 수 있게 안내합니다.',
+          complete: testing,
+          status: testing ? '확인 중' : '대기',
+        },
+        {
+          title: '실제 평가 3건 받기',
+          body: '인스타그램, 네이버 플레이스, 쿠폰, 리뷰 답글 중 최소 3개 결과에 평가를 남기게 합니다.',
+          complete: enoughRatings,
+          status: `${summary.pilotRatings.length}/3건`,
+        },
+      ];
+      const currentIndex = steps.findIndex(step => !step.complete);
+      panel.innerHTML = `
+        <div class="pilot-action-checklist-head">
+          <strong>파일럿 3건 수집 체크리스트</strong>
+          <span>${completeCount}/3 완료 · 실제 파일럿 ${summary.pilotRatings.length}건</span>
+        </div>
+        ${steps.map((step, index) => `
+          <div class="pilot-action-step" data-complete="${step.complete}" data-current="${index === currentIndex}">
+            <i>${step.complete ? '✓' : index + 1}</i>
+            <div><strong>${step.title}</strong><p>${step.body}</p></div>
+            <small>${step.status}</small>
+          </div>
+        `).join('')}
+        <div class="pilot-action-mini-actions">
+          <button class="btn btn-primary" onclick="shareEunbitPilotMessage()">전용 링크 보내기</button>
+          <button class="btn btn-secondary" onclick="copyEunbitPilotMessage()">안내문 복사</button>
+          <button class="btn btn-secondary" onclick="copyPilotFollowUpMessage()">평가 요청 복사</button>
+        </div>`;
+    }
+
     function updatePilotLaunchStatus(value) {
       state.pilotLaunch.status = PILOT_LAUNCH_STATUS[value] ? value : 'ready';
       if (state.pilotLaunch.status === 'sent' && !state.pilotLaunch.sentAt) state.pilotLaunch.sentAt = new Date().toISOString();
       saveState();
       renderPilotLaunchTracker();
+      renderPilotActionChecklist();
       toast(`파일럿 상태를 '${PILOT_LAUNCH_STATUS[state.pilotLaunch.status].label}'로 저장했어요`);
     }
 
@@ -626,6 +682,7 @@
       state.pilotLaunch.followUpDate = value || '';
       saveState();
       renderPilotLaunchTracker();
+      renderPilotActionChecklist();
       toast(value ? '후속 연락 날짜를 저장했어요' : '후속 연락 날짜를 비웠어요');
     }
 
@@ -635,6 +692,7 @@
       if (!state.pilotLaunch.followUpDate) state.pilotLaunch.followUpDate = getDefaultPilotFollowUpDate();
       saveState();
       renderPilotLaunchTracker();
+      renderPilotActionChecklist();
       toast('은빛캘리 링크 발송 완료로 기록했어요. 3일 뒤 후속 연락도 잡았습니다.');
     }
 
@@ -804,6 +862,7 @@
       renderUsageWidgets();
       renderPilotFeedbackPanel();
       renderPilotLaunchTracker();
+      renderPilotActionChecklist();
       renderPilotEvidenceDashboard();
       if (!state.onboardingComplete && state.currentTab !== 'proposal' && !isDirectPilotDemo) setTimeout(showOnboarding, 500);
       console.log('🌸 Bloom Dashboard v2.3 ready! — 다크모드 12조합 + WCAG AA + 키보드 단축키 + 스켈레톤');
@@ -1843,9 +1902,6 @@
       const items = state.pilotFeedback || [];
       const summary = getPilotRatingSummary();
       const { ratings, pilotRatings, internalRatings } = summary;
-      if (!items.length && !ratings.length) {
-        return '# Bloom 파일럿 피드백 기록\n\n아직 저장된 파일럿 피드백이 없습니다.';
-      }
 
       const lines = [
         '# Bloom 파일럿 피드백 기록',
@@ -1854,6 +1910,7 @@
         `- 총 응답: ${items.length}건`,
         `- 실제 파일럿 결과 평가: ${pilotRatings.length}건`,
         `- 내부 테스트 결과 평가: ${internalRatings.length}건`,
+        `- 파일럿 실행 체크리스트: ${getPilotActionProgress().completeCount}/3 완료`,
         `- 파일럿 상태: ${PILOT_LAUNCH_STATUS[state.pilotLaunch?.status]?.label || '발송 전'}`,
         `- 후속 연락: ${formatPilotLaunchDate(state.pilotLaunch?.followUpDate)}`,
         '',
@@ -1923,7 +1980,7 @@
       const payload = {
         exportedAt: new Date().toISOString(),
         product: 'Bloom',
-        version: 'v0.6.23',
+        version: 'v0.6.24',
         count: state.pilotFeedback.length,
         feedback: state.pilotFeedback,
         kitRatings: (Array.isArray(state.kitRatings) ? state.kitRatings : []).map(item => ({
@@ -2886,6 +2943,7 @@
       state.kitRatings = state.kitRatings.slice(0, 100);
       saveState();
       renderPilotFeedbackPanel();
+      renderPilotActionChecklist();
       renderPilotEvidenceDashboard();
       const group = button?.closest('.kit-rating-actions');
       group?.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
